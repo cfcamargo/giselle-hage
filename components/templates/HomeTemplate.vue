@@ -1,7 +1,11 @@
 <template>
-    <Container>
-        <h2 class="text-2xl text-red-900">Hello World</h2>
-    </Container>
+    <Header />
+    <Section-Home />
+    <Section-Card />
+    <Section-Harmonizacao />
+    <Section-Cliente />
+    <Section-Galeria />
+    <Section-Perguntas />
 </template>
 
 <script setup lang="ts">
