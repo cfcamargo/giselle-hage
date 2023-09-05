@@ -1,11 +1,11 @@
 <template>
     <Header />
-    <Section-Home />
-    <Section-Card />
+    <Banner />
+    <CardAboutHome />
     <Section-Harmonizacao />
     <Section-Cliente />
     <Section-Galeria />
-    <Section-Perguntas />
+    <AsksSection />
 </template>
 
 <script setup lang="ts">

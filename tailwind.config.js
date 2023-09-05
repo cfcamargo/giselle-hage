@@ -9,7 +9,15 @@ module.exports = {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: theme => ({
+        'degrade': 'linear-gradient(180deg, #3E3063 42.19%, #000 100%)',
+        'banner' : 'url("/background.png")',
+      }),
+      textColor: theme => ({
+        'degrade': 'linear-gradient(180deg, #3E3063 42.19%, #000 100%)'
+      }),
+    },
   },
   plugins: [],
 }
