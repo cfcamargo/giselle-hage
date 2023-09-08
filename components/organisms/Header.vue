@@ -1,13 +1,13 @@
 <template>
-    <header class="h-[99px]  flex items-center ">
+    <header class="h-[100px] flex items-center ">
       <Container class="flex justify-between ">
        <IconGH />
-       <ul class="flex flex-row gap-[20px] w-[438px] h-[24px] justify-center items-center mt-[15px] text-[#3F3164]">
-        <li><a href="">Home</a></li>
-        <li><a href="">Serviços</a></li>
-        <li><a href="">Sobre</a></li>
-        <li><a href="">Contato</a></li>
-       </ul>
+       <nav class="flex flex-row  justify-center items-center gap-6">
+        <a href="">Home</a>
+        <a href="">Serviços</a>
+        <a href="">Sobre</a>
+        <a href="">Contato</a>
+       </nav>
       </Container>
     </header>
   </template>
