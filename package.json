@@ -19,6 +19,7 @@
   "dependencies": {
     "@nuxt/image": "^1.0.0-rc.1",
     "animate.css": "^4.1.1",
-    "lucide-vue-next": "^0.269.0"
+    "lucide-vue-next": "^0.269.0",
+    "nuxt-swiper": "^1.2.2"
   }
 }
