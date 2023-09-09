@@ -1,8 +1,8 @@
 <template>
-    <header class="h-[100px] flex items-center ">
-      <Container class="flex justify-between ">
-       <IconGH />
-       <nav class="flex flex-row  justify-center items-center gap-6">
+    <header class="h-[100px] flex items-center">
+      <Container class="flex justify-between">
+       <Logo />
+       <nav class="flex items-center gap-6">
         <a href="">Home</a>
         <a href="">Serviços</a>
         <a href="">Sobre</a>

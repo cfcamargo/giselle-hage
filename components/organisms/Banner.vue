@@ -1,5 +1,5 @@
 <template>
-    <section class="h-screen w-full bg-banner">
+    <section class="h-screen w-full bg-banner bg-cover bg-center">
       <div class="w-full h-full bg-black/40 flex items-center">
         <Container class="flex flex-col gap-10">
           <IconSection class="" />

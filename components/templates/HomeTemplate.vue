@@ -2,10 +2,9 @@
     <Header />
     <Banner />
     <CardAboutHome />
-    <Section-Harmonizacao />
-    <Section-Cliente />
-    <Section-Galeria />
-    <AsksSection />
+    <Services />
+    <Testimonials />
+    <Faq />
 </template>
 
 <script setup lang="ts">
