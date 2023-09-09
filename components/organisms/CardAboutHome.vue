@@ -1,8 +1,8 @@
 <template>
     <section>
         <Container>
-            <div class="w-full bg-white px-6 py-4 shadow-lg rounded-md flex gap-8 z-50 -mt-10">
-                <div class="flex w-4/12 flex-col items-center gap-3">
+            <div class="w-full bg-white px-6 py-4 shadow-lg rounded-md flex xs:flex-col md:flex-row gap-8 z-50 -mt-10">
+                <div class="flex xs:w-full md:w-4/12 flex-col items-center gap-3">
                     <nuxt-img
                       src="/gisele-card-home.png"
                       class="-mt-16"

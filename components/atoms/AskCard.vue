@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-2 w-full">
-      <div class="flex gap-2 w-full justify-between bg-gray-200 px-4 py-2 rounded" @click="toggleShow">
+      <div class="flex gap-2 w-full justify-between bg-violet-100 px-4 py-2 rounded " @click="toggleShow">
         <h4 class="font-bold text-degrade">
           {{ question.ask }}
         </h4>

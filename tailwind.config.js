@@ -17,6 +17,9 @@ module.exports = {
       textColor: theme => ({
         'degrade': 'linear-gradient(180deg, #3E3063 42.19%, #000 100%)'
       }),
+      screens : {
+        'xs' : '390px'
+      }
     },
   },
   plugins: [],

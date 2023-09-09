@@ -3,10 +3,10 @@
       <div class="w-full h-full bg-black/40 flex items-center">
         <Container class="flex flex-col gap-10">
           <IconSection class="" />
-          <p class="w-[354px] h-[83px] text-small text-[#3E3063] text-16 ml-[100px]">Revele sua beleza natural, conquiste
-            a harmonia perfeita: bem-vindo ao mundo da harmonização ortofacial,
+          <p class="xs:text-center md:text-start w-full max-w-[500px] text-2xl text-violet-950">Revele sua beleza natural, conquiste
+            a harmonia perfeita: Bem-vindo ao mundo da harmonização orofacial,
             onde a confiança ganha novos contornos!</p>
-          <ButtonIcon class="ml-[100px]" />
+          <ActionButton class="xs:mx-auto md:mx-0"/>
         </Container>
       </div>
     </section>

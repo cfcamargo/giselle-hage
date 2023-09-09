@@ -1,11 +1,11 @@
 <template>
     <section class="mt-[215px] overflow-x-hidden">
         <Container class="flex flex-col justify-center items-center gap-10">
-            <h1 class="text-5xl font-bold">Galeria de Fotos</h1>
+            <h1 class="xs:text-4xl md:text-5xl font-bold">Galeria de Fotos</h1>
             <div class="w-full">
               <Swiper
                   :modules="[SwiperAutoplay, SwiperEffectCreative]"
-                  :slides-per-view="2"
+                  :slides-per-view="slidesPerView"
                   :loop="true"
                   :autoplay="{
                         delay: 8000,
@@ -27,6 +27,8 @@
 
 <script setup lang="ts">
 
+const slidesPerView = ref(2)
+
 const photos = [
     '/book/img1.jpg',
     '/book/img2.jpg',
@@ -40,5 +42,11 @@ const photos = [
     '/book/img10.jpg',
     '/book/img11.jpg',
 ]
+
+onMounted(() => {
+    if (window.innerWidth < 430) {
+        slidesPerView.value = 1
+    }
+})
 
 </script>

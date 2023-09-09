@@ -1,20 +1,20 @@
 <template>
     <section class="mt-32">
-        <Container class="flex flex-col gap-4 justify-center items-center">
-            <h1 class="text-5xl">Harmonização Orofacial</h1>
-            <div class="w-full flex py-10 gap-6">
-                <div class="flex flex-1 flex-col justify-between">
+        <Container class="flex flex-col gap-4 xs:justify-start md:justify-center xs:items-start md:items-center px-4">
+            <h1 class="xs:text-4xl md:text-5xl font-bold">Harmonização Orofacial</h1>
+            <div class="w-full flex xs:flex-col md:flex-row py-10 xs:gap-10 md:gap-6">
+                <div class="flex flex-1 flex-col md:justify-between xs:gap-10 md:gap-0">
                   <ServiceCard :service="services[0]" class="xs:mr-0 md:ml-[20%]"/>
                   <ServiceCard :service="services[1]"/>
                   <ServiceCard :service="services[2]" class="xs:mr-0 md:ml-[20%]"/>
                 </div>
-                <div class="flex items-center justify-center px-10 w-6/12">
+                <div class="flex items-center justify-center xs:px-6 md:px-10 xs:w-full md:w-6/12">
                   <nuxt-img
                     src="/harmonizationCover.png"
                     fit="cover"
                   />
                 </div>
-                <div class="flex flex-1 flex-col justify-between items-end gap-20">
+                <div class="flex flex-1 flex-col justify-between items-end md:gap-20 xs:gap-10">
                   <ServiceCard :service="services[3]" class="xs:mr-0 md:mr-[20%] "/>
                   <ServiceCard :service="services[4]"/>
                   <ServiceCard :service="services[5]" class="xs:mr-0 md:mr-[20%]"/>
