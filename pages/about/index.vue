@@ -1,10 +1,12 @@
 <template>
   <AppLayout>
     <Container class="py-10 flex flex-col">
-      <h3 class="text-violet-950 text-3xl font-bold">Sobre</h3>
 
       <div class="mt-6 grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div class="flex flex-col gap-6">
+
+            <h3 class="text-violet-950 text-3xl font-bold">Sobre</h3>
+
             <p>
               Bem-vindos ao fascinante mundo da harmonização orofacial, onde a arte de realçar a beleza natural de cada expressão facial encontra seu lar. Aqui, sou a Giselle, a maestrina por trás dessa sinfonia de harmonia e estética.
             </p>
