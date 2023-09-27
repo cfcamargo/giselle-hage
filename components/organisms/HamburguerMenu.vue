@@ -13,7 +13,7 @@
         </button>
       </div>
 
-      <NuxtLink>Home</NuxtLink>
+      <NuxtLink to="/">Home</NuxtLink>
 
       <div class="flex flex-col items-end gap-4">
         <button type="button" @click="toogleSubMenu" class="flex items-center gap-2">
@@ -27,8 +27,8 @@
         </transition>
       </div>
 
-      <NuxtLink>Sobre</NuxtLink>
-      <NuxtLink>Contato</NuxtLink>
+      <NuxtLink to="/about">Sobre</NuxtLink>
+      <NuxtLink to="/contact">Contato</NuxtLink>
     </nav>
   </transition>
 
