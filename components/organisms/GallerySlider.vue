@@ -43,10 +43,18 @@ const photos = [
     '/book/img11.jpg',
 ]
 
-onMounted(() => {
+function changeSlidesPerView() {
     if (window.innerWidth < 430) {
         slidesPerView.value = 1
+    } else {
+        slidesPerView.value = 2
     }
+}
+
+onMounted(() => {
+  changeSlidesPerView()
+
+  window.addEventListener('resize', changeSlidesPerView)
 })
 
 </script>

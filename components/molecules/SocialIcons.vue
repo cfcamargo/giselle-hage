@@ -1,16 +1,9 @@
 <template>
-    <div class="flex justify-end items-end  mt-[20px] gap-5 ml-[70%] mt-[30px]">
-
-        <a href="">
+    <div class="flex justify-end items-end  gap-5 ml-[70%] mt-[30px]">
+        <a href="https://www.instagram.com/dra.gisellehage/" target="_blank">
             <IconInstagram />
         </a>
-        <a href="">
-            <IconTikTok />
-        </a>
-        <a href="">
-            <IconFace />
-        </a>
-
-</div></template>
+</div>
+</template>
 
 <script setup lang="ts"></script>
