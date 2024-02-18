@@ -1,11 +1,6 @@
 <template>
     <AppLayout>
-      <Banner />
-      <CardAboutHome />
-      <Services />
-      <Testimonials />
-      <GallerySlider />
-      <Faq />
+      <HeroSection />
     </AppLayout>
 </template>
 

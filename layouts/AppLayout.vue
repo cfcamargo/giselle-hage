@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <main class="mt-[100px]">
+  <main class="mt-[80px] scroll-smooth">
     <slot />
   </main>
   <Footer />
