@@ -65,20 +65,21 @@
 </template>
 
 <script setup lang="ts">
-import AppLayout from "~/layouts/AppLayout.vue";
+import AppLayout from "~/layouts/AppLayout.vue"
+import { ref } from 'vue'
 
 const modalShow = ref(false)
 const imgURL = ref('')
 
 function viewImage(url: string){
-  imgURL.value = url
-  modalShow.value = true
+	imgURL.value = url
+	modalShow.value = true
 }
 
 
 function closeModal(){
-  modalShow.value = false
-  imgURL.value = ''
+	modalShow.value = false
+	imgURL.value = ''
 }
 
 </script>

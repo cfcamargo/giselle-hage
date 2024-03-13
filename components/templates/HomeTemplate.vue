@@ -1,6 +1,10 @@
 <template>
     <AppLayout>
       <HeroSection />
+      <HeroBanner />
+      <Services />
+      <CardAboutHome />
+      <Results />
     </AppLayout>
 </template>
 

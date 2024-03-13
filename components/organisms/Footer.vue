@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-violet-950">
+  <div class="bg-primary">
     <Container class="py-20 grid xs:grid-cols-1 md:grid-cols-3 gap-10">
       <div class="flex flex-col gap-2 text-white">
-        <NuxtLink to="/">Home</NuxtLink>
-        <NuxtLink to="/about">Sobre</NuxtLink>
-        <NuxtLink to="/contact">Contato</NuxtLink>
+        <a href="#home">Home</a>
+        <a href="#about">Sobre</a>
+        <a href="#contact">Contato</a>
       </div>
 
       <div class="flex flex-col gap-2 text-white">
