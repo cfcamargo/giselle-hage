@@ -10,12 +10,11 @@
                 </div>
 
                 <div>
-                    <p>WhatsApp: 71 3013-9663 e 71 99964-4650</p>
-                    <div>
+                    <p>WhatsApp:67 9 8126-9482</p>
+                    <div class="flex flex-col mt-2">
                         <p>Horarios de funcionamento:</p>
-                        <span>Segundas às quintas: 08:00h - 12:00h e 13:00h- 18:00h</span>
-                        <span>Sextas feiras: 08:00h - 12:00h e 13:00h- 17:00h</span>
-
+                        <span>Segundas às Sextas: 08:00h - 12:00h e 13:00h- 17:00h</span>
+                        <span class="mt-4">R. Tiradentes, 481 - Centro, Ponta Porã</span>
                     </div>
                 </div>
             </div>

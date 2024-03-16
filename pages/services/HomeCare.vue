@@ -1,7 +1,14 @@
 <template>
   <AppLayout>
+    <div class="w-full h-[calc(100dvh_-_80px)] bg-[url('/botox-bg.png')] bg-cover">
+        <div class="w-full h-full bg-white/30">
+            <Container class="h-full flex flex-col items-start justify-center">
+            <h2 class="text-6xl font-bold text-primary">HOME CARE</h2>
+            </Container>
+        </div>
+    </div>
     <Container class="py-20">
-    <h2 class="font-bold text-3xl text-violet-950">Home Care Personalizado::</h2>
+    <h2 class="font-bold text-3xl text-violet-950">Home Care Personalizado:</h2>
     <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-8">
       <div class="flex gap-2 flex-col">
         <h4 class="font-bold text-2xl mt-6">O que é ?</h4>
@@ -25,10 +32,6 @@
           Os serviços podem abranger orientações sobre a aplicação de compressas de gelo, uso de medicamentos prescritos, acompanhamento do inchaço e da cicatrização, além de cuidados específicos para manter e otimizar os resultados da harmonização orofacial.
         </p>
 
-        <h4 class="font-bold text-2xl mt-6">Cuidados após o procedimento:?</h4>
-        <p>
-          Após o Home Care Personalizado, os pacientes devem seguir as instruções fornecidas pelo profissional de saúde para garantir uma recuperação suave e resultados satisfatórios. Isso pode incluir agendar consultas de acompanhamento no consultório e manter uma comunicação aberta sobre qualquer preocupação ou necessidade pós-procedimento.
-        </p>
       </div>
 
       <nuxt-img

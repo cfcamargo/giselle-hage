@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full py-10 bg-[url('/hero-banner-bg.svg')] bg-left bg-cover">
+    <div class="w-full py-10 bg-gray-100 bg-left bg-cover">
         <Container class="flex justify-between items-center">
             <a href="https://www.instagram.com/dra.gisellehage/" target="_blank">
                 <div class="flex gap-4 items-center">

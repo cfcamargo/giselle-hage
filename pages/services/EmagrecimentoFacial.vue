@@ -1,5 +1,12 @@
 <template>
   <AppLayout>
+    <div class="w-full h-[calc(100dvh_-_80px)] bg-[url('/emagrecimento-bg.jpeg')] bg-cover">
+        <div class="w-full h-full bg-white/30">
+            <Container class="h-full flex flex-col items-start justify-center">
+            <h2 class="text-6xl font-bold text-primary">EMAGRECIMENTO FACIAL</h2>
+            </Container>
+        </div>
+    </div>
     <Container class="py-20">
     <h2 class="font-bold text-3xl text-violet-950">Emagrecimento Facial::</h2>
     <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-8">
