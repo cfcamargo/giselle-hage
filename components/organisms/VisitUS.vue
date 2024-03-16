@@ -1,6 +1,6 @@
 <template>
     <Container class="py-20">
-        <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10">
+        <section class="grid xs:grid-cols-1 md:grid-cols-2 gap-10" id="contact">
             <div class="flex flex-col gap-10">
                 <div class="flex flex-col gap-2">
                     <h4 class="text-2xl text-primary font-bold">Faça uma Visita</h4>
@@ -22,7 +22,7 @@
             <div>
                 <img src="https://lh3.googleusercontent.com/p/AF1QipPABFWsXaRB2IbOi9CQA3NSfLTT_WFH5_4jADvw=s680-w680-h510" alt="Imagem do consultório" />
             </div>
-        </div>
+        </section>
     </Container>
 </template>
 

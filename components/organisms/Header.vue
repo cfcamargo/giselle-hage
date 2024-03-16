@@ -10,7 +10,7 @@
       <a @click="submenu = false" href="#about">Sobre</a>
       <a @click="submenu = false" href="#contact">Contato</a>
     </nav>
-    <a class="xs:hidden md:flex">
+    <a class="xs:hidden md:flex" href="https://api.whatsapp.com/send/?phone=5567981269482&text&type=phone_number&app_absent=0" target="_blank">
       <WhatsIcon />
     </a>
 
