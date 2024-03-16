@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-4 py-10">
+      <div class="grid xs:grid-cols-1 md:grid-cols-3 gap-4 py-10">
         <ServiceCard v-for="(service, index) in servicesList" :key="index" :title="service.title" :link="service.link" :description="service.description" />
       </div>
     </Container>

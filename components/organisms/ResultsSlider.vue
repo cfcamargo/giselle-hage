@@ -5,7 +5,7 @@
         </div>
         <Swiper
         :modules="[SwiperAutoplay, SwiperNavigation]"
-        :slides-per-view="4"
+        :slides-per-view="slidesPerVies"
         :navigation="true"
         :loop="true"
         :autoplay="{
@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+const slidesPerVies = ref(4)
+
 const results = [
 	'/services/bigode.jpg',
 	'/services/botox1.jpg',
@@ -35,5 +37,18 @@ const results = [
 	'/services/mento2.jpg',
 	'/services/mento3.jpg',
 ]
+
+const changeSlidesPerView = () => {
+    if (window.innerWidth < 430) {
+        slidesPerVies.value = 1
+    } else {
+        slidesPerVies.value = 4
+    }
+}
+
+onMounted(() => {
+    changeSlidesPerView()
+    window.addEventListener('resize', changeSlidesPerView)
+})
 
 </script>

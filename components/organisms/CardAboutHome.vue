@@ -1,10 +1,10 @@
 <template>
     <section id="about">
-        <Container class="mt-[200px]">
-            <div class="w-full bg-white px-20 py-10 shadow-lg rounded-md flex xs:flex-col md:flex-row gap-16 z-50 -mt-10 border">
+        <Container class="xs:mt-20 md:mt-[200px]">
+            <div class="w-full bg-white xs:px-2 md:px-20 xs:py-2 md:py-10 shadow-lg rounded-md flex xs:flex-col md:flex-row gap-16 z-50 -mt-10 border">
                 <div class="flex xs:w-full md:w-5/12 h-[800px] flex-col items-center gap-3 bg-[url('/about.jpg')] bg-cover bg-center -mt-[80px] shadow-lg">
                 </div>
-                <div class="flex flex-col gap-4 flex-1 h-full my-auto pr-20">
+                <div class="flex flex-col gap-4 flex-1 h-full my-auto xs:pr-0 md:pr-20">
                   <h4 class="font-bold text-4xl text-degrade text-secondary"><span class="text-primary">Prazer,</span> Dra Giselle Hage</h4>
                   <p class="flex flex-col gap-6 text-justify text-secondary">
                     Cirurgiã-dentista com CRO-MS 4589, especializada em Harmonização Orofacial pelo Instituto de Odontologia das Américas desde 2009.

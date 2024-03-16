@@ -1,6 +1,6 @@
 <template>
     <div class="w-full py-10 bg-gray-100 bg-left bg-cover">
-        <Container class="flex justify-between items-center">
+        <Container class="flex xs:flex-col md:flex-row justify-between xs:gap-8 xs:items-start md:items-center">
             <a href="https://www.instagram.com/dra.gisellehage/" target="_blank">
                 <div class="flex gap-4 items-center">
                     <div class="rounded-full w-20 h-20 bg-red border-primary border-2 object-cover overflow-hidden">
@@ -9,7 +9,6 @@
                     <span class="font-bold text-primary">@dra.gisellehage</span>
                 </div>
             </a>
-
 
             <a href="https://maps.app.goo.gl/GzueV4dxy1aZmRLx5" class="flex items-center gap-4">
                 <div class="bg-primary rounded-full w-20 h-20 flex justify-center items-center">

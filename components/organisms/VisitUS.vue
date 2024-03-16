@@ -1,6 +1,6 @@
 <template>
     <Container class="py-20">
-        <div class="grid grid-cols-2 gap-10">
+        <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10">
             <div class="flex flex-col gap-10">
                 <div class="flex flex-col gap-2">
                     <h4 class="text-2xl text-primary font-bold">Faça uma Visita</h4>
