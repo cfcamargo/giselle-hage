@@ -10,7 +10,10 @@
                 </div>
 
                 <div>
-                    <p>WhatsApp:67 9 8126-9482</p>
+                    <a href="https://api.whatsapp.com/send/?phone=5567981269482&text&type=phone_number&app_absent=0" target="_blank" class="flex items-center gap-2 hover:sc">
+                        <WhatsIcon color="black" class="w-4"/>
+                        <span>67 9 8126-9482</span>
+                    </a>
                     <div class="flex flex-col mt-2">
                         <p>Horarios de funcionamento:</p>
                         <span>Segundas às Sextas: 08:00h - 12:00h e 13:00h- 17:00h</span>

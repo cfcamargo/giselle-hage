@@ -7,8 +7,8 @@
       <div @mouseenter="submenu = true" class="relative">
         <button @click="toogleSubMenu" type="button">Serviços</button>
       </div>
-      <a @click="submenu = false" href="#about">Sobre</a>
-      <a @click="submenu = false" href="#contact">Contato</a>
+      <button @click="navigateAndScrollToSection('about')">Sobre</button>
+      <button @click="navigateAndScrollToSection('contact')">Contato</button>
     </nav>
     <a class="xs:hidden md:flex" href="https://api.whatsapp.com/send/?phone=5567981269482&text&type=phone_number&app_absent=0" target="_blank">
       <WhatsIcon />
@@ -37,8 +37,8 @@
             </div>
           </div>
 
-          <a @click="submenu = false" href="#about" class="text-white">Sobre</a>
-          <a @click="submenu = false" href="#contact" class="text-white">Contato</a>
+          <button @click="navigateAndScrollToSection('about')" class="text-white">Sobre</button>
+          <button @click="navigateAndScrollToSection('contact')" class="text-white">Contato</button>
         </div>
       </aside>
     </div>
@@ -58,12 +58,33 @@
 import services from '@/Models/Services'
 import { Menu, X } from 'lucide-vue-next'
 import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 const submenu = ref(false)
 const asideShow = ref(false)
 
 function toogleSubMenu() {
 	submenu.value = !submenu.value
+}
+
+const router = useRouter()
+const route = useRoute()
+
+const navigateAndScrollToSection = (sectionId: string) => {
+	submenu.value = false
+	asideShow.value = false
+	if (route.path === '/') {
+		scrollToSection(sectionId)
+	} else {
+		router.push({ path: '/', query: { section: sectionId } })
+	}
+}
+
+const scrollToSection = (sectionId : string) => {
+	const element = document.getElementById(sectionId)
+	if (element) {
+		element.scrollIntoView({ behavior: 'smooth' })
+	}
 }
 
 const servicesData = services

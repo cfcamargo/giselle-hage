@@ -10,7 +10,7 @@
                     Cirurgiã-dentista com CRO-MS 4589, especializada em Harmonização Orofacial pelo Instituto de Odontologia das Américas desde 2009.
                   </p>
 
-                  <div class="mt-4 flex flex-col gap-4">
+                  <div class="mt-4 flex flex-col gap-4 text-justify">
                   <div class="flex flex-col gap-4 text-secondary">
                     <p>Meu desejo de fazer o curso de Odontologia começou perto dos 12 anos. Então, alguns anos depois, me formei cirurgiã dentista, em 2009. Sou   especialista em Implantodontia e Cirurgia e Traumatologia Bucomaxilofaciais, apesar de não atuar nessas áreas por agora, e especializanda em Harmonização Orofacial (HOF).
                     </p>

@@ -7,18 +7,18 @@
 
 <script setup lang="ts">
 const { color, icon_height, icon_width } = defineProps({
-    color: {
-        type: String,
-        default: 'white'
-    },
-    icon_width : {
-        type: String,
-        default: '30'
-    },
-    icon_height : {
-        type: String,
-        default: '30'
-    }
+	color: {
+		type: String,
+		default: 'white'
+	},
+	icon_width : {
+		type: String,
+		default: '30'
+	},
+	icon_height : {
+		type: String,
+		default: '30'
+	}
 })
 
 </script>

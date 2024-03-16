@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="w-full h-[calc(100dvh_-_80px)] bg-[url('/botox-bg.png')]">
+    <div class="w-full h-[calc(100dvh_-_80px)] bg-[url('/botox-bg.png')] bg-cover">
       <div class="w-full h-full bg-white/30">
         <Container class="h-full flex flex-col items-start justify-center">
           <h2 class="text-6xl font-bold text-primary">BOTOX</h2>
