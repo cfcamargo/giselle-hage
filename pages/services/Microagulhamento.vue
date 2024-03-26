@@ -43,7 +43,7 @@
 
       <nuxt-img
         src="/services/microagulhamento.png"
-        class="h-full object-cover"
+        class="h-full object-cover xs:max-h-[400px] md:max-h-[1200px] mx-auto w-full"
       />
     </div>
   </Container>

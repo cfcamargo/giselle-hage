@@ -12,8 +12,8 @@
       <Container>
         <div class="flex flex-col gap-2 items-center justify-center">
           <h4 class="xs:text-center md:text-start text-2xl font-bold">O que é e como funciona o <span>botox?</span></h4>
-          <p class="text-center mt-2 xs:text-justify md:text-start">Botox é o nome comercial - mas já se tornou praticamente sinônimo - da toxina botulínica. Essa substância ficou mundialmente conhecida por seu efeito na prevenção e tratamento de rugas de expressão. Não é a toa que a aplicação de botox é o procedimento estético mais realizado no mundo para todas as faixas etárias, segundo dados da Sociedade Internacional de Cirurgia Plástica Estética (ISAPS).</p>
-          <p class="text-center mt-2 xs:text-justify md:text-start">A toxina botulínica age paralisando a musculatura por meio da interrupção da ação entre o nervo motor e o músculo. A aplicação faz com que os músculos das mímicas faciais relaxem e não se contraiam. Com a interrupção dos movimentos, a pele para de criar vincos e as rugas dinâmicas desaparecem.</p>
+          <p class="mt-2 text-justify">Botox é o nome comercial - mas já se tornou praticamente sinônimo - da toxina botulínica. Essa substância ficou mundialmente conhecida por seu efeito na prevenção e tratamento de rugas de expressão. Não é a toa que a aplicação de botox é o procedimento estético mais realizado no mundo para todas as faixas etárias, segundo dados da Sociedade Internacional de Cirurgia Plástica Estética (ISAPS).</p>
+          <p class="mt-2 text-justify">A toxina botulínica age paralisando a musculatura por meio da interrupção da ação entre o nervo motor e o músculo. A aplicação faz com que os músculos das mímicas faciais relaxem e não se contraiam. Com a interrupção dos movimentos, a pele para de criar vincos e as rugas dinâmicas desaparecem.</p>
         </div>
 
 
@@ -28,15 +28,15 @@
         </div>
 
 
-        <div class="flex flex-col py-20">
+        <div class="flex flex-col xs:py-2 md:py-20">
           <h4 class="text-2xl font-bold text-center">Aplicações do <span class="text-primary">botox?</span></h4>
 
-          <div class="py-20">
+          <div class="xs:py-2 md:py-20">
             <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
               <img src="/services/atm.png">
               <div class="flex flex-col gap-2">
                 <h4 class="font-bold text-primary text-2xl">ATM</h4>
-                <p class="xs:text-justify md:text-start">O Botox para ATM (Articulação Temporomandibular) oferece uma solução eficaz para aliviar dores e desconfortos associados a problemas nessa articulação. Através de injeções precisas, o tratamento relaxa os músculos ao redor da ATM, reduzindo a tensão e melhorando significativamente a qualidade de vida. Indicado para quem sofre com bruxismo, dores de cabeça e dificuldades na mastigação, o Botox ATM proporciona alívio duradouro, permitindo uma rotina mais confortável e sem dor.</p>
+                <p class="text-justify">O Botox para ATM (Articulação Temporomandibular) oferece uma solução eficaz para aliviar dores e desconfortos associados a problemas nessa articulação. Através de injeções precisas, o tratamento relaxa os músculos ao redor da ATM, reduzindo a tensão e melhorando significativamente a qualidade de vida. Indicado para quem sofre com bruxismo, dores de cabeça e dificuldades na mastigação, o Botox ATM proporciona alívio duradouro, permitindo uma rotina mais confortável e sem dor.</p>
               </div>
             </div>
 
@@ -46,7 +46,7 @@
               <img src="/services/rinotox.png">
               <div class="flex flex-col gap-2">
                 <h4 class="font-bold text-primary text-2xl">RINOTOX</h4>
-                <p class="xs:text-justify md:text-start">O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
+                <p class="text-justify">O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
               </div>
             </div>
 
@@ -56,7 +56,7 @@
               <img src="/services/contorno-facial.png">
               <div class="flex flex-col gap-2">
                 <h4 class="font-bold text-primary text-2xl">CONTORNO FACIAL</h4>
-                <p class="xs:text-justify md:text-start">O tratamento de contorno facial redefine e realça a estrutura do seu rosto, criando linhas mais definidas e uma aparência mais jovem e equilibrada. Utilizando técnicas avançadas, este procedimento minimamente invasivo pode ajustar o volume e a forma das áreas específicas, como as maçãs do rosto, mandíbula e queixo, proporcionando um perfil esteticamente mais atraente. Perfeito para quem deseja melhorar a harmonia facial sem a necessidade de cirurgia, o contorno facial é a escolha ideal para alcançar resultados imediatos e naturais, elevando sua confiança e beleza.O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
+                <p class="text-justify">O tratamento de contorno facial redefine e realça a estrutura do seu rosto, criando linhas mais definidas e uma aparência mais jovem e equilibrada. Utilizando técnicas avançadas, este procedimento minimamente invasivo pode ajustar o volume e a forma das áreas específicas, como as maçãs do rosto, mandíbula e queixo, proporcionando um perfil esteticamente mais atraente. Perfeito para quem deseja melhorar a harmonia facial sem a necessidade de cirurgia, o contorno facial é a escolha ideal para alcançar resultados imediatos e naturais, elevando sua confiança e beleza.O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
               </div>
             </div>
 
@@ -66,7 +66,7 @@
               <img src="/services/pescoco.png">
               <div class="flex flex-col gap-2">
                 <h4 class="font-bold text-primary text-2xl uppercase">Pescoço</h4>
-                <p class="xs:text-justify md:text-start">O tratamento de contorno facial redefine e realça a estrutura do seu rosto, criando linhas mais definidas e uma aparência mais jovem e equilibrada. Utilizando técnicas avançadas, este procedimento minimamente invasivo pode ajustar o volume e a forma das áreas específicas, como as maçãs do rosto, mandíbula e queixo, proporcionando um perfil esteticamente mais atraente. Perfeito para quem deseja melhorar a harmonia facial sem a necessidade de cirurgia, o contorno facial é a escolha ideal para alcançar resultados imediatos e naturais, elevando sua confiança e beleza.O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
+                <p class="text-justify">O tratamento de contorno facial redefine e realça a estrutura do seu rosto, criando linhas mais definidas e uma aparência mais jovem e equilibrada. Utilizando técnicas avançadas, este procedimento minimamente invasivo pode ajustar o volume e a forma das áreas específicas, como as maçãs do rosto, mandíbula e queixo, proporcionando um perfil esteticamente mais atraente. Perfeito para quem deseja melhorar a harmonia facial sem a necessidade de cirurgia, o contorno facial é a escolha ideal para alcançar resultados imediatos e naturais, elevando sua confiança e beleza.O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
               </div>
             </div>
 
@@ -76,7 +76,7 @@
               <img src="/services/sorriso-triste.png">
               <div class="flex flex-col gap-2">
                 <h4 class="font-bold text-primary text-2xl uppercase">SORRISO TRISTE</h4>
-                <p class="xs:text-justify md:text-start">O tratamento para o sorriso triste transforma expressões de tristeza involuntária em um sorriso mais harmonioso e alegre. Utilizando técnicas precisas, como o uso de Botox ou preenchimentos, este procedimento corrige a inclinação dos cantos da boca, proporcionando um aspecto mais positivo e rejuvenescido. Ideal para quem deseja melhorar a expressão facial e aumentar a autoestima, este tratamento oferece uma mudança sutil, mas impactante, permitindo que sua verdadeira felicidade brilhe através de um sorriso naturalmente mais acolhedor.</p>
+                <p class="text-justify">O tratamento para o sorriso triste transforma expressões de tristeza involuntária em um sorriso mais harmonioso e alegre. Utilizando técnicas precisas, como o uso de Botox ou preenchimentos, este procedimento corrige a inclinação dos cantos da boca, proporcionando um aspecto mais positivo e rejuvenescido. Ideal para quem deseja melhorar a expressão facial e aumentar a autoestima, este tratamento oferece uma mudança sutil, mas impactante, permitindo que sua verdadeira felicidade brilhe através de um sorriso naturalmente mais acolhedor.</p>
               </div>
             </div>
 
@@ -86,7 +86,7 @@
               <img src="/services/sorriso.png">
               <div class="flex flex-col gap-2">
                 <h4 class="font-bold text-primary text-2xl uppercase">SORRISO GENGIVAL</h4>
-                <p class="xs:text-justify md:text-start">O tratamento para o sorriso gengival oferece uma solução estética para aqueles que se sentem desconfortáveis com a exposição excessiva da gengiva ao sorrir. Através de procedimentos minimamente invasivos, como a aplicação de Botox ou técnicas de contorno gengival, é possível ajustar a altura do sorriso, reduzindo a visibilidade da gengiva e criando uma aparência mais equilibrada e harmoniosa. Este tratamento é ideal para quem busca um sorriso mais confiante e atraente, com resultados naturais que realçam sua beleza sem a necessidade de intervenções cirúrgicas complexas.</p>
+                <p class="text-justify">O tratamento para o sorriso gengival oferece uma solução estética para aqueles que se sentem desconfortáveis com a exposição excessiva da gengiva ao sorrir. Através de procedimentos minimamente invasivos, como a aplicação de Botox ou técnicas de contorno gengival, é possível ajustar a altura do sorriso, reduzindo a visibilidade da gengiva e criando uma aparência mais equilibrada e harmoniosa. Este tratamento é ideal para quem busca um sorriso mais confiante e atraente, com resultados naturais que realçam sua beleza sem a necessidade de intervenções cirúrgicas complexas.</p>
               </div>
             </div>
 
@@ -96,7 +96,7 @@
               <img src="/services/olhar.png">
               <div class="flex flex-col gap-2">
                 <h4 class="font-bold text-primary text-2xl uppercase">EMBELEZAMENTO DO OLHAR</h4>
-                <p class="xs:text-justify md:text-start">O embelezamento do olhar revitaliza e destaca a área dos olhos, transformando olhares cansados em expressões vivas e radiantes. Este tratamento abrange técnicas como lifting de sobrancelhas, redução de olheiras e suavização de linhas finas, utilizando procedimentos minimamente invasivos para rejuvenescer e iluminar seu olhar. Perfeito para quem deseja refletir sua vitalidade interior, o embelezamento do olhar oferece resultados imediatos, melhorando a aparência de forma natural e sutil, sem longos períodos de recuperação. Desperte sua beleza com um olhar mais jovem e expressivo.</p>
+                <p class="text-justify">O embelezamento do olhar revitaliza e destaca a área dos olhos, transformando olhares cansados em expressões vivas e radiantes. Este tratamento abrange técnicas como lifting de sobrancelhas, redução de olheiras e suavização de linhas finas, utilizando procedimentos minimamente invasivos para rejuvenescer e iluminar seu olhar. Perfeito para quem deseja refletir sua vitalidade interior, o embelezamento do olhar oferece resultados imediatos, melhorando a aparência de forma natural e sutil, sem longos períodos de recuperação. Desperte sua beleza com um olhar mais jovem e expressivo.</p>
               </div>
             </div>
 
