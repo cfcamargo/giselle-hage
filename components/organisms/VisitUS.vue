@@ -1,5 +1,5 @@
 <template>
-    <Container class="py-20">
+    <Container class="xs:py-8 md:py-20">
         <section class="grid xs:grid-cols-1 md:grid-cols-2 gap-10" id="contact">
             <div class="flex flex-col gap-10">
                 <div class="flex flex-col gap-2">

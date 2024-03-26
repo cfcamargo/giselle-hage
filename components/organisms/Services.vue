@@ -1,5 +1,5 @@
 <template>
-  <section class="py-20" id="services">
+  <section class="xs:py-10 md:py-20" id="services">
     <Container>
       <div class="flex items-center justify-between">
         <h4 class="text-2xl font-bold text-secondary">Alguns dos nossos <span class="text-primary">serviços</span></h4>

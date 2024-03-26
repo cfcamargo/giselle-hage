@@ -1,34 +1,33 @@
 <template>
   <AppLayout>
-    <div class="w-full h-[calc(100dvh_-_80px)] bg-[url('/botox-bg.png')] bg-cover">
+    <div class="w-full xs:h-[300px] md:h-[calc(100dvh_-_80px)] xs:bg-[url('/HomeCareBanner.png')] md:bg-[url('/HomeCareDesktop.png')] bg-cover">
         <div class="w-full h-full bg-white/30">
             <Container class="h-full flex flex-col items-start justify-center">
-            <h2 class="text-6xl font-bold text-primary">HOME CARE</h2>
+            <h2 class="xs:text-3xl md:text-6xl font-bold text-primary">HOME CARE</h2>
             </Container>
         </div>
     </div>
-    <Container class="py-20">
-    <h2 class="font-bold text-3xl text-violet-950">Home Care Personalizado:</h2>
+    <Container class="xs:py-4 md:py-20">
     <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-8">
       <div class="flex gap-2 flex-col">
         <h4 class="font-bold text-2xl mt-6">O que é ?</h4>
-        <p>
+        <p class="xs:text-justify md:text-start">
           O Home Care Personalizado para Harmonização Orofacial é um serviço sob medida que visa fornecer cuidados e acompanhamento específicos após procedimentos de harmonização orofacial no conforto da residência do paciente.
         </p>
 
 
         <h4 class="font-bold text-2xl mt-6">Como funciona ?</h4>
-        <p>
+        <p class="xs:text-justify md:text-start">
           Após tratamentos como preenchimento labial, preenchimento de mento, toxina botulínica e outros procedimentos de harmonização orofacial, um profissional de saúde, geralmente um dentista ou médico estético, pode oferecer serviços de acompanhamento personalizado no ambiente doméstico do paciente. Isso pode incluir monitoramento pós-procedimento, cuidados com a higiene oral, recomendações dietéticas e esclarecimento de dúvidas.
         </p>
 
         <h4 class="font-bold text-2xl mt-6">Por que fazer?</h4>
-        <p>
+        <p class="xs:text-justify md:text-start">
           O Home Care Personalizado para Harmonização Orofacial é procurado por pessoas que desejam garantir uma recuperação tranquila, resultados ideais e uma experiência de cuidado contínuo após procedimentos de estética facial. Oferece conveniência e atenção individualizada.
         </p>
 
         <h4 class="font-bold text-2xl mt-6">Serviços comuns:</h4>
-        <p>
+        <p class="xs:text-justify md:text-start">
           Os serviços podem abranger orientações sobre a aplicação de compressas de gelo, uso de medicamentos prescritos, acompanhamento do inchaço e da cicatrização, além de cuidados específicos para manter e otimizar os resultados da harmonização orofacial.
         </p>
 

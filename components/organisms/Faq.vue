@@ -1,5 +1,5 @@
 <template>
-<section class="py-20">
+<section class="xs:py-2 md:py-20">
     <Container class="flex flex-col gap-10 items-center">
         <h1 class="xs:text-2xl md:text-[40px] flex col gap-2 justify-center items-center font-bold">Perguntas<span class="text-primary">Frequentes</span></h1>
         <div class="flex w-full flex-col gap-3">

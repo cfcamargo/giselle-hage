@@ -1,15 +1,14 @@
 <template>
   <AppLayout>
-    <div class="w-full h-[calc(100dvh_-_80px)] bg-[url('/microagulhamento-bg.jpg')] bg-cover">
+    <div class="w-full xs:h-[300px] md:h-[calc(100dvh_-_80px)] xs:bg-[url('/MicroagulhamentoBanner.png')] md:bg-[url('/microagulhamento-bg.png')] bg-cover">
       <div class="w-full h-full bg-white/30">
-        <Container class="h-full flex flex-col items-start justify-center">
-          <h2 class="text-6xl font-bold text-primary">MICROAGULHAMENTO</h2>
+        <Container class="h-full flex flex-col xs:items-center md:items-start xs:justify-end md:justify-center">
+          <h2 class="xs:text-3xl md:text-6xl font-bold text-primary">MICROAGULHAMENTO</h2>
           <span class="text-gray-900 text-xl">Percutânea de Colágeno</span>
         </Container>
       </div>
     </div>
-    <Container class="py-20">
-    <h2 class="font-bold text-3xl text-violet-950">Microagulhamento</h2>
+    <Container class="xs:py-4 md:py-20">
     <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-8">
       <div class="flex gap-2 flex-col">
         <h4 class="font-bold text-2xl mt-6">O que é ?</h4>
@@ -52,6 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import AppLayout from "~/layouts/AppLayout.vue";
+import AppLayout from "~/layouts/AppLayout.vue"
 
 </script>

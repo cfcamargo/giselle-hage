@@ -1,7 +1,7 @@
 <template>
     <Container>
-        <div class="py-20">
-            <h4 class="text-3xl font-bold text-center underline">Alguns de Nossos <span class="text-primary">Resultados</span></h4>
+        <div class="xs:pb-12 md:py-20">
+            <h4 class="text-3xl font-bold text-center">Alguns de Nossos <span class="text-primary">Resultados</span></h4>
         </div>
         <Swiper
         :modules="[SwiperAutoplay, SwiperNavigation]"
@@ -39,16 +39,16 @@ const results = [
 ]
 
 const changeSlidesPerView = () => {
-    if (window.innerWidth < 430) {
-        slidesPerVies.value = 1
-    } else {
-        slidesPerVies.value = 4
-    }
+	if (window.innerWidth < 430) {
+		slidesPerVies.value = 1
+	} else {
+		slidesPerVies.value = 4
+	}
 }
 
 onMounted(() => {
-    changeSlidesPerView()
-    window.addEventListener('resize', changeSlidesPerView)
+	changeSlidesPerView()
+	window.addEventListener('resize', changeSlidesPerView)
 })
 
 </script>

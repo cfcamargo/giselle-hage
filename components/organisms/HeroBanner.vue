@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full py-10 bg-gray-100 bg-left bg-cover">
+    <div class="xs:hidden md:block w-full py-10 bg-gray-100 bg-left bg-cover">
         <Container class="flex xs:flex-col md:flex-row justify-between xs:gap-8 xs:items-start md:items-center">
             <a href="https://www.instagram.com/dra.gisellehage/" target="_blank">
                 <div class="flex gap-4 items-center">
