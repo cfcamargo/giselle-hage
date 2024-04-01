@@ -1,33 +1,25 @@
 <template>
-    <section>
-        <Container>
-            <div class="w-full bg-white px-6 py-4 shadow-lg rounded-md flex xs:flex-col md:flex-row gap-8 z-50 -mt-10">
-                <div class="flex xs:w-full md:w-4/12 flex-col items-center gap-3">
-                    <nuxt-img
-                      src="/gisele-card-home.png"
-                      class="-mt-16"
-                    />
-                    <span>
-                        Cirurgiã Dentista - CRO-MS 4859
-                    </span>
+    <section id="about">
+        <Container class="xs:mt-20 md:mt-[200px]">
+            <div class="w-full bg-white xs:px-2 md:px-20 xs:py-2 md:py-10 shadow-lg rounded-md flex xs:flex-col md:flex-row xs:gap-8 md:gap-16 z-50 -mt-10 border">
+                <div class="flex xs:w-full md:w-5/12 xs:h-[400px] md:h-[800px] flex-col items-center gap-3 bg-[url('/about.jpg')] bg-cover bg-center -mt-[80px] shadow-lg">
                 </div>
-                <div class="flex flex-col gap-4 flex-1 h-full my-auto">
-                  <h4 class="font-bold text-4xl text-degrade">Dra Giselle Hage</h4>
-                  <div class="flex flex-col gap-6 text-justify">
-                      <p>Olá, sou a Giselle, uma cirurgiã dentista completamente
-                        apaixonada pela beleza e tudo que ele representa. Minha jornada na odontologia me levou a descobrir
-                        minha verdadeira paixão: a harmonização orofacial. Tenho dedicado toda a minha carreira para unir a
-                        arte de transformar auto estima com a magia de promover a harmonia estética em cada expressão facial.
-                      </p>
-                      <p>Meu trabalho é como uma jornada encantada, onde cada rosto é
-                        transformado em uma expressão radiante. Com cuidado e empatia, ouço atentamente os desejos de cada
-                        indivíduo, garantindo que cada tratamento seja único e feito sob medida.</p>
-                      <p >Convido você a abrir as portas da sua auto estima e embarcar
-                        nesta jornada mágica comigo. Vamos juntos desvendar o encanto e a beleza de um rosto harmonioso e
-                        uma expressão cativante. Estou ansiosa para te ajudar a revelar a sua melhor versão</p>
+                <div class="flex flex-col gap-4 flex-1 h-full my-auto xs:pr-0 md:pr-20">
+                  <h4 class="font-bold text-4xl text-degrade text-secondary"><span class="text-primary">Prazer,</span> Dra Giselle Hage</h4>
+                  <p class="flex flex-col gap-6 text-justify text-secondary">
+                    Cirurgiã-dentista com CRO-MS 4589, especializada em Harmonização Orofacial pelo Instituto de Odontologia das Américas desde 2009.
+                  </p>
+
+                  <div class="mt-4 flex flex-col gap-4 text-justify">
+                  <div class="flex flex-col gap-4 text-secondary">
+                    <p>Meu desejo de fazer o curso de Odontologia começou perto dos 12 anos. Então, alguns anos depois, me formei cirurgiã dentista, em 2009. Sou   especialista em Implantodontia e Cirurgia e Traumatologia Bucomaxilofaciais, apesar de não atuar nessas áreas por agora, e especializanda em Harmonização Orofacial (HOF).
+                    </p>
+
+                    <p>Descobri a Harmonização Orofacial num momento conturbado, na época da pandemia. Comecei com um curso online, e logo que os cursos presenciais voltaram, eu fiz meus primeiros. Desde então não parei mais, é uma área que me encanta! Gerenciamento do envelhecimento, cuidados com a pele, bioestimuladores de colágeno, regeneração celular, preenchimentos e a queridinha toxina botulínica, mais conhecida como Botox.<span>&#174;</span></p>
                   </div>
-                  <SocialIcons />
                 </div>
+                </div>
+
             </div>
         </Container>
     </section>

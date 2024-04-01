@@ -13,7 +13,7 @@
         </button>
       </div>
 
-      <NuxtLink to="/">Home</NuxtLink>
+      <a href="#home">Home</a>
 
       <div class="flex flex-col items-end gap-4">
         <button type="button" @click="toogleSubMenu" class="flex items-center gap-2">
@@ -22,13 +22,13 @@
         </button>
         <transition enter-active-class="animate__animated animate__fadeInDown" leave-active-class="animate__animated animate__fadeOutUp">
           <div v-show="submenuShow" class="flex flex-col items-end gap-6 pt-6 pb-2">
-            <NuxtLink :to="`/services/${service.to}`" v-for="service in services" :key="service" class="font-light">{{ service.name }}</NuxtLink>
+            <NuxtLink :to="`/services/${service.to}`" v-for="(service, index) in services" :key="index" class="font-light">{{ service.name }}</NuxtLink>
           </div>
         </transition>
       </div>
 
-      <NuxtLink to="/about">Sobre</NuxtLink>
-      <NuxtLink to="/contact">Contato</NuxtLink>
+      <a href="#about">Sobre</a>
+      <a href="#contact">Contato</a>
     </nav>
   </transition>
 
@@ -36,19 +36,19 @@
 
 <script setup lang="ts">
 import { X, Menu, ChevronDown } from 'lucide-vue-next'
-import services from "~/Models/Services";
+import services from "~/Models/Services"
+import { ref } from 'vue'
 
 const menuShow = ref(false)
 const submenuShow = ref(false)
 
 
 function toogleSubMenu() {
-  submenuShow.value = !submenuShow.value
+	submenuShow.value = !submenuShow.value
 }
 
 function toogleMenu() {
-  menuShow.value = !menuShow.value
+	menuShow.value = !menuShow.value
 }
 
-const servicesData = services
 </script>

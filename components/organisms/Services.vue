@@ -1,57 +1,90 @@
 <template>
-    <section class="mt-32">
-        <Container class="flex flex-col gap-4 xs:justify-start md:justify-center xs:items-start md:items-center px-4">
-            <h1 class="xs:text-4xl md:text-5xl font-bold">Harmonização Orofacial</h1>
-            <div class="w-full flex xs:flex-col md:flex-row py-10 xs:gap-10 md:gap-6">
-                <div class="flex flex-1 flex-col md:justify-between xs:gap-10 md:gap-0">
-                  <ServiceCard :service="services[0]" class="xs:mr-0 md:ml-[20%]"/>
-                  <ServiceCard :service="services[1]"/>
-                  <ServiceCard :service="services[2]" class="xs:mr-0 md:ml-[20%]"/>
-                </div>
-                <div class="flex items-center justify-center xs:px-6 md:px-10 xs:w-full md:w-6/12">
-                  <nuxt-img
-                    src="/harmonizationCover.png"
-                    fit="cover"
-                  />
-                </div>
-                <div class="flex flex-1 flex-col justify-between items-end md:gap-20 xs:gap-10">
-                  <ServiceCard :service="services[3]" class="xs:mr-0 md:mr-[20%] "/>
-                  <ServiceCard :service="services[4]"/>
-                  <ServiceCard :service="services[5]" class="xs:mr-0 md:mr-[20%]"/>
+  <section class="xs:py-10 md:py-20" id="services">
+    <Container>
+      <div class="flex items-center justify-between">
+        <h4 class="text-2xl font-bold text-secondary">Alguns dos nossos <span class="text-primary">serviços</span></h4>
+        <div class="flex gap-10 items-center">
+          <button @click="prevService" class="flex justify-center items-center w-12 h-12 bg-primary rounded-full disabled:opacity-60 disabled:cursor-not-allowed" :disabled="index === 0">
+            <MoveLeft color="white" />
+          </button>
 
-                </div>
-            </div>
-        </Container>
-    </section>
+          <button @click="nextService" class="flex justify-center items-center w-12 h-12 bg-primary rounded-full disabled:opacity-60 disabled:cursor-not-allowed" :disabled="index === servicesList.length">
+            <MoveRight color="white" />
+          </button>
+        </div>
+      </div>
+
+      <div class="grid xs:grid-cols-1 md:grid-cols-3 gap-4 py-10">
+        <ServiceCard v-for="(service, index) in servicesList" :key="index" :title="service.title" :link="service.link" :description="service.description" />
+      </div>
+    </Container>
+  </section>
 </template>
 
 <script setup lang="ts">
+import { MoveLeft, MoveRight } from 'lucide-vue-next'
+import { ref, computed } from 'vue'
 
-const services = [
-  {
-    title : 'Harmonização Facial',
-    description : 'Procedimentos não cirúrgicos que realçam e equilibram traços faciais através de preenchimentos e toxina botulínica. Resultados naturais e rejuvenescidos.'
-  },
-  {
-    title: 'Preenchimento',
-    description: 'Técnica  que utiliza materiais como ácido hialurônico para suavizar rugas, linhas de expressão e realçar contornos da região da boca e áreas adjacentes. Proporciona lábios mais volumosos, contorno facial harmonioso e aparência rejuvenescida.'
-  },
-  {
-    title: 'Linhas de expressão',
-    description: 'Procedimento que utiliza toxina botulínica para relaxar os músculos faciais e reduzir as rugas dinâmicas, como pés de galinha e linhas na testa. Resultados naturais e mais joviais, contribuindo para uma aparência mais leve e fresca.'
-  },
-  {
-    title: 'Olheiras',
-    description: 'A solução para reduzir as olheiras indesejadas e o aspecto de cansaço ao redor dos olhos. Com o uso de preenchedores dérmicos ou tratamentos a laser, as olheiras podem ser amenizadas, proporcionando uma aparência mais descansada e iluminada'
-  },
-  {
-    title: 'Peeling Químico',
-    description: 'Um procedimento que utiliza uma solução química aplicada à pele para remover camadas superficiais danificadas, promovendo a renovação celular e o estímulo da produção de colágeno.'
-  },
-  {
-    title: 'Bioestimulador de colageno',
-    description: 'O bioestimulador de colágeno é um procedimento estético que estimula a produção natural de colágeno na pele. Geralmente, envolve a aplicação de substâncias como o ácido polilático por meio de injeções, que atuam como "sinalizadores" para o organismo produzir mais colágeno. Isso resulta na melhoria da firmeza, elasticidade e textura da pele, reduzindo rugas e linhas de expressão de forma duradoura, sem a necessidade de cirurgia invasiva.'
-  },
+interface serviceProps {
+  title: string,
+  link: string,
+  description: string
+}
+
+const index = ref(0)
+
+const nextService = () => {
+	if (index.value < services.length - 4) {
+		index.value += 1
+	}
+}
+
+const prevService = () => {
+	if (index.value > 0) {
+		index.value -= 1
+	}
+}
+
+const services:serviceProps[] = [
+	{
+		title: 'Botox',
+		link: '/services/botox',
+		description: 'O Botox rejuvenesce e revitaliza sua aparência instantaneamente, suavizando rugas e aprimorando contornos faciais sem dor ou tempo de recuperação. Descubra a beleza de um sorriso confiante e uma expressão renovada com apenas uma sessão.'
+	},
+	{
+		title: 'Preenchimento',
+		link: '/services/preenchimento',
+		description: 'O preenchimento oferece um efeito imediato de rejuvenescimento, restaurando volumes e definindo contornos faciais com precisão. Perfeito para realçar a beleza natural, reduzir marcas de expressão e obter lábios mais volumosos. Descubra a sensação de uma pele firme e radiante em minutos, sem intervenções cirúrgicas.'
+	},
+	{
+		title: 'Peeling',
+		'link' : '/peeling',
+		description: 'O peeling renova sua pele, promovendo luminosidade e suavidade ao reduzir manchas, linhas finas e irregularidades. Experimente a transformação para uma pele mais jovem e radiante com este tratamento não invasivo, que revela sua beleza natural através de uma renovação celular profunda.'
+	},
+	{
+		title: 'Tratamento de manchas',
+		link: '/services/tratamento-manchas',
+		description: 'O tratamento de manchas é a solução definitiva para conquistar uma pele uniforme e radiante. Utilizando técnicas avançadas, ele atenua manchas e melhora a textura da pele, revelando um tom mais homogêneo e uma aparência visivelmente rejuvenescida. Desfrute da confiança de uma pele impecável com resultados duradouros.'
+	},
+	{
+		title: 'Microagulhamento',
+		link: '/services/microagulhamento',
+		description : 'O microagulhamento revitaliza sua pele, estimulando a produção natural de colágeno e elastina para reduzir cicatrizes, rugas e poros dilatados. Este tratamento inovador promove a regeneração cutânea, oferecendo uma pele mais firme, lisa e rejuvenescida. Experimente a transformação e sinta a diferença de uma pele revitalizada e cheia de vida.'
+	},
+	{
+		title: 'Emagrecimento Facial',
+		link: '/services/emagrecimento-facial',
+		description: 'O emagrecimento facial redefine seu contorno, harmonizando as proporções do rosto para um perfil mais fino e elegante. Através de técnicas seguras e eficazes, este tratamento proporciona uma aparência mais jovem e dinâmica, destacando sua beleza natural sem a necessidade de procedimentos invasivos. Sinta-se mais confiante com um rosto visivelmente mais esculpido e definido.'
+	},
+	{
+		title: 'Home Care personalizado',
+		link: '/services/home-care',
+		description: 'O Home Care personalizado eleva sua rotina de cuidados com a pele, trazendo tratamentos de qualidade profissional para o conforto do seu lar. Com produtos selecionados especialmente para suas necessidades, você desfrutará de uma pele mais saudável, radiante e rejuvenescida dia após dia. Descubra a praticidade e eficácia de um cuidado contínuo que se adapta ao seu ritmo de vida, garantindo resultados duradouros e satisfatórios.'
+	}
 ]
+
+const servicesList = computed(():serviceProps[] => {
+	return services.slice(index.value, index.value + 3)
+})
 
 </script>

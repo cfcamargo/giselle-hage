@@ -19,6 +19,10 @@ module.exports = {
       }),
       screens : {
         'xs' : '390px'
+      },
+      colors: {
+        primary : "#3F3164",
+        secondary : "#303030"
       }
     },
   },

@@ -1,84 +1,130 @@
 <template>
   <AppLayout>
-    <Container class="py-20">
-    <h2 class="font-bold text-3xl text-violet-950">Toxina Botulínica(Botox)</h2>
-    <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-8">
-      <div class="flex gap-2 flex-col">
-        <h4 class="font-bold text-2xl mt-6">O que é ?</h4>
-        <p>
-          A toxina botulínica, popularmente conhecida como "botox", é uma substância utilizada em procedimentos estéticos para reduzir temporariamente as rugas e linhas de expressão, bem como para tratar condições médicas, como espasmos musculares e hiperidrose (sudorese excessiva).
-        </p>
-
-
-        <h4 class="font-bold text-2xl mt-6">Como funciona ?</h4>
-        <p>
-          A toxina botulínica é injetada em pequenas quantidades nos músculos responsáveis pelas rugas faciais. Ela atua bloqueando temporariamente os sinais nervosos que levam à contração muscular, relaxando assim os músculos e suavizando as linhas de expressão.
-        </p>
-
-        <h4 class="font-bold text-2xl mt-6">Por que fazer?</h4>
-        <p>
-          É procurada para reduzir a aparência de rugas faciais, como as linhas da testa, pés de galinha e rugas entre as sobrancelhas. Também é usada para tratar condições médicas, como espasmos musculares, distonia cervical e hiperidrose axilar.
-        </p>
-
-        <h4 class="font-bold text-2xl mt-6">Cuidados após o procedimento:?</h4>
-        <p>
-          Após o tratamento com toxina botulínica, os pacientes são aconselhados a evitar esfregar a área tratada, deitar-se ou fazer exercícios intensos nas primeiras horas. Os resultados geralmente começam a aparecer dentro de alguns dias e duram vários meses. É importante seguir as orientações do profissional de saúde e agendar retoques conforme necessário para manter os resultados desejados. A toxina botulínica é geralmente segura quando administrada por um profissional qualificado, mas é fundamental escolher um profissional experiente e licenciado para garantir um tratamento seguro e eficaz.
-        </p>
+    <div class="w-full xs:h-[300px] md:h-[calc(100dvh_-_80px)] xs:bg-[url('/BotoxBanner.png')] md:bg-[url('/botox-bg.png')] bg-cover">
+      <div class="w-full h-full bg-white/30">
+        <Container class="h-full flex flex-col items-start justify-center">
+          <h2 class="text-6xl font-bold text-primary">BOTOX</h2>
+          <span class="text-gray-900 text-xl">Toxina Butolínica</span>
+        </Container>
       </div>
-
-      <nuxt-img
-        src="https://drafairuzhelena.com.br/wp-content/uploads/2021/06/Botox-Preventivo.png"
-        class="h-full object-cover"
-      />
     </div>
-
-
-      <div class="py-20">
-        <h3 class="text-3xl font-bold">
-          Alguns de nossos resultados
-        </h3>
-
-        <div class="grid xs:grid-cols-1 md:grid-cols-3 gap-10 py-6">
-          <nuxt-img
-              class="w-full cursor-pointer transform hover:scale-105"
-              src="/services/botox1.jpg"
-              @click="viewImage('/services/botox1.jpg')"
-          />
-
-          <nuxt-img
-              class="w-full cursor-pointer transform hover:scale-105"
-              src="/services/botox2.jpg"
-              @click="viewImage('/services/botox2.jpg')"
-          />
-
-          <nuxt-img
-              class="w-full cursor-pointer transform hover:scale-105"
-              src="/services/botox3.jpg"
-              @click="viewImage('/services/botox3.jpg')"
-          />
+    <div class="xs:py-8 md:py-20">
+      <Container>
+        <div class="flex flex-col gap-2 items-center justify-center">
+          <h4 class="xs:text-center md:text-start text-2xl font-bold">O que é e como funciona o <span>botox?</span></h4>
+          <p class="mt-2 text-justify">Botox é o nome comercial - mas já se tornou praticamente sinônimo - da toxina botulínica. Essa substância ficou mundialmente conhecida por seu efeito na prevenção e tratamento de rugas de expressão. Não é a toa que a aplicação de botox é o procedimento estético mais realizado no mundo para todas as faixas etárias, segundo dados da Sociedade Internacional de Cirurgia Plástica Estética (ISAPS).</p>
+          <p class="mt-2 text-justify">A toxina botulínica age paralisando a musculatura por meio da interrupção da ação entre o nervo motor e o músculo. A aplicação faz com que os músculos das mímicas faciais relaxem e não se contraiam. Com a interrupção dos movimentos, a pele para de criar vincos e as rugas dinâmicas desaparecem.</p>
         </div>
 
-        <ServiceImageModal :imgURL="imgURL" :show="modalShow" @toogleShow="closeModal" />
-      </div>
-  </Container>
+
+        <div class="mt-20">
+          <h4 class="font-bold text-center text-2xl">Resultados na aplicação do <span class="text-primary">BOTOX</span></h4>
+
+          <div class="grid xs:grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <img src="/services/botox1.jpg" alt="" class="cursor-pointer transform hover:scale-105 hover:shadow" @click="viewImage('/services/botox1.jpg')">
+            <img src="/services/botox2.jpg" alt="" class="cursor-pointer transform hover:scale-105 hover:shadow" @click="viewImage('/services/botox2.jpg')">
+            <img src="/services/botox3.jpg" alt="" class="cursor-pointer transform hover:scale-105 hover:shadow" @click="viewImage('/services/botox3.jpg')">
+          </div>
+        </div>
+
+
+        <div class="flex flex-col xs:py-2 md:py-20">
+          <h4 class="text-2xl font-bold text-center">Aplicações do <span class="text-primary">botox?</span></h4>
+
+          <div class="xs:py-2 md:py-20">
+            <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <img src="/services/atm.png">
+              <div class="flex flex-col gap-2">
+                <h4 class="font-bold text-primary text-2xl">ATM</h4>
+                <p class="text-justify">O Botox para ATM (Articulação Temporomandibular) oferece uma solução eficaz para aliviar dores e desconfortos associados a problemas nessa articulação. Através de injeções precisas, o tratamento relaxa os músculos ao redor da ATM, reduzindo a tensão e melhorando significativamente a qualidade de vida. Indicado para quem sofre com bruxismo, dores de cabeça e dificuldades na mastigação, o Botox ATM proporciona alívio duradouro, permitindo uma rotina mais confortável e sem dor.</p>
+              </div>
+            </div>
+
+            <Divisor />
+
+            <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <img src="/services/rinotox.png">
+              <div class="flex flex-col gap-2">
+                <h4 class="font-bold text-primary text-2xl">RINOTOX</h4>
+                <p class="text-justify">O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
+              </div>
+            </div>
+
+            <Divisor />
+
+            <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <img src="/services/contorno-facial.png">
+              <div class="flex flex-col gap-2">
+                <h4 class="font-bold text-primary text-2xl">CONTORNO FACIAL</h4>
+                <p class="text-justify">O tratamento de contorno facial redefine e realça a estrutura do seu rosto, criando linhas mais definidas e uma aparência mais jovem e equilibrada. Utilizando técnicas avançadas, este procedimento minimamente invasivo pode ajustar o volume e a forma das áreas específicas, como as maçãs do rosto, mandíbula e queixo, proporcionando um perfil esteticamente mais atraente. Perfeito para quem deseja melhorar a harmonia facial sem a necessidade de cirurgia, o contorno facial é a escolha ideal para alcançar resultados imediatos e naturais, elevando sua confiança e beleza.O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
+              </div>
+            </div>
+
+            <Divisor />
+
+            <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <img src="/services/pescoco.png">
+              <div class="flex flex-col gap-2">
+                <h4 class="font-bold text-primary text-2xl uppercase">Pescoço</h4>
+                <p class="text-justify">O tratamento de contorno facial redefine e realça a estrutura do seu rosto, criando linhas mais definidas e uma aparência mais jovem e equilibrada. Utilizando técnicas avançadas, este procedimento minimamente invasivo pode ajustar o volume e a forma das áreas específicas, como as maçãs do rosto, mandíbula e queixo, proporcionando um perfil esteticamente mais atraente. Perfeito para quem deseja melhorar a harmonia facial sem a necessidade de cirurgia, o contorno facial é a escolha ideal para alcançar resultados imediatos e naturais, elevando sua confiança e beleza.O Rinotox é uma técnica inovadora que utiliza o Botox para refinar e harmonizar os traços do nariz sem a necessidade de cirurgia. Este procedimento minimamente invasivo suaviza as linhas e ajusta a ponta do nariz, proporcionando uma aparência mais equilibrada e esteticamente agradável. Ideal para quem busca uma solução rápida e sem tempo de recuperação, o Rinotox é perfeito para realçar a beleza do seu rosto com resultados naturais e sutis.</p>
+              </div>
+            </div>
+
+            <Divisor />
+
+            <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <img src="/services/sorriso-triste.png">
+              <div class="flex flex-col gap-2">
+                <h4 class="font-bold text-primary text-2xl uppercase">SORRISO TRISTE</h4>
+                <p class="text-justify">O tratamento para o sorriso triste transforma expressões de tristeza involuntária em um sorriso mais harmonioso e alegre. Utilizando técnicas precisas, como o uso de Botox ou preenchimentos, este procedimento corrige a inclinação dos cantos da boca, proporcionando um aspecto mais positivo e rejuvenescido. Ideal para quem deseja melhorar a expressão facial e aumentar a autoestima, este tratamento oferece uma mudança sutil, mas impactante, permitindo que sua verdadeira felicidade brilhe através de um sorriso naturalmente mais acolhedor.</p>
+              </div>
+            </div>
+
+            <Divisor />
+
+            <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <img src="/services/sorriso.png">
+              <div class="flex flex-col gap-2">
+                <h4 class="font-bold text-primary text-2xl uppercase">SORRISO GENGIVAL</h4>
+                <p class="text-justify">O tratamento para o sorriso gengival oferece uma solução estética para aqueles que se sentem desconfortáveis com a exposição excessiva da gengiva ao sorrir. Através de procedimentos minimamente invasivos, como a aplicação de Botox ou técnicas de contorno gengival, é possível ajustar a altura do sorriso, reduzindo a visibilidade da gengiva e criando uma aparência mais equilibrada e harmoniosa. Este tratamento é ideal para quem busca um sorriso mais confiante e atraente, com resultados naturais que realçam sua beleza sem a necessidade de intervenções cirúrgicas complexas.</p>
+              </div>
+            </div>
+
+            <Divisor />
+
+            <div class="grid xs:grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <img src="/services/olhar.png">
+              <div class="flex flex-col gap-2">
+                <h4 class="font-bold text-primary text-2xl uppercase">EMBELEZAMENTO DO OLHAR</h4>
+                <p class="text-justify">O embelezamento do olhar revitaliza e destaca a área dos olhos, transformando olhares cansados em expressões vivas e radiantes. Este tratamento abrange técnicas como lifting de sobrancelhas, redução de olheiras e suavização de linhas finas, utilizando procedimentos minimamente invasivos para rejuvenescer e iluminar seu olhar. Perfeito para quem deseja refletir sua vitalidade interior, o embelezamento do olhar oferece resultados imediatos, melhorando a aparência de forma natural e sutil, sem longos períodos de recuperação. Desperte sua beleza com um olhar mais jovem e expressivo.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </Container>
+    </div>
+
+    <ServiceImageModal :imgURL="imgURL" :show="modalShow" @toogleShow="closeModal" />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import AppLayout from "~/layouts/AppLayout.vue";
+import AppLayout from "~/layouts/AppLayout.vue"
+import { ref } from 'vue'
 
 const modalShow = ref(false)
 const imgURL = ref('')
 
 function viewImage(url: string){
-  imgURL.value = url
-  modalShow.value = true
+	imgURL.value = url
+	modalShow.value = true
 }
 
 
 function closeModal(){
-  modalShow.value = false
-  imgURL.value = ''
+	modalShow.value = false
+	imgURL.value = ''
 }
 
 </script>

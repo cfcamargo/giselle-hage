@@ -10,3 +10,8 @@
 .Main__Container-sc-1w4nyzp-0 a {
     display: none !important;
 }
+
+html {
+    scroll-behavior: smooth !important;
+    scroll-padding-top: 200px;
+}
