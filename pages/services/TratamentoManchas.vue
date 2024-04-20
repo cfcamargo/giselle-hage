@@ -12,7 +12,7 @@
             <div class="flex gap-2 flex-col">
                 <h4 class="font-bold text-2xl mt-6">O que é ?</h4>
                 <p class="text-justify">
-                O tratamento para manchas na pele envolve uma variedade de abordagens terapêuticas projetadas para reduzir ou eliminar manchas indesejadas, como melasma, sardas, manchas senis e hiperpigmentação.
+                    O tratamento de manchas é a solução para conquistar uma pele uniforme e radiante. Utilizando técnicas avançadas, ele atenua manchas e melhora a textura da pele, revelando um tom mais homogêneo e uma aparência visivelmente rejuvenescida. Desfrute da confiança de uma pele impecável com resultados duradouros.
                 </p>
 
 
@@ -26,7 +26,7 @@
                 As manchas na pele podem ser causadas por exposição ao sol, envelhecimento, desequilíbrios hormonais ou predisposição genética. O tratamento é procurado para melhorar a aparência da pele, promover um tom de pele uniforme e aumentar a confiança.
                 </p>
 
-                <h4 class="font-bold text-2xl mt-6">Cuidados após o procedimento:?</h4>
+                <h4 class="font-bold text-2xl mt-6">Cuidados após o procedimento?</h4>
                 <p class="text-justify">
                 Após o tratamento para manchas na pele, é crucial seguir as orientações do profissional de saúde. Isso pode incluir o uso de protetor solar diariamente, evitar a exposição solar direta e manter uma rotina de cuidados com a pele apropriada. A recuperação e os resultados podem variar de acordo com o método utilizado, mas a consistência e a paciência são essenciais para alcançar uma pele mais uniforme e saudável.
                 </p>

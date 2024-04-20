@@ -3,9 +3,9 @@
     <Container class="flex flex-col gap-10 items-center">
         <h1 class="xs:text-2xl md:text-[40px] flex col gap-2 justify-center items-center font-bold">Perguntas<span class="text-primary">Frequentes</span></h1>
         <div class="flex w-full flex-col gap-3">
-          <div v-for="(ask, index) in asks" :key="index">
-            <AskCard :question="ask" />
-          </div>
+          	<div v-for="(ask, index) in asks" :key="index">
+        		<AskCard :question="ask" />
+          	</div>
         </div>
     </Container>
 </section>
@@ -27,21 +27,12 @@ const asks = [
 		"awsner" : 'Na verdade, ele é o mesmo procedimento realizado em pessoas que já apresentam rugas. É o mesmo produto. Ele é chamado de preventivo pois é realizado em pacientes mais jovens, justamente no intuito de prevenir que as rugas marquem a pele.'
 	},
 	{
-		"ask" : "O que é bioestimulador de colágeno? Para que serve?",
-		"awsner" : 'São substâncias que vão estimular as células (fibroblastos) a produzirem colágeno. Existem várias marcas no mercado e vários tipos de bioestimulador.\n' +
-        '\t•\tSculptra\n' +
-        '\t•\tRadiesse\n' +
-        '\t•\tEllanse\n' +
-        '\t•\tDiamond\n' +
-        '\t•\tFios lisos de PDO\n' +
-        '\t•\tFios espiculados de PDO\n' +
-        '\t•\tPeptídeos \n' +
-        '\t•\tAparelhos\n' +
-        'Cada paciente terá seu protocolo de procedimentos para estimular colágeno.\n'
+		"ask" : "O que é bioestimulador?",
+		"awsner" : 'Bioestimulador de colágeno é uma classe de procedimentos que tratam a pele, melhorando sua qualidade e firmeza, auxiliando no tratamento de rugas. É indicado desde cedo, a partir dos 30 anos, e não quando já se tem muitas rugas, como se pensa. Existem bioestimuladores líquidos, exemplos de nomes comerciais são o Sculptra e Rennova Diamond. Também temos os fios de PDO, que podem ser lisos, espiculados ou moldados. Cada um com sua indicação específica. Além disso, temos as tecnologias, como o Ultraformer que trata desde as camadas mais profundas, compactando a camada de gordura e chegando até a pele.'
 	},
 	{
 		"ask" : "Quando devo iniciar um protocolo para bioestimular colágeno?",
-		"awsner" : 'Muito cedo, por volta dos 25 anos, as nossas células já diminuem a produção de colágeno e, em contrapartida, as enzimas que degradam o colágeno não diminuem sua atividade. Então, a melhor forma de gerenciar o envelhecimento, é prevenindo e começando cedo este protocolo.'
+		"awsner" : 'Por volta dos 25-30 anos, as nossas células já diminuem a produção de colágeno e, em contrapartida, as enzimas que degradam o colágeno não diminuem sua atividade. Então, a melhor forma de gerenciar o envelhecimento é prevenindo.'
 	},
 	{
 		"ask" : "Quanto tempo vai durar?",
