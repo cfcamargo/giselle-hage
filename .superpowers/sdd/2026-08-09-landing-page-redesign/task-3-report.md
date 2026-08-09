@@ -77,3 +77,17 @@ Implemented canonical home metadata, Portuguese document locale, one server-rend
 - RED mutation — with a deliberate `https://regression.example.test/` fallback temporarily introduced, `npm test -- tests/nuxt/seo-no-origin.spec.ts` failed on the new canonical-link assertion. The mutation was then removed.
 - GREEN — `npm test -- tests/nuxt/seo-no-origin.spec.ts`: 1 file and 1 test passed with the explicit empty environment.
 - Final focused verification — `npm test -- tests/nuxt/seo.spec.ts tests/nuxt/seo-no-origin.spec.ts`: 2 files and 4 tests passed.
+
+## Fix Round 3
+
+### Finding addressed
+
+- Replaced raw HTML regex checks with `happy-dom` parsing and `querySelector`, making canonical and `og:url` detection independent of attribute ordering.
+- Parsed every JSON-LD script and selected all graph nodes whose `@type` contains `LocalBusiness` or `Dentist`, rather than assuming the business node is `@graph[0]`.
+- Each matching business node must omit `@id` and `url` and must not contain an absolute HTTP(S) URL anywhere in its `image` value.
+
+### RED/GREEN evidence
+
+- RED mutation — inserted canonical and `og:url` tags with their URL attributes before `rel`/`property`; `npm test -- tests/nuxt/seo-no-origin.spec.ts` failed at the DOM canonical assertion. The temporary mutation was removed.
+- GREEN — `npm test -- tests/nuxt/seo-no-origin.spec.ts`: 1 file and 1 test passed against real no-origin SSR.
+- Final focused verification — `npm test -- tests/nuxt/seo.spec.ts tests/nuxt/seo-no-origin.spec.ts`: 2 files and 4 tests passed.

@@ -2,6 +2,31 @@
 
 import { describe, expect, it } from 'vitest'
 import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { Window } from 'happy-dom'
+
+type JsonLdNode = Record<string, unknown>
+
+const isAbsoluteUrl = (value: unknown): boolean => {
+  if (typeof value === 'string') {
+    return /^https?:\/\//i.test(value)
+  }
+
+  if (Array.isArray(value)) {
+    return value.some(isAbsoluteUrl)
+  }
+
+  if (value && typeof value === 'object') {
+    return Object.values(value).some(isAbsoluteUrl)
+  }
+
+  return false
+}
+
+const hasBusinessType = (node: JsonLdNode): boolean => {
+  const types = Array.isArray(node['@type']) ? node['@type'] : [node['@type']]
+
+  return types.some(type => type === 'LocalBusiness' || type === 'Dentist')
+}
 
 describe('landing SEO without a configured public origin', async () => {
   await setup({
@@ -14,17 +39,25 @@ describe('landing SEO without a configured public origin', async () => {
 
   it('omits every origin-dependent SEO field', async () => {
     const html = await $fetch<string>('/')
-    const jsonLdSource = html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1]
+    const document = new Window().document
+    document.write(html)
 
-    expect(html).not.toMatch(/<link[^>]+rel="canonical"/)
-    expect(html).not.toMatch(/<meta[^>]+property="og:url"/)
-    expect(jsonLdSource).toBeDefined()
+    expect(document.querySelector('link[rel~="canonical"]')).toBeNull()
+    expect(document.querySelector('meta[property="og:url"]')).toBeNull()
 
-    const structuredData = JSON.parse(jsonLdSource!)
-    const localBusiness = structuredData['@graph'][0]
+    const structuredData = [...document.querySelectorAll('script[type="application/ld+json"]')]
+      .map(script => JSON.parse(script.textContent || 'null'))
+      .flatMap(value => Array.isArray(value) ? value : [value])
+      .flatMap(value => Array.isArray(value?.['@graph']) ? value['@graph'] : [value])
+      .filter((node): node is JsonLdNode => Boolean(node && typeof node === 'object'))
+    const businessNodes = structuredData.filter(hasBusinessType)
 
-    expect(localBusiness).not.toHaveProperty('@id')
-    expect(localBusiness).not.toHaveProperty('url')
-    expect(localBusiness).not.toHaveProperty('image')
+    expect(businessNodes.length).toBeGreaterThan(0)
+
+    for (const businessNode of businessNodes) {
+      expect(businessNode).not.toHaveProperty('@id')
+      expect(businessNode).not.toHaveProperty('url')
+      expect(isAbsoluteUrl(businessNode.image)).toBe(false)
+    }
   })
 })
