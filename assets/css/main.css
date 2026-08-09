@@ -2,16 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.eapps-widget-toolbar{
-    display: none !important;
-}
-
-.Main__Container-sc-1w4nyzp-0 a {
-    display: none !important;
+:root {
+  --color-ivory: #f5f0e8;
+  --color-plum: #351d2d;
+  --color-champagne: #b9a27d;
+  --color-ink: #211d1f;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Montserrat', Arial, sans-serif;
 }
 
 html {
-    scroll-behavior: smooth !important;
-    scroll-padding-top: 200px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  background: var(--color-ivory);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-champagne);
+  outline-offset: 4px;
+}
+
+.eapps-widget-toolbar,
+.Main__Container-sc-1w4nyzp-0 a {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
