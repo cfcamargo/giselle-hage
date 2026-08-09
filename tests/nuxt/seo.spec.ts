@@ -36,15 +36,36 @@ describe('landing SEO', async () => {
     expect(page.html).toContain('"url":"https://seo.example.test/"')
   })
 
-  it('preserves the existing home content and treatments anchor', async () => {
+  it('renders the published landing content and treatments anchor', async () => {
     const page = await renderPage('/')
 
-    expect(page.html).toContain('Revele sua beleza natural')
+    expect(page.html).toContain('Harmonização Facial em Ponta Porã')
     expect(page.html).toContain('id="tratamentos"')
     expect(page.html).toContain(String(new Date().getFullYear()))
     expect(page.html).toContain('R. Tiradentes, 481 - Centro, Ponta Porã - MS, 79904-620')
     expect(page.html).not.toContain('Desenvolvido por:')
     expect(page.html).not.toContain('logo-chris.png')
+  })
+
+  it('renders the landing sections in their published order', async () => {
+    const page = await renderPage('/')
+    const document = new Window().document
+    document.write(page.html)
+
+    const content = document.querySelector('main#conteudo')
+    expect(content).not.toBeNull()
+
+    expect([...content!.children].map(element => element.classList[0])).toEqual([
+      'landing-hero',
+      'credentials-strip',
+      'treatments-section',
+      'philosophy-section',
+      'results-section',
+      'about-section',
+      'faq-section',
+      'location-section',
+      'closing-cta'
+    ])
   })
 
   it('resolves every primary-navigation anchor in the server HTML', async () => {
@@ -59,9 +80,6 @@ describe('landing SEO', async () => {
     for (const href of hrefs) {
       expect(document.querySelector(href!)).not.toBeNull()
     }
-
-    expect(document.querySelector('#about')).not.toBeNull()
-    expect(document.querySelector('#contact')).not.toBeNull()
   })
 
   it('permanently redirects the published peeling alias', async () => {

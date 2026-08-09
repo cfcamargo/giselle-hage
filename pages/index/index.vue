@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <BrandIntro />
-    <LandingHeader />
+  <BrandIntro @complete="introComplete = true" />
+  <LandingHeader />
+  <main id="conteudo">
     <LandingHero />
     <CredentialsStrip />
     <TreatmentsSection />
@@ -11,18 +11,16 @@
     <FaqSection />
     <LocationSection />
     <ClosingCta />
-    <FloatingWhatsApp />
-    <SiteFooter />
-
-    <div class="legacy-home">
-      <HomeTemplate />
-    </div>
-  </div>
+  </main>
+  <FloatingWhatsApp />
+  <SiteFooter />
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { landingContent } from '~/data/landing'
 
+const introComplete = ref(false)
 const title = 'Dra. Giselle Hage | Harmonização Facial em Ponta Porã'
 const description = 'Harmonização facial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
 const runtimeConfig = useRuntimeConfig()
@@ -95,13 +93,3 @@ useHead({
   ]
 })
 </script>
-
-<style scoped>
-.legacy-home :deep(> header:first-child) {
-  display: none;
-}
-
-.legacy-home :deep(> main) {
-  margin-top: 0;
-}
-</style>
