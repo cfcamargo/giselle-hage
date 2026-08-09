@@ -8,6 +8,11 @@
     <PhilosophySection />
     <ResultsSection />
     <AboutSection />
+    <FaqSection />
+    <LocationSection />
+    <ClosingCta />
+    <FloatingWhatsApp />
+    <SiteFooter />
 
     <div class="legacy-home">
       <HomeTemplate />

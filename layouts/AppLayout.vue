@@ -4,7 +4,6 @@
     <slot />
   </main>
   <Footer />
-  <OwnerFooter />
 </template>
 
 <script setup lang="ts">

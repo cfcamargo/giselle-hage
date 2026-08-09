@@ -21,6 +21,7 @@
 
       <div class="landing-hero__actions">
         <a
+          data-hero-cta
           class="landing-hero__cta"
           :href="href"
           target="_blank"
