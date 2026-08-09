@@ -59,18 +59,17 @@
 <script setup lang="ts">
 import { ArrowUpRight } from 'lucide-vue-next'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useReducedMotion } from '~/composables/useReducedMotion'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 import { landingContent } from '~/data/landing'
 
 const section = ref<HTMLElement | null>(null)
-const reducedMotion = useReducedMotion()
 const { href, openWhatsApp } = useWhatsApp()
 let animationContext: import('gsap').Context | undefined
+let responsiveMedia: import('gsap').MatchMedia | undefined
 let unmounted = false
 
 onMounted(async () => {
-  if (reducedMotion.value || !section.value) return
+  if (!section.value) return
 
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([
     import('gsap'),
@@ -81,51 +80,64 @@ onMounted(async () => {
   gsap.registerPlugin(ScrollTrigger)
   animationContext = gsap.context(() => {
     const panels = gsap.utils.toArray<HTMLElement>('[data-treatment-panel]')
-    const desktopLayout = window.matchMedia('(min-width: 1024px)').matches
+    responsiveMedia = gsap.matchMedia()
+    responsiveMedia.add({
+      desktop: '(min-width: 1024px)',
+      reduceMotion: '(prefers-reduced-motion: reduce)'
+    }, (context) => {
+      const { desktop, reduceMotion } = context.conditions as {
+        desktop: boolean
+        reduceMotion: boolean
+      }
+      if (reduceMotion) return
 
-    for (const [index, panel] of panels.entries()) {
-      const media = panel.querySelector('[data-treatment-media]')
-      const content = panel.querySelector('[data-treatment-content]')
+      for (const [index, panel] of panels.entries()) {
+        const media = panel.querySelector('[data-treatment-media]')
+        const content = panel.querySelector('[data-treatment-content]')
 
-      if (desktopLayout) {
-        const direction = index % 2 === 0 ? -1 : 1
-        gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: panel,
-            start: 'top top',
-            end: '+=70%',
-            pin: true,
-            pinSpacing: true,
-            scrub: 0.8
-          }
-        })
-          .fromTo(media, { xPercent: direction * 3, scale: 1.025 }, { xPercent: 0, scale: 1, duration: 1 })
-          .fromTo(content, { opacity: 0.45, x: direction * -26 }, { opacity: 1, x: 0, duration: 0.72 }, 0)
-      } else {
-        gsap.fromTo(
-          panel,
-          { opacity: 0, y: 34 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.72,
-            ease: 'power3.out',
+        if (desktop) {
+          const direction = index % 2 === 0 ? -1 : 1
+          gsap.timeline({
+            defaults: { ease: 'none' },
             scrollTrigger: {
               trigger: panel,
-              start: 'top 88%',
-              once: true
+              start: 'top top',
+              end: '+=70%',
+              pin: true,
+              pinSpacing: true,
+              scrub: 0.8
             }
-          }
-        )
+          })
+            .fromTo(media, { xPercent: direction * 3, scale: 1.025 }, { xPercent: 0, scale: 1, duration: 1 })
+            .fromTo(content, { opacity: 0.45, x: direction * -26 }, { opacity: 1, x: 0, duration: 0.72 }, 0)
+        } else {
+          gsap.fromTo(
+            panel,
+            { opacity: 0, y: 34 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.72,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: panel,
+                start: 'top 88%',
+                once: true
+              }
+            }
+          )
+        }
       }
-    }
+    })
   }, section.value)
 })
 
 onBeforeUnmount(() => {
   unmounted = true
+  responsiveMedia?.revert()
+  responsiveMedia = undefined
   animationContext?.revert()
+  animationContext = undefined
 })
 </script>
 

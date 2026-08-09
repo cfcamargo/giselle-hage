@@ -15,7 +15,7 @@ const treatments: readonly Treatment[] = [
     title: 'Preenchimento',
     summary: 'O preenchimento facial é planejado de forma individual para valorizar contornos, proporções e volumes com segurança e respeito à sua anatomia.',
     image: '/preenchimento.png',
-    alt: 'Perfil feminino em destaque para representar o planejamento dos contornos faciais.'
+    alt: 'Aplicação clínica próxima à região dos olhos e da face durante atendimento profissional.'
   },
   {
     slug: 'peeling',

@@ -35,3 +35,21 @@ All GSAP and ScrollTrigger imports occur after mount on the client. Each section
 
 - The full `npm test` suite could not be completed in this environment. Inside the sandbox the two Nuxt suites fail before assertions with `uv_interface_addresses` while trying to allocate a local port. An escalated retry was started but externally interrupted before producing a result. The 21 non-Nuxt baseline assertions had passed before that environmental failure, and all Task 5 focused tests pass.
 - The production server artifact starts, but requesting it in this workspace returned an existing packaging/runtime resolution error for `.output/server/node_modules/vue/server-renderer/index.mjs`; the Nuxt development server served the page successfully and was used for browser verification. `npm run build` itself exits 0.
+
+## Fix Round 1
+
+### Changes
+
+- Replaced the one-time treatment breakpoint check with `gsap.matchMedia()` conditions for `(min-width: 1024px)` and `(prefers-reduced-motion: reduce)`.
+- Responsive GSAP contexts now revert the previous desktop pins/mobile reveals before rebuilding for the new media state.
+- Enabling reduced motion during the session removes active treatment motion; disabling it rebuilds the appropriate current layout.
+- Component unmount explicitly reverts both the responsive match-media context and the owning GSAP context.
+- Expanded the GSAP/ScrollTrigger test double to model stable `MediaQueryList` objects, change listeners, responsive re-runs, pin spacers and cleanup.
+- Added coverage for SSR-safe plugin registration, exactly three desktop pins, desktop-to-mobile cleanup, mobile reveals without pins, initial/dynamic reduced motion, unmount cleanup and all three CTA sources.
+- Corrected the preenchimento image description to describe a clinical application near the eyes/face without implying a result.
+
+### RED/GREEN evidence
+
+- RED: `npm test -- tests/unit/LandingNarrative.spec.ts` — FAIL, 6 failed / 2 passed. Failures covered the old alt, missing client registration under the static gate, missing pins/reveals, missing responsive rebuild and missing responsive cleanup.
+- GREEN: `npm test -- tests/unit/LandingNarrative.spec.ts tests/unit/landingData.spec.ts` — PASS, 2 files / 12 tests.
+- BUILD: `npm run build` — PASS, exit 0; 1,935 client modules and 229 SSR modules transformed.
