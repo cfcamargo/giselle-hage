@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 	components : [{ path: '@/components', pathPrefix: false }],
 	runtimeConfig: {
 		public: {
-			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+			siteUrl: ''
 		}
 	},
 	postcss: {
@@ -37,6 +37,7 @@ export default defineNuxtConfig({
 		'/services/preenchimento': { redirect: { to: '/#tratamentos', statusCode: 301 } },
 		'/services/TratamentoManchas': { redirect: { to: '/#tratamentos', statusCode: 301 } },
 		'/services/tratamento-manchas': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/peeling': { redirect: { to: '/#tratamentos', statusCode: 301 } },
 		'/services/**': { redirect: { to: '/#tratamentos', statusCode: 301 } }
 	},
 	app: {

@@ -1,7 +1,8 @@
 <template>
-  <main id="inicio">
-    <h1>{{ landingContent.hero.headline }}</h1>
-  </main>
+  <div id="inicio">
+    <h1 class="sr-only">{{ landingContent.hero.headline }}</h1>
+    <HomeTemplate />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -10,7 +11,18 @@ import { landingContent } from '~/data/landing'
 const title = 'Dra. Giselle Hage | Harmonização Facial em Ponta Porã'
 const description = 'Harmonização facial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
 const runtimeConfig = useRuntimeConfig()
-const canonicalUrl = new URL('/', runtimeConfig.public.siteUrl).toString()
+const canonicalUrl = (() => {
+  if (!runtimeConfig.public.siteUrl) return undefined
+
+  try {
+    const configuredOrigin = new URL(runtimeConfig.public.siteUrl)
+    return configuredOrigin.protocol === 'https:'
+      ? new URL('/', configuredOrigin).toString()
+      : undefined
+  } catch {
+    return undefined
+  }
+})()
 const professionalRegistration = landingContent.credentials.find(({ label }) => label === 'Registro profissional')?.value
 
 const structuredData = {
@@ -18,10 +30,7 @@ const structuredData = {
   '@graph': [
     {
       '@type': ['Dentist', 'LocalBusiness'],
-      '@id': `${canonicalUrl}#dentist`,
       name: landingContent.brand.name,
-      url: canonicalUrl,
-      image: new URL(landingContent.hero.image, canonicalUrl).toString(),
       description,
       address: {
         '@type': 'PostalAddress',
@@ -35,7 +44,14 @@ const structuredData = {
         '@type': 'PropertyValue',
         name: 'Registro profissional',
         value: professionalRegistration
-      }
+      },
+      ...(canonicalUrl
+        ? {
+            '@id': `${canonicalUrl}#dentist`,
+            url: canonicalUrl,
+            image: new URL(landingContent.hero.image, canonicalUrl).toString()
+          }
+        : {})
     }
   ]
 }
@@ -54,7 +70,7 @@ useSeoMeta({
 
 useHead({
   link: [
-    { rel: 'canonical', href: canonicalUrl }
+    ...(canonicalUrl ? [{ rel: 'canonical', href: canonicalUrl }] : [])
   ],
   script: [
     {
