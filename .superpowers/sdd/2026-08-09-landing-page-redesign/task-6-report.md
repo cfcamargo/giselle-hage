@@ -56,3 +56,19 @@ The full `npm test` run executed 41 tests successfully, but the two Nuxt test pr
 - Final focused: `npm test -- tests/unit/landingData.spec.ts tests/unit/ResultsProfile.spec.ts` -> 17/17 passed.
 - `git diff --check` -> passed.
 - `npm run build` -> passed; client, SSR and Nitro bundles completed.
+
+## Fix Round 2
+
+### Changes
+
+- Replaced center-based scroll synchronization with leading-edge snap synchronization. Card positions now use `offsetLeft` normalized by the first card, matching `scroll-snap-align: start` and the rail's actual leading padding.
+- Added explicit start and maximum-scroll handling so a wide desktop viewport keeps the first card active at `scrollLeft = 0` and exposes the last card at the reachable end position.
+- Verified that programmatic Next begins from the leading visual card rather than skipping because multiple cards are visible.
+- Corrected the three embedded-label transcriptions from `Tocina Botulínica` to the exact `Toxina Botulínica` wording.
+
+### TDD and verification evidence
+
+- RED: `npm test -- tests/unit/landingData.spec.ts tests/unit/ResultsProfile.spec.ts` -> 3 expected failures: initial desktop state reported 2/7, maximum scroll reported 6/7, and toxin alternatives failed the exact literal check.
+- GREEN: `npm test -- tests/unit/landingData.spec.ts tests/unit/ResultsProfile.spec.ts` -> 18/18 passed.
+- `git diff --check` -> passed.
+- `npm run build` -> passed; client, SSR and Nitro bundles completed.

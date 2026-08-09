@@ -122,15 +122,30 @@ function syncCurrentResult() {
   scrollFrame = undefined
   if (!gallery.value) return
 
-  const galleryRect = gallery.value.getBoundingClientRect()
-  const galleryCenter = galleryRect.left + gallery.value.clientWidth / 2
+  const cards = Array.from(gallery.value.children) as HTMLElement[]
+  if (!cards.length) return
+
+  const scrollPosition = gallery.value.scrollLeft
+  const maxScroll = Math.max(0, gallery.value.scrollWidth - gallery.value.clientWidth)
+  const edgeTolerance = 2
+
+  if (scrollPosition <= edgeTolerance) {
+    currentResult.value = 0
+    return
+  }
+
+  if (maxScroll - scrollPosition <= edgeTolerance) {
+    currentResult.value = cards.length - 1
+    return
+  }
+
+  const firstOffset = cards[0].offsetLeft
   let nearestIndex = 0
   let nearestDistance = Number.POSITIVE_INFINITY
 
-  for (const [index, card] of Array.from(gallery.value.children).entries()) {
-    const cardRect = card.getBoundingClientRect()
-    const cardCenter = cardRect.left + cardRect.width / 2
-    const distance = Math.abs(cardCenter - galleryCenter)
+  for (const [index, card] of cards.entries()) {
+    const snapPosition = card.offsetLeft - firstOffset
+    const distance = Math.abs(snapPosition - scrollPosition)
 
     if (distance < nearestDistance) {
       nearestDistance = distance

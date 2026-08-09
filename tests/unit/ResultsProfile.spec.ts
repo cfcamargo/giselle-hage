@@ -113,8 +113,12 @@ function installAnimationFrame() {
   }
 }
 
-function placeResultNearest(wrapper: VueWrapper, targetIndex: number) {
+function configureGalleryLayout(wrapper: VueWrapper) {
   const gallery = wrapper.get('#results-gallery').element as HTMLElement
+  const cardOffsets = [32, 416, 800, 1184, 1568, 1952, 2336]
+  const clientWidth = 1024
+  const scrollWidth = 2728
+  let scrollLeft = 0
   const rectangle = (left: number, width: number): DOMRect => ({
     x: left,
     y: 0,
@@ -127,17 +131,33 @@ function placeResultNearest(wrapper: VueWrapper, targetIndex: number) {
     toJSON: () => ({})
   })
 
-  Object.defineProperty(gallery, 'clientWidth', { configurable: true, value: 100 })
+  Object.defineProperty(gallery, 'clientWidth', { configurable: true, value: clientWidth })
+  Object.defineProperty(gallery, 'scrollWidth', { configurable: true, value: scrollWidth })
+  Object.defineProperty(gallery, 'scrollLeft', {
+    configurable: true,
+    get: () => scrollLeft
+  })
   Object.defineProperty(gallery, 'getBoundingClientRect', {
     configurable: true,
-    value: () => rectangle(0, 100)
+    value: () => rectangle(0, clientWidth)
   })
 
   for (const [index, card] of wrapper.findAll('[data-result-card]').entries()) {
+    Object.defineProperty(card.element, 'offsetLeft', {
+      configurable: true,
+      value: cardOffsets[index]
+    })
     Object.defineProperty(card.element, 'getBoundingClientRect', {
       configurable: true,
-      value: () => rectangle((index - targetIndex) * 120, 100)
+      value: () => rectangle(cardOffsets[index] - scrollLeft, 360)
     })
+  }
+
+  return {
+    maxScroll: scrollWidth - clientWidth,
+    setScrollLeft(nextScrollLeft: number) {
+      scrollLeft = nextScrollLeft
+    }
   }
 }
 
@@ -191,22 +211,41 @@ describe('results and professional profile', () => {
     expect(wrapper.find('[role="slider"]').exists()).toBe(false)
   })
 
-  it('syncs the live and current states with native horizontal scrolling', async () => {
+  it('syncs to leading snap positions at the start, middle and end of a multi-card viewport', async () => {
     const wrapper = mount(ResultsSection, {
       attachTo: document.body,
       global: { stubs: { NuxtImg } }
     })
     wrappers.push(wrapper)
     const gallery = wrapper.get('#results-gallery')
-    placeResultNearest(wrapper, 4)
+    const layout = configureGalleryLayout(wrapper)
 
     await gallery.trigger('scroll')
     animationFrame.flush()
     await nextTick()
 
-    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 5 de 7')
-    expect(wrapper.findAll('[data-result-card]')[4].attributes('aria-current')).toBe('true')
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
+    expect(wrapper.findAll('[data-result-card]')[0].attributes('aria-current')).toBe('true')
+
+    await wrapper.get('button[aria-label="Ver próximo resultado"]').trigger('click')
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 7')
+
+    layout.setScrollLeft(770)
+    await gallery.trigger('scroll')
+    animationFrame.flush()
+    await nextTick()
+
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 3 de 7')
+    expect(wrapper.findAll('[data-result-card]')[2].attributes('aria-current')).toBe('true')
     expect(wrapper.findAll('[data-result-card]')[0].attributes('aria-current')).toBeUndefined()
+
+    layout.setScrollLeft(layout.maxScroll)
+    await gallery.trigger('scroll')
+    animationFrame.flush()
+    await nextTick()
+
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
+    expect(wrapper.findAll('[data-result-card]')[6].attributes('aria-current')).toBe('true')
   })
 
   it('starts controls from the visually current card and keeps edge controls focused', async () => {
@@ -218,8 +257,9 @@ describe('results and professional profile', () => {
     const gallery = wrapper.get('#results-gallery')
     const previous = wrapper.get('button[aria-label="Ver resultado anterior"]')
     const next = wrapper.get('button[aria-label="Ver próximo resultado"]')
+    const layout = configureGalleryLayout(wrapper)
 
-    placeResultNearest(wrapper, 6)
+    layout.setScrollLeft(layout.maxScroll)
     await gallery.trigger('scroll')
     animationFrame.flush()
     await nextTick()
@@ -232,7 +272,7 @@ describe('results and professional profile', () => {
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
     expect(document.activeElement).toBe(next.element)
 
-    placeResultNearest(wrapper, 1)
+    layout.setScrollLeft(384)
     await gallery.trigger('scroll')
     animationFrame.flush()
     await nextTick()

@@ -51,6 +51,15 @@ describe('landingContent', () => {
     expect(new Set(hashes).size).toBe(7)
   })
 
+  it('transcribes the embedded toxin label faithfully for assistive technology', () => {
+    const botoxAlternatives = landingContent.results
+      .filter(item => item.category === 'botox')
+      .map(item => item.alt)
+
+    expect(botoxAlternatives).toHaveLength(3)
+    expect(botoxAlternatives.every(alt => alt.includes('texto incorporado “Toxina Botulínica”'))).toBe(true)
+  })
+
   it('keeps the professional profile verifiable and evaluation-led', () => {
     expect(landingContent.profile.registration).toBe('CRO-MS 4589')
     expect(landingContent.profile.evaluation).toMatch(/avaliação individual/i)
