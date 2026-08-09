@@ -1,7 +1,12 @@
 <template>
-  <div id="inicio">
-    <h1 class="sr-only">{{ landingContent.hero.headline }}</h1>
-    <HomeTemplate />
+  <div>
+    <BrandIntro />
+    <LandingHeader />
+    <LandingHero />
+
+    <div class="legacy-home">
+      <HomeTemplate />
+    </div>
   </div>
 </template>
 
@@ -80,3 +85,13 @@ useHead({
   ]
 })
 </script>
+
+<style scoped>
+.legacy-home :deep(> header:first-child) {
+  display: none;
+}
+
+.legacy-home :deep(> main) {
+  margin-top: 0;
+}
+</style>
