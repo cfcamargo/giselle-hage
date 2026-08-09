@@ -27,4 +27,14 @@ describe('landingContent', () => {
       expect(treatment.alt.length).toBeGreaterThan(20)
     }
   })
+
+  it('provides descriptive, supported metadata for every clinical result', () => {
+    expect(landingContent.results.every(item => item.alt.length >= 20)).toBe(true)
+    expect(landingContent.results.every(item => ['botox', 'preenchimento'].includes(item.category))).toBe(true)
+  })
+
+  it('keeps the professional profile verifiable and evaluation-led', () => {
+    expect(landingContent.profile.registration).toBe('CRO-MS 4589')
+    expect(landingContent.profile.evaluation).toMatch(/avaliação individual/i)
+  })
 })

@@ -80,7 +80,10 @@ export const landingContent = {
   ],
   profile: {
     image: '/about.jpg',
-    biography: 'Cirurgiã-dentista formada pela UNIDERP em 2009, com atuação em harmonização orofacial e atenção individualizada.'
+    alt: 'Retrato profissional da cirurgiã-dentista Dra. Giselle Hage em ambiente clínico.',
+    biography: 'Cirurgiã-dentista formada pela UNIDERP em 2009, com atuação em harmonização orofacial e atenção individualizada.',
+    registration: 'CRO-MS 4589',
+    evaluation: 'Cada plano de cuidado é definido após uma avaliação individual, considerando anatomia, histórico e expectativas.'
   },
   faqs,
   location: {

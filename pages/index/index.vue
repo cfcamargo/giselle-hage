@@ -6,6 +6,8 @@
     <CredentialsStrip />
     <TreatmentsSection />
     <PhilosophySection />
+    <ResultsSection />
+    <AboutSection />
 
     <div class="legacy-home">
       <HomeTemplate />
