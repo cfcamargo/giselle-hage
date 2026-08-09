@@ -3,6 +3,7 @@
     ref="intro"
     v-show="active"
     class="brand-intro"
+    :data-intro-state="introState"
     aria-label="Introdução da marca Dra. Giselle Hage"
   >
     <div class="brand-intro__mark" aria-hidden="true">
@@ -29,6 +30,7 @@ const MAX_INTRO_DURATION = 2100
 
 const intro = ref<HTMLElement | null>(null)
 const active = ref(false)
+const introState = ref<'pending' | 'active' | 'complete'>('pending')
 const reducedMotion = useReducedMotion()
 let timeline: { kill: () => void } | undefined
 let hardTimeout: ReturnType<typeof setTimeout> | undefined
@@ -60,6 +62,7 @@ function finish() {
   document.documentElement.classList.remove('intro-active')
   rememberIntro()
   active.value = false
+  introState.value = 'complete'
   emit('complete')
 }
 
@@ -79,6 +82,7 @@ onMounted(async () => {
   }
 
   active.value = true
+  introState.value = 'active'
   document.documentElement.classList.add('intro-active')
   await nextTick()
 

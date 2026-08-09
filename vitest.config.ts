@@ -4,6 +4,7 @@ export default defineVitestConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    include: ['tests/**/*.spec.ts']
+    include: ['tests/**/*.spec.ts'],
+    exclude: ['tests/e2e/**']
   }
 })
