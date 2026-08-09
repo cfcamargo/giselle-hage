@@ -1,3 +1,5 @@
+import { mount } from '@vue/test-utils'
+import { defineComponent, h } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 describe('useReducedMotion', () => {
@@ -36,5 +38,37 @@ describe('useReducedMotion', () => {
     listener?.({ matches: true } as MediaQueryListEvent)
 
     expect(reducedMotion.value).toBe(true)
+  })
+
+  it('removes the media-query listener after the last consumer unmounts', async () => {
+    const addEventListener = vi.fn()
+    const removeEventListener = vi.fn()
+    const mediaQuery = {
+      matches: false,
+      addEventListener,
+      removeEventListener
+    } as unknown as MediaQueryList
+
+    vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
+
+    const { useReducedMotion } = await import('../../composables/useReducedMotion')
+    const Consumer = defineComponent({
+      setup() {
+        useReducedMotion()
+
+        return () => h('div')
+      }
+    })
+
+    const firstConsumer = mount(Consumer)
+    const secondConsumer = mount(Consumer)
+
+    firstConsumer.unmount()
+
+    expect(removeEventListener).not.toHaveBeenCalled()
+
+    secondConsumer.unmount()
+
+    expect(removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
   })
 })

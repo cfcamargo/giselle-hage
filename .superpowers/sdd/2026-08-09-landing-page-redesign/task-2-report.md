@@ -46,3 +46,22 @@ Known pre-existing tooling warnings during Vitest/build: unsupported native Vite
 - A post-import unmount guard prevents a late GSAP context from escaping cleanup if the component is removed during the lazy import.
 - The tests catch realistic regressions: inverted preference reads, absent change-state updates, removed unmount cleanup, ignored reduced-motion preference, and the async import/unmount race.
 - The custom font variables use fallbacks; loading a specific hosted font remains intentionally outside Task 2.
+
+## Fix Round 1 — reduced-motion listener teardown
+
+### Root cause
+
+`useReducedMotion()` held a module-scoped `MediaQueryList` and registered its `change` listener once, but did not associate that listener with the lifecycle of Vue consumers. Therefore, the listener survived after every component using the composable had unmounted.
+
+### RED
+
+Added `removes the media-query listener after the last consumer unmounts` to `tests/unit/useReducedMotion.spec.ts`. It mounts two consumers, verifies unmounting the first keeps the listener, then expects `removeEventListener('change', listener)` after the second unmount. The focused command failed as expected with zero calls to `removeEventListener`.
+
+### GREEN
+
+Added a module-scoped consumer count in `composables/useReducedMotion.ts`. A Vue component consumer increments it and registers `onBeforeUnmount`; the final consumer removes the exact `change` listener and releases the `MediaQueryList`. The same listener remains shared while at least one consumer is mounted.
+
+### Verification
+
+- `npm test -- tests/unit/useReducedMotion.spec.ts` — RED: 1 failed / 2 passed; failure was the missing `removeEventListener` call.
+- `npm test -- tests/unit/useReducedMotion.spec.ts tests/unit/useGsapContext.spec.ts` — GREEN: 2 files, 6 tests passed.
