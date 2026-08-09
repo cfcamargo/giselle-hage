@@ -3,6 +3,9 @@
     <BrandIntro />
     <LandingHeader />
     <LandingHero />
+    <CredentialsStrip />
+    <TreatmentsSection />
+    <PhilosophySection />
 
     <div class="legacy-home">
       <HomeTemplate />

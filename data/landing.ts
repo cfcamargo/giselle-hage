@@ -6,21 +6,24 @@ const treatments: readonly Treatment[] = [
     eyebrow: 'Toxina botulínica',
     title: 'Botox',
     summary: 'Uma avaliação cuidadosa orienta o uso da toxina botulínica para suavizar marcas de expressão e preservar a naturalidade dos seus traços.',
-    image: '/botox-bg.png'
+    image: '/botox-bg.png',
+    alt: 'Mulher com expressão serena durante um cuidado facial individualizado.'
   },
   {
     slug: 'preenchimento',
     eyebrow: 'Equilíbrio facial',
     title: 'Preenchimento',
     summary: 'O preenchimento facial é planejado de forma individual para valorizar contornos, proporções e volumes com segurança e respeito à sua anatomia.',
-    image: '/preenchimento.png'
+    image: '/preenchimento.png',
+    alt: 'Perfil feminino em destaque para representar o planejamento dos contornos faciais.'
   },
   {
     slug: 'peeling',
     eyebrow: 'Qualidade da pele',
     title: 'Peeling',
     summary: 'O peeling é indicado após avaliação clínica para apoiar a renovação da pele e cuidar de textura, luminosidade e manchas conforme cada necessidade.',
-    image: '/peeling-bg.png'
+    image: '/peeling-bg.png',
+    alt: 'Rosto feminino em luz suave para representar o cuidado com a qualidade da pele.'
   }
 ]
 

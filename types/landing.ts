@@ -8,6 +8,7 @@ export interface Treatment {
   title: string
   summary: string
   image: string
+  alt: string
 }
 
 export interface FaqItem {
