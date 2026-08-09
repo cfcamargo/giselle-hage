@@ -1,12 +1,20 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { useWhatsApp } from '../../composables/useWhatsApp'
 
-describe('useWhatsApp', () => {
-  it('builds the canonical prefilled WhatsApp URL', () => {
-    const { href } = useWhatsApp()
+const canonicalMessage = 'Olá, Dra. Giselle! Conheci seu site e gostaria de agendar uma avaliação para entender qual tratamento é mais indicado para mim.'
+const canonicalHref = 'https://api.whatsapp.com/send?phone=5567981269482&text=Ol%C3%A1%2C%20Dra.%20Giselle!%20Conheci%20seu%20site%20e%20gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o%20para%20entender%20qual%20tratamento%20%C3%A9%20mais%20indicado%20para%20mim.'
 
-    expect(decodeURIComponent(href.value)).toContain('phone=5567981269482')
-    expect(decodeURIComponent(href.value)).toContain('Olá, Dra. Giselle! Conheci seu site')
+describe('useWhatsApp', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('builds the canonical prefilled WhatsApp URL', () => {
+    const { href, message } = useWhatsApp()
+
+    expect(message).toBe(canonicalMessage)
+    expect(href.value).toBe(canonicalHref)
+    expect(decodeURIComponent(href.value)).toBe(`https://api.whatsapp.com/send?phone=5567981269482&text=${canonicalMessage}`)
   })
 
   it('dispatches a source-aware analytics event before opening', () => {
@@ -15,7 +23,10 @@ describe('useWhatsApp', () => {
 
     useWhatsApp().openWhatsApp('hero')
 
+    const clickEvent = dispatch.mock.calls[0]?.[0] as CustomEvent<{ source: string }>
+
     expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'whatsapp:click' }))
+    expect(clickEvent.detail).toEqual({ source: 'hero' })
     expect(open).toHaveBeenCalledOnce()
   })
 })
