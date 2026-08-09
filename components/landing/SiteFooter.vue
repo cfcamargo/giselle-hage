@@ -1,5 +1,5 @@
 <template>
-  <footer class="site-footer">
+  <footer id="rodape" class="site-footer">
     <div class="site-footer__inner">
       <div class="site-footer__identity">
         <strong>{{ landingContent.brand.name }}</strong>

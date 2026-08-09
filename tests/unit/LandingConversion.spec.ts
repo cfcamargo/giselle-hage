@@ -1,4 +1,6 @@
 import { mount } from '@vue/test-utils'
+import { renderToString } from '@vue/server-renderer'
+import { createSSRApp } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import ClosingCta from '../../components/landing/ClosingCta.vue'
 import FloatingWhatsApp from '../../components/landing/FloatingWhatsApp.vue'
@@ -25,9 +27,12 @@ describe('landing conversion sections', () => {
     expect(address.text()).toContain(landingContent.location.address)
     expect(address.element.compareDocumentPosition(iframe.element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(wrapper.text()).toContain('Pedro Juan Caballero')
+    expect(wrapper.text()).not.toMatch(/clínica (?:em|no) (?:Pedro Juan Caballero|Paraguai)/i)
+    expect(wrapper.text()).not.toMatch(/atendimento (?:em|no) Paraguai/i)
     expect(iframe.attributes('loading')).toBe('lazy')
     expect(iframe.attributes('title')).toBeTruthy()
     expect(iframe.attributes('src')).toContain('pt-BR')
+    expect(iframe.attributes('referrerpolicy')).toBe('strict-origin-when-cross-origin')
   })
 
   it.each([
@@ -43,10 +48,19 @@ describe('landing conversion sections', () => {
     expect(received).toEqual([source])
   })
 
-  it('shows the floating CTA after the hero action leaves view and disconnects its observer', async () => {
+  function installFloatingTargets() {
     const heroAction = document.createElement('a')
-    heroAction.className = 'landing-hero__cta'
-    document.body.append(heroAction)
+    heroAction.dataset.heroCta = ''
+    const closing = document.createElement('section')
+    closing.id = 'agendamento-final'
+    const footer = document.createElement('footer')
+    footer.id = 'rodape'
+    document.body.append(heroAction, closing, footer)
+
+    return { closing, footer, heroAction }
+  }
+
+  function installIntersectionObserver() {
     let callback: IntersectionObserverCallback | undefined
     const disconnect = vi.fn()
     const observe = vi.fn()
@@ -65,27 +79,84 @@ describe('landing conversion sections', () => {
     }
     vi.stubGlobal('IntersectionObserver', IntersectionObserverDouble)
 
+    return {
+      disconnect,
+      observe,
+      emit(...entries: Array<{ target: Element, isIntersecting: boolean }>) {
+        callback?.(entries as IntersectionObserverEntry[], {} as IntersectionObserver)
+      }
+    }
+  }
+
+  it('shows the floating CTA only between the hero and the closing boundaries', async () => {
+    const targets = installFloatingTargets()
+    const observer = installIntersectionObserver()
+
     const wrapper = mount(FloatingWhatsApp, { attachTo: document.body })
     await wrapper.vm.$nextTick()
     expect(wrapper.get('a').attributes('data-visible')).toBe('false')
-    expect(observe).toHaveBeenCalledWith(heroAction)
+    expect(observer.observe).toHaveBeenCalledTimes(3)
+    expect(observer.observe).toHaveBeenCalledWith(targets.heroAction)
+    expect(observer.observe).toHaveBeenCalledWith(targets.closing)
+    expect(observer.observe).toHaveBeenCalledWith(targets.footer)
 
-    callback?.([{ isIntersecting: false } as IntersectionObserverEntry], {} as IntersectionObserver)
+    observer.emit(
+      { target: targets.heroAction, isIntersecting: false },
+      { target: targets.closing, isIntersecting: false },
+      { target: targets.footer, isIntersecting: false }
+    )
     await wrapper.vm.$nextTick()
+    expect(wrapper.get('a').attributes('data-visible')).toBe('true')
 
+    observer.emit({ target: targets.heroAction, isIntersecting: true })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('a').attributes('data-visible')).toBe('false')
+
+    observer.emit({ target: targets.heroAction, isIntersecting: false })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('a').attributes('data-visible')).toBe('true')
+
+    observer.emit({ target: targets.footer, isIntersecting: true })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('a').attributes('data-visible')).toBe('false')
+
+    observer.emit({ target: targets.footer, isIntersecting: false })
+    await wrapper.vm.$nextTick()
     expect(wrapper.get('a').attributes('data-visible')).toBe('true')
     wrapper.unmount()
-    expect(disconnect).toHaveBeenCalledOnce()
+    expect(observer.disconnect).toHaveBeenCalledOnce()
   })
 
-  it('keeps a real WhatsApp link as the floating no-JS fallback', () => {
-    vi.stubGlobal('IntersectionObserver', undefined)
+  it('starts hidden and keeps a real WhatsApp link in a noscript fallback', async () => {
+    const html = await renderToString(createSSRApp(FloatingWhatsApp))
+
+    expect(html).toContain('data-visible="false"')
+    expect(html).toContain('<noscript')
+    expect(html).toMatch(/<noscript[^>]*><a[^>]+href="https:\/\/api\.whatsapp\.com\//)
+    expect(html).toMatch(/<noscript[^>]*><a[^>]+aria-label="[^"]*WhatsApp[^"]*"/)
+  })
+
+  it('stays safely hidden when observation targets are unavailable', async () => {
+    const observer = installIntersectionObserver()
     const wrapper = mount(FloatingWhatsApp)
     const link = wrapper.get('a')
 
     expect(link.attributes('href')).toMatch(/^https:\/\/api\.whatsapp\.com\//)
     expect(link.attributes('aria-label')).toContain('WhatsApp')
-    expect(link.attributes('data-visible')).toBe('true')
+    expect(link.attributes('data-visible')).toBe('false')
+    expect(observer.observe).not.toHaveBeenCalled()
+  })
+
+  it('reports the floating source and enforces safe-area positioning without animation', async () => {
+    const received: string[] = []
+    window.addEventListener('whatsapp:click', ((event: CustomEvent<{ source: string }>) => received.push(event.detail.source)) as EventListener, { once: true })
+    const wrapper = mount(FloatingWhatsApp)
+    const link = wrapper.get('a')
+
+    expect(link.element.getAttribute('style')).toContain('safe-area-inset-bottom')
+    expect(link.element.getAttribute('style')).toContain('animation: none')
+    await link.trigger('click')
+    expect(received).toEqual(['floating'])
   })
 
   it('renders the compact professional footer without a developer credit', () => {
@@ -93,6 +164,8 @@ describe('landing conversion sections', () => {
 
     expect(wrapper.text()).toContain('Dra. Giselle Hage')
     expect(wrapper.text()).toContain('CRO-MS 4589')
+    expect(wrapper.text()).toContain(String(new Date().getFullYear()))
+    expect(wrapper.text()).toContain(landingContent.location.address)
     expect(wrapper.text()).not.toContain('Desenvolvido por')
     expect(wrapper.get('a[href*="instagram.com"]').exists()).toBe(true)
     expect(wrapper.get('a[href^="https://api.whatsapp.com/"]').exists()).toBe(true)

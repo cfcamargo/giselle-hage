@@ -1,17 +1,35 @@
 <template>
-  <a
-    class="floating-whatsapp"
-    :class="{ 'floating-whatsapp--visible': visible }"
-    :data-visible="visible"
-    :href="href"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Agendar avaliação pelo WhatsApp"
-    @click.prevent="openWhatsApp('floating')"
-  >
-    <MessageCircle :size="21" :stroke-width="1.6" aria-hidden="true" />
-    <span>Agendar pelo WhatsApp</span>
-  </a>
+  <div class="floating-whatsapp-host">
+    <a
+      class="floating-whatsapp"
+      :class="{ 'floating-whatsapp--visible': visible }"
+      :data-visible="visible"
+      :href="href"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Agendar avaliação pelo WhatsApp"
+      :aria-hidden="!visible"
+      :tabindex="visible ? undefined : -1"
+      style="--floating-safe-right: env(safe-area-inset-right, 0px); --floating-safe-bottom: env(safe-area-inset-bottom, 0px); animation: none;"
+      @click.prevent="openWhatsApp('floating')"
+    >
+      <MessageCircle :size="21" :stroke-width="1.6" aria-hidden="true" />
+      <span>Agendar pelo WhatsApp</span>
+    </a>
+
+    <noscript>
+      <a
+        class="floating-whatsapp floating-whatsapp--visible"
+        :href="href"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Agendar avaliação pelo WhatsApp"
+        style="--floating-safe-right: env(safe-area-inset-right, 0px); --floating-safe-bottom: env(safe-area-inset-bottom, 0px); animation: none;"
+      >
+        Agendar pelo WhatsApp
+      </a>
+    </noscript>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -19,19 +37,35 @@ import { MessageCircle } from 'lucide-vue-next'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 
-const visible = ref(true)
+const visible = ref(false)
 const { href, openWhatsApp } = useWhatsApp()
 let observer: IntersectionObserver | undefined
 
 onMounted(() => {
-  const heroAction = document.querySelector('[data-hero-cta], .landing-hero__cta')
-  if (!heroAction || typeof IntersectionObserver === 'undefined') return
+  if (typeof IntersectionObserver === 'undefined') return
 
-  visible.value = false
-  observer = new IntersectionObserver(([entry]) => {
-    visible.value = !entry.isIntersecting
+  const heroAction = document.querySelector('[data-hero-cta]')
+  const closing = document.querySelector('#agendamento-final')
+  const footer = document.querySelector('#rodape')
+  if (!heroAction || !closing || !footer) return
+
+  const intersections = new Map<Element, boolean>([
+    [heroAction, true],
+    [closing, true],
+    [footer, true]
+  ])
+
+  observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (intersections.has(entry.target)) intersections.set(entry.target, entry.isIntersecting)
+    }
+
+    visible.value = intersections.get(heroAction) === false
+      && intersections.get(closing) === false
+      && intersections.get(footer) === false
   })
-  observer.observe(heroAction)
+
+  for (const target of intersections.keys()) observer.observe(target)
 })
 
 onBeforeUnmount(() => {
@@ -43,8 +77,8 @@ onBeforeUnmount(() => {
 <style scoped>
 .floating-whatsapp {
   position: fixed;
-  right: calc(1rem + env(safe-area-inset-right, 0px));
-  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  right: calc(1rem + var(--floating-safe-right, 0px));
+  bottom: calc(1rem + var(--floating-safe-bottom, 0px));
   z-index: 55;
   display: inline-flex;
   width: 3.35rem;

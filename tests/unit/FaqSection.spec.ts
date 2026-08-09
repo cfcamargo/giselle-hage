@@ -9,9 +9,16 @@ describe('FaqSection', () => {
   it('connects every question to its answer in the server HTML', async () => {
     const html = await renderToString(createSSRApp(FaqSection))
 
-    for (const item of landingContent.faqs) {
+    expect(html).not.toMatch(/\shidden(?:=|\s|>)/)
+    expect(html).not.toContain('display:none')
+
+    for (const [index, item] of landingContent.faqs.entries()) {
       expect(html).toContain(item.question)
       expect(html).toContain(item.answer)
+      expect(html).toContain(`id="faq-question-${index + 1}"`)
+      expect(html).toContain(`aria-controls="faq-answer-${index + 1}"`)
+      expect(html).toContain(`id="faq-answer-${index + 1}"`)
+      expect(html).toContain(`aria-labelledby="faq-question-${index + 1}"`)
     }
 
     const wrapper = mount(FaqSection)

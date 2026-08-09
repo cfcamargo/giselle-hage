@@ -26,3 +26,12 @@
 
 - The legacy home remains intentionally composed for Task 8.
 - Existing dependency/configuration warnings remain unchanged: npm project config deprecations, Vite native config warning, Node `fs.Stats` deprecation, and outdated Browserslist metadata.
+
+## Fix Round 1
+
+- Removed the floating CTA SSR/hydration flash: the interactive link now starts hidden and unfocusable, while a real accessible `<noscript>` WhatsApp link provides the no-JavaScript fallback.
+- Added conservative three-target observation for the hero CTA, final closing section, and site footer. The CTA appears only after all targets report that they are outside the viewport; absent APIs or targets keep it safely hidden, and unmount disconnects the observer.
+- Added clear `agendamento-final` and `rodape` boundaries so the floating action does not cover the final conversion or footer content.
+- Strengthened FAQ SSR/ARIA, observer transitions, missing-target fallback, floating source, no-pulse/safe-area, footer composition, regional wording, and map privacy coverage.
+- Tightened both current and retained legacy map embeds to `strict-origin-when-cross-origin`.
+- Verification: focused contract 12/12, full suite 61/61, production build exit 0, and `git diff --check` clean.

@@ -41,6 +41,10 @@ describe('landing SEO', async () => {
 
     expect(page.html).toContain('Revele sua beleza natural')
     expect(page.html).toContain('id="tratamentos"')
+    expect(page.html).toContain(String(new Date().getFullYear()))
+    expect(page.html).toContain('R. Tiradentes, 481 - Centro, Ponta Porã - MS, 79904-620')
+    expect(page.html).not.toContain('Desenvolvido por:')
+    expect(page.html).not.toContain('logo-chris.png')
   })
 
   it('resolves every primary-navigation anchor in the server HTML', async () => {

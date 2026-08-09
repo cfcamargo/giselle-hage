@@ -1,5 +1,5 @@
 <template>
-  <section class="closing-cta" aria-labelledby="closing-title">
+  <section id="agendamento-final" class="closing-cta" aria-labelledby="closing-title">
     <div class="closing-cta__inner">
       <p class="closing-cta__eyebrow">Uma escolha individual</p>
       <h2 id="closing-title">Seu plano começa com uma conversa.</h2>

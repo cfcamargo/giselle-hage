@@ -28,7 +28,7 @@
           :src="landingContent.location.mapEmbedUrl"
           title="Mapa da clínica da Dra. Giselle Hage em Ponta Porã"
           loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
+          referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         />
       </div>
