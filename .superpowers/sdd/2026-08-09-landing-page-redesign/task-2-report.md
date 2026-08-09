@@ -65,3 +65,24 @@ Added a module-scoped consumer count in `composables/useReducedMotion.ts`. A Vue
 
 - `npm test -- tests/unit/useReducedMotion.spec.ts` — RED: 1 failed / 2 passed; failure was the missing `removeEventListener` call.
 - `npm test -- tests/unit/useReducedMotion.spec.ts tests/unit/useGsapContext.spec.ts` — GREEN: 2 files, 6 tests passed.
+
+## Fix Round 2 — scope-owned reduced-motion subscriptions
+
+### Root cause
+
+The Fix Round 1 counter was based on `getCurrentInstance()`. Calls made outside a component were not represented in the counter, so a subsequent component teardown could remove their shared listener. During render, `getCurrentInstance()` can expose a rendering instance while lifecycle registration has no active component setup context, producing a Vue warning and an unreleased count.
+
+### RED
+
+1. Extended the non-component preference test to assert that an unscoped call reads the current preference without calling `addEventListener`; it failed because the module installed a listener.
+2. Added a caller-outside-scope → component mount/unmount scenario. It failed because the unscoped call retained the shared listener before the component lifecycle began.
+3. Added a render-time invocation scenario. It failed with Vue's `onBeforeUnmount is called when there is no active component instance` warning.
+
+### GREEN
+
+`useReducedMotion()` now checks `getCurrentScope()`. Unscoped callers receive a readonly snapshot ref with the current media-query value and do not retain a listener. Active Vue scopes share the reactive module ref, acquire the listener, and release it through `onScopeDispose` when the final scope ends. `useGsapContext()` remains a scoped setup consumer and therefore retains its reactive behavior.
+
+### Verification
+
+- `npm test -- tests/unit/useReducedMotion.spec.ts` — RED: 3 failures, including listener installation for an unscoped call and the invalid render-time lifecycle warning.
+- `npm test -- tests/unit/useReducedMotion.spec.ts tests/unit/useGsapContext.spec.ts` — GREEN: 2 files, 8 tests passed.

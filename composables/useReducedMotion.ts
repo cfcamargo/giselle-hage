@@ -1,4 +1,4 @@
-import { getCurrentInstance, onBeforeUnmount, readonly, ref } from 'vue'
+import { getCurrentScope, onScopeDispose, readonly, ref } from 'vue'
 
 const reducedMotion = ref(false)
 let mediaQuery: MediaQueryList | undefined
@@ -15,20 +15,33 @@ function removeMediaQueryListener() {
   mediaQuery = undefined
 }
 
-export function useReducedMotion() {
+function currentPreference() {
+  if (import.meta.client && typeof window.matchMedia === 'function') {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
+
+  return false
+}
+
+function startMediaQueryListener() {
   if (import.meta.client && !mediaQuery && typeof window.matchMedia === 'function') {
     mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     reducedMotion.value = mediaQuery.matches
     mediaQuery.addEventListener('change', updatePreference)
   }
+}
 
-  if (getCurrentInstance()) {
-    consumerCount += 1
-    onBeforeUnmount(() => {
-      consumerCount -= 1
-      removeMediaQueryListener()
-    })
+export function useReducedMotion() {
+  if (!getCurrentScope()) {
+    return readonly(ref(currentPreference()))
   }
+
+  startMediaQueryListener()
+  consumerCount += 1
+  onScopeDispose(() => {
+    consumerCount -= 1
+    removeMediaQueryListener()
+  })
 
   return readonly(reducedMotion)
 }

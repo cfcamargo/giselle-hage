@@ -4,20 +4,23 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 describe('useReducedMotion', () => {
   afterEach(() => {
+    vi.restoreAllMocks()
     vi.unstubAllGlobals()
     vi.resetModules()
   })
 
   it('reflects the reduced-motion media query', async () => {
+    const addEventListener = vi.fn()
     vi.stubGlobal('matchMedia', vi.fn(() => ({
       matches: true,
-      addEventListener: vi.fn(),
+      addEventListener,
       removeEventListener: vi.fn()
     })))
 
     const { useReducedMotion } = await import('../../composables/useReducedMotion')
 
     expect(useReducedMotion().value).toBe(true)
+    expect(addEventListener).not.toHaveBeenCalled()
   })
 
   it('updates when the reduced-motion preference changes', async () => {
@@ -33,11 +36,21 @@ describe('useReducedMotion', () => {
     vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
 
     const { useReducedMotion } = await import('../../composables/useReducedMotion')
-    const reducedMotion = useReducedMotion()
+    let reducedMotion: ReturnType<typeof useReducedMotion>
+    const Consumer = defineComponent({
+      setup() {
+        reducedMotion = useReducedMotion()
+
+        return () => h('div')
+      }
+    })
+    const consumer = mount(Consumer)
 
     listener?.({ matches: true } as MediaQueryListEvent)
 
-    expect(reducedMotion.value).toBe(true)
+    expect(reducedMotion!.value).toBe(true)
+
+    consumer.unmount()
   })
 
   it('removes the media-query listener after the last consumer unmounts', async () => {
@@ -70,5 +83,66 @@ describe('useReducedMotion', () => {
     secondConsumer.unmount()
 
     expect(removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+  })
+
+  it('does not retain a listener for an unscoped caller after a component cycle', async () => {
+    const addEventListener = vi.fn()
+    const removeEventListener = vi.fn()
+    const mediaQuery = {
+      matches: false,
+      addEventListener,
+      removeEventListener
+    } as unknown as MediaQueryList
+
+    vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
+
+    const { useReducedMotion } = await import('../../composables/useReducedMotion')
+    const externalPreference = useReducedMotion()
+    const Consumer = defineComponent({
+      setup() {
+        useReducedMotion()
+
+        return () => h('div')
+      }
+    })
+
+    expect(addEventListener).not.toHaveBeenCalled()
+
+    const consumer = mount(Consumer)
+    consumer.unmount()
+    mediaQuery.matches = true
+
+    expect(removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
+    expect(externalPreference.value).toBe(false)
+  })
+
+  it('does not warn or leave a listener when called during render', async () => {
+    const addEventListener = vi.fn()
+    const removeEventListener = vi.fn()
+    const mediaQuery = {
+      matches: false,
+      addEventListener,
+      removeEventListener
+    } as unknown as MediaQueryList
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
+
+    const { useReducedMotion } = await import('../../composables/useReducedMotion')
+    const Consumer = defineComponent({
+      setup() {
+        return () => {
+          useReducedMotion()
+
+          return h('div')
+        }
+      }
+    })
+
+    const consumer = mount(Consumer)
+    consumer.unmount()
+
+    expect(warn).not.toHaveBeenCalled()
+    expect(removeEventListener).toHaveBeenCalledTimes(addEventListener.mock.calls.length)
   })
 })
