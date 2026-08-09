@@ -3,22 +3,49 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	css: ['@/assets/css/main.css'],
 	components : [{ path: '@/components', pathPrefix: false }],
+	runtimeConfig: {
+		public: {
+			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+		}
+	},
 	postcss: {
 		plugins: {
 			tailwindcss: {},
 			autoprefixer: {},
 		},
 	},
-	modules: ['@nuxt/image', 'nuxt-swiper'],
+	modules: ['@nuxt/image', 'nuxt-swiper', 'motion-v/nuxt'],
+	motionV: {
+		utilities: false
+	},
+	routeRules: {
+		'/services/BigodeChines': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/bigode-chines': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/Bioestimuladores': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/bioestimuladores': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/Botox': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/botox': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/EmagrecimentoFacial': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/emagrecimento-facial': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/HomeCare': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/home-care': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/Microagulhamento': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/microagulhamento': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/Peeling': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/peeling': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/Preenchimento': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/preenchimento': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/TratamentoManchas': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/tratamento-manchas': { redirect: { to: '/#tratamentos', statusCode: 301 } },
+		'/services/**': { redirect: { to: '/#tratamentos', statusCode: 301 } }
+	},
 	app: {
 		head: {
 			charset: 'utf-8',
 			viewport: 'width=device-width, initial-scale=1',
-			title : 'Giselle Hage | Harmonização Orofacial',
-			meta: [
-				{ hid: 'description', name: 'description', content: '>Olá, sou a Giselle, uma cirurgiã dentista completamente apaixonada pela beleza e tudo que ele representa.Minha verdadeira paixão: a harmonização orofacial. Tenho dedicado toda a minha carreira para unir a arte de transformar auto estima com a magia de promover a harmonia estética em cada expressão facial.' },
-				{ name: 'keywords', content: 'harmonização orofacial, botox, peeling, microagulhamento, tratamento de manchas, saúde, beleza, tratamento estético, estética, mulher, Giselle Hage, pele saudável, cuidados faciais, tramatamento de pele, rejuvenescimento, harmonização facial, harmonização orofacial, esteticista'}
-			]
+			htmlAttrs: {
+				lang: 'pt-BR'
+			}
 		}
 	}
 })
