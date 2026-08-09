@@ -16,7 +16,7 @@ Implemented the staged landing opening: an accessible, session-aware brand intro
   - Cleans the timer, timeline, and document scroll-lock class on completion/unmount.
 - `components/landing/LandingHeader.vue`
   - Adds a fixed semantic header and `<nav aria-label="Navegação principal">` using the existing logo and the required `inicio`, `tratamentos`, `sobre`, `resultados`, and `contato` anchors.
-  - Adds a responsive mobile menu with `aria-expanded`, Motion for Vue enter/exit animation, reduced-motion duration zero, Escape handling, and focus return to the trigger.
+  - Adds a responsive native `<details>/<summary>` mobile menu whose links remain in the initial HTML and work without JavaScript, enhanced with Motion for Vue, reduced-motion duration zero, dynamic accessible naming, Escape handling, and focus return to the trigger.
 - `components/landing/LandingHero.vue`
   - Renders the content-backed eyebrow, single H1, supporting text, Ponta Porã location, and WhatsApp CTA.
   - Renders `/hero-bg.jpg` through `NuxtImg` with preload, intrinsic 3024×3185 dimensions, responsive sizes, and decorative/empty alt treatment because the clinical information is already present in text.
@@ -51,5 +51,23 @@ Implemented the staged landing opening: an accessible, session-aware brand intro
 
 1. The requested same-tab visual reload check was not performed in a real browser because no Playwright browser binary is installed in this environment. Automated coverage verifies the session flag path and skip control; a final visual smoke check should still confirm the full first-load timeline, immediate second-load reveal, header/menu layout, and image crop on target devices.
 2. `HomeTemplate` intentionally remains for the staged migration, so the page temporarily repeats legacy hero/content below the new hero. Its old fixed header is hidden to prevent it from covering the new header. Task 8 should remove this bridge.
-3. The new header already uses the final Portuguese IDs, but legacy sections still expose `about`/`contact` and no `resultados` ID. Those links become fully resolvable when the future sections replace `HomeTemplate`; no future-section markup was added here.
+3. The final Portuguese navigation IDs are temporarily attached to the matching legacy bridge sections. The old `about` and `contact` IDs remain as compatibility aliases and should be removed together with `HomeTemplate` in Task 8 if no external links depend on them.
 4. The repository still emits pre-existing warnings for npm config keys, Vitest's future native config loader, deprecated `fs.Stats`, outdated Browserslist data, and dependency audit findings. They do not fail the focused tests, full suite, or production build.
+
+## Fix Round 1
+
+### Findings addressed
+
+- Added `sobre`, `resultados`, and `contato` to the matching legacy bridge sections so every published header anchor resolves in current SSR output. Preserved `about` and `contact` as compatibility aliases.
+- Replaced the client-only mobile `v-if` menu with native `<details>/<summary>`. The mobile panel and all five links are present in initial HTML, work without JavaScript, and start without an opacity-hidden style. Motion remains a progressive enhancement.
+- The disclosure's accessible name now changes between `Abrir navegação` and `Fechar navegação`; `aria-controls` always refers to the persistent panel. Escape closes the disclosure and returns focus.
+- Expanded intro coverage for the exact 2100 ms hard cap, session persistence on timeout/skip, reduced motion, racing completion-path idempotency, timer cleanup, scroll-lock cleanup, and wrapper teardown.
+
+### RED/GREEN evidence
+
+- Anchors RED — `npm test -- tests/nuxt/seo.spec.ts` failed 1 of 4 tests because `#sobre` had no server-rendered target; the same focused spec passed 4 of 4 after the bridge IDs were added.
+- Mobile navigation RED — `npm test -- tests/unit/LandingHeader.spec.ts` failed 2 of 2 tests because the header rendered no `<details>` disclosure. After implementation, the spec passed 2 of 2.
+- Intro timeout mutation RED — temporarily changing the production hard cap from 2100 to 2200 made `npm test -- tests/unit/BrandIntro.spec.ts -t 'uses 2100 ms as a hard cap'` fail at the 2100 ms boundary. Restoring 2100 made the strengthened suite pass.
+- Focused GREEN — `npm test -- tests/unit/BrandIntro.spec.ts tests/unit/LandingHeader.spec.ts` passed 2 files and 10 tests.
+- Full GREEN — `npm test` passed 8 files and 26 tests. The run emitted a non-failing parallel-fixture WebSocket port warning alongside the pre-existing repository warnings.
+- Production build — `npm run build` exited 0 after client, SSR, and Nitro server builds.

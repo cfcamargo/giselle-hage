@@ -2,6 +2,7 @@
 
 import { describe, expect, it } from 'vitest'
 import { $fetch, fetch, setup } from '@nuxt/test-utils/e2e'
+import { Window } from 'happy-dom'
 
 const title = 'Dra. Giselle Hage | Harmonização Facial em Ponta Porã'
 const description = 'Harmonização facial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
@@ -40,6 +41,23 @@ describe('landing SEO', async () => {
 
     expect(page.html).toContain('Revele sua beleza natural')
     expect(page.html).toContain('id="tratamentos"')
+  })
+
+  it('resolves every primary-navigation anchor in the server HTML', async () => {
+    const page = await renderPage('/')
+    const document = new Window().document
+    document.write(page.html)
+    const anchors = [...document.querySelectorAll<HTMLAnchorElement>('nav[aria-label="Navegação principal"] a[href^="#"]')]
+    const hrefs = [...new Set(anchors.map(anchor => anchor.getAttribute('href')))]
+
+    expect(hrefs).toEqual(['#inicio', '#tratamentos', '#sobre', '#resultados', '#contato'])
+
+    for (const href of hrefs) {
+      expect(document.querySelector(href!)).not.toBeNull()
+    }
+
+    expect(document.querySelector('#about')).not.toBeNull()
+    expect(document.querySelector('#contact')).not.toBeNull()
   })
 
   it('permanently redirects the published peeling alias', async () => {

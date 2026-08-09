@@ -15,27 +15,29 @@
         </li>
       </ul>
 
-      <button
-        ref="menuTrigger"
-        class="landing-header__menu-trigger"
-        type="button"
-        aria-label="Abrir navegação"
-        aria-controls="landing-mobile-navigation"
-        :aria-expanded="menuOpen"
-        @click="toggleMenu"
+      <details
+        ref="mobileNavigation"
+        class="landing-header__mobile-navigation"
+        @toggle="syncMenuState"
       >
-        <X v-if="menuOpen" :size="24" :stroke-width="1.5" aria-hidden="true" />
-        <Menu v-else :size="24" :stroke-width="1.5" aria-hidden="true" />
-      </button>
+        <summary
+          ref="menuTrigger"
+          class="landing-header__menu-trigger"
+          :aria-label="menuOpen ? 'Fechar navegação' : 'Abrir navegação'"
+          aria-controls="landing-mobile-navigation"
+          :aria-expanded="menuOpen"
+        >
+          <X v-if="menuOpen" :size="24" :stroke-width="1.5" aria-hidden="true" />
+          <Menu v-else :size="24" :stroke-width="1.5" aria-hidden="true" />
+        </summary>
 
-      <AnimatePresence :initial="false">
         <motion.div
-          v-if="menuOpen"
           id="landing-mobile-navigation"
           class="landing-header__mobile-panel"
-          :initial="reducedMotion ? false : { opacity: 0, y: -14 }"
-          :animate="{ opacity: 1, y: 0 }"
-          :exit="reducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }"
+          :initial="{ opacity: 1, y: 0 }"
+          :animate="menuOpen && !reducedMotion
+            ? { opacity: [0, 1], y: [-14, 0] }
+            : { opacity: 1, y: 0 }"
           :transition="{ duration: reducedMotion ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }"
         >
           <ul>
@@ -47,14 +49,14 @@
             </li>
           </ul>
         </motion.div>
-      </AnimatePresence>
+      </details>
     </nav>
   </header>
 </template>
 
 <script setup lang="ts">
 import { Menu, X } from 'lucide-vue-next'
-import { AnimatePresence, motion } from 'motion-v'
+import { motion } from 'motion-v'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 
@@ -67,16 +69,18 @@ const navigation = [
 ] as const
 
 const menuOpen = ref(false)
-const menuTrigger = ref<HTMLButtonElement | null>(null)
+const mobileNavigation = ref<HTMLDetailsElement | null>(null)
+const menuTrigger = ref<HTMLElement | null>(null)
 const reducedMotion = useReducedMotion()
 
-function toggleMenu() {
-  menuOpen.value = !menuOpen.value
+function syncMenuState() {
+  menuOpen.value = Boolean(mobileNavigation.value?.open)
 }
 
 async function closeMenu(returnFocus: boolean) {
-  if (!menuOpen.value) return
+  if (!menuOpen.value && !mobileNavigation.value?.open) return
 
+  if (mobileNavigation.value) mobileNavigation.value.open = false
   menuOpen.value = false
   if (returnFocus) {
     await nextTick()
@@ -195,6 +199,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   border-radius: 999px;
   color: var(--color-ivory);
   background: transparent;
+  cursor: pointer;
+  list-style: none;
+}
+
+.landing-header__menu-trigger::-webkit-details-marker {
+  display: none;
 }
 
 .landing-header__mobile-panel {
@@ -244,7 +254,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   }
 
   .landing-header__menu-trigger,
-  .landing-header__mobile-panel {
+  .landing-header__mobile-navigation {
     display: none;
   }
 }
