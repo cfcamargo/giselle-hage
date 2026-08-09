@@ -63,3 +63,17 @@ Implemented canonical home metadata, Portuguese document locale, one server-rend
 - GREEN — `npm test -- tests/nuxt/seo-no-origin.spec.ts`: 1/1 passed; SSR without an origin contains no localhost canonical, `og:url`, or JSON-LD URL.
 - Final focused verification — `npm test -- tests/nuxt/seo.spec.ts tests/nuxt/seo-no-origin.spec.ts`: 2 files and 4 tests passed.
 - Generate — `NUXT_PUBLIC_SITE_URL=https://seo.example.test npm run generate`: exit 0; generated HTML contains one H1, the HTTPS canonical/`og:url`/JSON-LD URLs, legacy conversion content, and `id="tratamentos"`. `.output/public/peeling/index.html` targets `/#tratamentos`.
+
+## Fix Round 2
+
+### Finding addressed
+
+- The no-origin fixture now explicitly supplies `NUXT_PUBLIC_SITE_URL: ''`, so it cannot inherit an origin from the runner.
+- The SSR contract rejects any canonical link and any `og:url` meta tag, independently of hostname.
+- The JSON-LD script is parsed and its `LocalBusiness` node is asserted to omit the origin-dependent `@id`, `url`, and absolute `image` properties.
+
+### RED/GREEN evidence
+
+- RED mutation — with a deliberate `https://regression.example.test/` fallback temporarily introduced, `npm test -- tests/nuxt/seo-no-origin.spec.ts` failed on the new canonical-link assertion. The mutation was then removed.
+- GREEN — `npm test -- tests/nuxt/seo-no-origin.spec.ts`: 1 file and 1 test passed with the explicit empty environment.
+- Final focused verification — `npm test -- tests/nuxt/seo.spec.ts tests/nuxt/seo-no-origin.spec.ts`: 2 files and 4 tests passed.
