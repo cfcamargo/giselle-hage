@@ -6,12 +6,12 @@
   >
     <div class="results-section__header">
       <div>
-        <p class="results-section__eyebrow">Resultados clínicos</p>
+        <p class="results-section__eyebrow">Registros visuais</p>
         <h2 id="results-title">Cuidado que respeita cada rosto.</h2>
       </div>
 
       <p class="results-section__introduction">
-        Registros individuais de tratamentos realizados com planejamento, critério clínico e atenção à naturalidade.
+        Montagens fotográficas fornecidas pela profissional, apresentadas sem controles de comparação porque a ordem e as condições dos registros não foram verificadas.
       </p>
     </div>
 
@@ -34,6 +34,7 @@
           :id="`result-card-${index + 1}`"
           :key="result.image"
           :aria-label="`Resultado ${index + 1} de ${landingContent.results.length}: ${categoryLabels[result.category]}`"
+          :aria-current="index === currentResult ? 'true' : undefined"
           data-result-card
         >
           <figure>
@@ -47,7 +48,7 @@
             />
             <figcaption>
               <span>{{ categoryLabels[result.category] }}</span>
-              <small>Resultado individual</small>
+              <small>Montagem lado a lado</small>
             </figcaption>
           </figure>
         </li>
@@ -60,7 +61,7 @@
           type="button"
           aria-label="Ver resultado anterior"
           aria-controls="results-gallery"
-          :disabled="currentResult === 0"
+          :aria-disabled="currentResult === 0 ? 'true' : 'false'"
           @click="showPrevious"
         >
           <ArrowLeft :size="19" :stroke-width="1.4" aria-hidden="true" />
@@ -74,7 +75,7 @@
           type="button"
           aria-label="Ver próximo resultado"
           aria-controls="results-gallery"
-          :disabled="currentResult === landingContent.results.length - 1"
+          :aria-disabled="currentResult === landingContent.results.length - 1 ? 'true' : 'false'"
           @click="showNext"
         >
           <ArrowRight :size="19" :stroke-width="1.4" aria-hidden="true" />
@@ -101,7 +102,7 @@
 
 <script setup lang="ts">
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-vue-next'
-import { nextTick, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 import { landingContent } from '~/data/landing'
@@ -115,6 +116,36 @@ const gallery = ref<HTMLElement | null>(null)
 const currentResult = ref(0)
 const reducedMotion = useReducedMotion()
 const { href, openWhatsApp } = useWhatsApp()
+let scrollFrame: number | undefined
+
+function syncCurrentResult() {
+  scrollFrame = undefined
+  if (!gallery.value) return
+
+  const galleryRect = gallery.value.getBoundingClientRect()
+  const galleryCenter = galleryRect.left + gallery.value.clientWidth / 2
+  let nearestIndex = 0
+  let nearestDistance = Number.POSITIVE_INFINITY
+
+  for (const [index, card] of Array.from(gallery.value.children).entries()) {
+    const cardRect = card.getBoundingClientRect()
+    const cardCenter = cardRect.left + cardRect.width / 2
+    const distance = Math.abs(cardCenter - galleryCenter)
+
+    if (distance < nearestDistance) {
+      nearestDistance = distance
+      nearestIndex = index
+    }
+  }
+
+  currentResult.value = nearestIndex
+}
+
+function queueScrollSync() {
+  if (scrollFrame !== undefined) return
+
+  scrollFrame = requestAnimationFrame(syncCurrentResult)
+}
 
 function showResult(index: number) {
   const lastIndex = landingContent.results.length - 1
@@ -133,12 +164,29 @@ function showResult(index: number) {
 }
 
 function showPrevious() {
+  if (currentResult.value === 0) return
+
   showResult(currentResult.value - 1)
 }
 
 function showNext() {
+  if (currentResult.value === landingContent.results.length - 1) return
+
   showResult(currentResult.value + 1)
 }
+
+onMounted(() => {
+  gallery.value?.addEventListener('scroll', queueScrollSync, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  gallery.value?.removeEventListener('scroll', queueScrollSync)
+
+  if (scrollFrame !== undefined) {
+    cancelAnimationFrame(scrollFrame)
+    scrollFrame = undefined
+  }
+})
 </script>
 
 <style scoped>
@@ -285,13 +333,13 @@ function showNext() {
   transition: color 180ms ease, background 180ms ease, opacity 180ms ease;
 }
 
-.results-section__navigation button:hover:not(:disabled),
-.results-section__navigation button:focus-visible:not(:disabled) {
+.results-section__navigation button:hover:not([aria-disabled='true']),
+.results-section__navigation button:focus-visible:not([aria-disabled='true']) {
   color: var(--color-ivory);
   background: var(--color-plum);
 }
 
-.results-section__navigation button:disabled {
+.results-section__navigation button[aria-disabled='true'] {
   opacity: 0.3;
   cursor: not-allowed;
 }

@@ -61,7 +61,7 @@ onMounted(async () => {
     import('gsap'),
     import('gsap/ScrollTrigger')
   ])
-  if (unmounted || !section.value) return
+  if (unmounted || reducedMotion.value || !section.value) return
 
   gsap.registerPlugin(ScrollTrigger)
   section.value.classList.add('js-motion')

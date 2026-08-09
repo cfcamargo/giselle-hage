@@ -6,6 +6,7 @@ import AboutSection from '../../components/landing/AboutSection.vue'
 import ResultsSection from '../../components/landing/ResultsSection.vue'
 
 const motionState = vi.hoisted(() => {
+  const state: { defer: boolean, resolve?: () => void } = { defer: false }
   const revert = vi.fn()
   const fromTo = vi.fn()
   const timeline = vi.fn((options: { scrollTrigger?: { pin?: boolean } } = {}) => {
@@ -25,16 +26,26 @@ const motionState = vi.hoisted(() => {
   })
   const registerPlugin = vi.fn()
 
-  return { context, fromTo, registerPlugin, revert, timeline }
+  return { context, fromTo, registerPlugin, revert, state, timeline }
 })
 
-vi.mock('gsap', () => ({
-  gsap: {
-    context: motionState.context,
-    registerPlugin: motionState.registerPlugin,
-    timeline: motionState.timeline
+vi.mock('gsap', () => {
+  const module = {
+    gsap: {
+      context: motionState.context,
+      registerPlugin: motionState.registerPlugin,
+      timeline: motionState.timeline
+    }
   }
-}))
+
+  if (motionState.state.defer) {
+    return new Promise((resolve) => {
+      motionState.state.resolve = () => resolve(module)
+    })
+  }
+
+  return module
+})
 
 const ScrollTrigger = { name: 'ScrollTrigger' }
 vi.mock('gsap/ScrollTrigger', () => ({ ScrollTrigger }))
@@ -45,12 +56,89 @@ const NuxtImg = {
   template: '<img :src="src" :alt="alt">'
 }
 
+interface ControlledMediaQuery extends MediaQueryList {
+  setMatches: (matches: boolean) => void
+}
+
 function installMatchMedia(reduced: boolean) {
-  vi.stubGlobal('matchMedia', vi.fn(() => ({
-    matches: reduced,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn()
-  })))
+  let matches = reduced
+  const listeners = new Set<(event: MediaQueryListEvent) => void>()
+  const mediaQuery = {
+    media: '(prefers-reduced-motion: reduce)',
+    get matches() {
+      return matches
+    },
+    onchange: null,
+    addEventListener: vi.fn((type: string, listener: (event: MediaQueryListEvent) => void) => {
+      if (type === 'change') listeners.add(listener)
+    }),
+    removeEventListener: vi.fn((type: string, listener: (event: MediaQueryListEvent) => void) => {
+      if (type === 'change') listeners.delete(listener)
+    }),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(() => true),
+    setMatches(nextMatches: boolean) {
+      matches = nextMatches
+      const event = { matches, media: mediaQuery.media } as MediaQueryListEvent
+      for (const listener of listeners) listener(event)
+      mediaQuery.onchange?.(event)
+    }
+  } as ControlledMediaQuery
+
+  vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
+  return mediaQuery
+}
+
+function installAnimationFrame() {
+  let nextId = 1
+  const callbacks = new Map<number, FrameRequestCallback>()
+  const request = vi.fn((callback: FrameRequestCallback) => {
+    const id = nextId++
+    callbacks.set(id, callback)
+    return id
+  })
+  const cancel = vi.fn((id: number) => callbacks.delete(id))
+  vi.stubGlobal('requestAnimationFrame', request)
+  vi.stubGlobal('cancelAnimationFrame', cancel)
+
+  return {
+    cancel,
+    flush() {
+      const pending = [...callbacks.values()]
+      callbacks.clear()
+      for (const callback of pending) callback(16)
+    },
+    pending: () => callbacks.size
+  }
+}
+
+function placeResultNearest(wrapper: VueWrapper, targetIndex: number) {
+  const gallery = wrapper.get('#results-gallery').element as HTMLElement
+  const rectangle = (left: number, width: number): DOMRect => ({
+    x: left,
+    y: 0,
+    top: 0,
+    left,
+    right: left + width,
+    bottom: 100,
+    width,
+    height: 100,
+    toJSON: () => ({})
+  })
+
+  Object.defineProperty(gallery, 'clientWidth', { configurable: true, value: 100 })
+  Object.defineProperty(gallery, 'getBoundingClientRect', {
+    configurable: true,
+    value: () => rectangle(0, 100)
+  })
+
+  for (const [index, card] of wrapper.findAll('[data-result-card]').entries()) {
+    Object.defineProperty(card.element, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => rectangle((index - targetIndex) * 120, 100)
+    })
+  }
 }
 
 async function settleMotion() {
@@ -61,9 +149,11 @@ async function settleMotion() {
 
 describe('results and professional profile', () => {
   const wrappers: VueWrapper[] = []
+  let animationFrame: ReturnType<typeof installAnimationFrame>
 
   beforeEach(() => {
     installMatchMedia(true)
+    animationFrame = installAnimationFrame()
     Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
       configurable: true,
       value: vi.fn()
@@ -78,6 +168,8 @@ describe('results and professional profile', () => {
     motionState.fromTo.mockClear()
     motionState.registerPlugin.mockClear()
     motionState.revert.mockClear()
+    motionState.state.defer = false
+    motionState.state.resolve = undefined
     motionState.timeline.mockClear()
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
@@ -91,33 +183,85 @@ describe('results and professional profile', () => {
 
     expect(wrapper.get('section').attributes('id')).toBe('resultados')
     expect(wrapper.get('[role="region"]').attributes('aria-describedby')).toBe('results-disclaimer')
-    expect(wrapper.findAll('[data-result-card]')).toHaveLength(10)
+    expect(wrapper.findAll('[data-result-card]')).toHaveLength(7)
     expect(wrapper.findAll('[data-result-card] img').every(image => (image.attributes('alt')?.length ?? 0) >= 20)).toBe(true)
+    expect(wrapper.text()).toContain('Montagens fotográficas')
+    expect(wrapper.findAll('figcaption small').every(label => label.text() === 'Montagem lado a lado')).toBe(true)
     expect(wrapper.get('#results-disclaimer').text()).toContain('Resultados variam de pessoa para pessoa')
     expect(wrapper.find('[role="slider"]').exists()).toBe(false)
   })
 
-  it('advances and reverses the gallery while retaining keyboard focus', async () => {
+  it('syncs the live and current states with native horizontal scrolling', async () => {
     const wrapper = mount(ResultsSection, {
       attachTo: document.body,
       global: { stubs: { NuxtImg } }
     })
     wrappers.push(wrapper)
+    const gallery = wrapper.get('#results-gallery')
+    placeResultNearest(wrapper, 4)
+
+    await gallery.trigger('scroll')
+    animationFrame.flush()
+    await nextTick()
+
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 5 de 7')
+    expect(wrapper.findAll('[data-result-card]')[4].attributes('aria-current')).toBe('true')
+    expect(wrapper.findAll('[data-result-card]')[0].attributes('aria-current')).toBeUndefined()
+  })
+
+  it('starts controls from the visually current card and keeps edge controls focused', async () => {
+    const wrapper = mount(ResultsSection, {
+      attachTo: document.body,
+      global: { stubs: { NuxtImg } }
+    })
+    wrappers.push(wrapper)
+    const gallery = wrapper.get('#results-gallery')
     const previous = wrapper.get('button[aria-label="Ver resultado anterior"]')
     const next = wrapper.get('button[aria-label="Ver próximo resultado"]')
 
-    expect(previous.attributes()).toHaveProperty('disabled')
+    placeResultNearest(wrapper, 6)
+    await gallery.trigger('scroll')
+    animationFrame.flush()
+    await nextTick()
+
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
+    expect(next.attributes('aria-disabled')).toBe('true')
+    expect(next.attributes()).not.toHaveProperty('disabled')
     next.element.focus()
     await next.trigger('click')
-
-    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 10')
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
     expect(document.activeElement).toBe(next.element)
 
+    placeResultNearest(wrapper, 1)
+    await gallery.trigger('scroll')
+    animationFrame.flush()
+    await nextTick()
+
+    previous.element.focus()
     await previous.trigger('click')
-    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 10')
+
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
+    expect(previous.attributes('aria-disabled')).toBe('true')
+    expect(previous.attributes()).not.toHaveProperty('disabled')
+    expect(document.activeElement).toBe(previous.element)
+  })
+
+  it('removes the native scroll listener and cancels pending synchronization on unmount', async () => {
+    const wrapper = mount(ResultsSection, {
+      global: { stubs: { NuxtImg } }
+    })
+    wrappers.push(wrapper)
+    const gallery = wrapper.get('#results-gallery')
+    const removeEventListener = vi.spyOn(gallery.element, 'removeEventListener')
+
+    await gallery.trigger('scroll')
+    expect(animationFrame.pending()).toBe(1)
 
     wrapper.unmount()
     wrappers.pop()
+
+    expect(animationFrame.cancel).toHaveBeenCalledOnce()
+    expect(removeEventListener).toHaveBeenCalledWith('scroll', expect.any(Function))
   })
 
   it('supports arrow keys when the result rail itself is focused', async () => {
@@ -128,10 +272,10 @@ describe('results and professional profile', () => {
     const gallery = wrapper.get('#results-gallery')
 
     await gallery.trigger('keydown', { key: 'ArrowRight' })
-    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 10')
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 7')
 
     await gallery.trigger('keydown', { key: 'ArrowLeft' })
-    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 10')
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
   })
 
   it('uses the results source when opening the evaluation CTA', async () => {
@@ -151,6 +295,22 @@ describe('results and professional profile', () => {
     expect(open).toHaveBeenCalledOnce()
     expect(sources).toEqual(['results'])
     window.removeEventListener('whatsapp:click', receiveSource)
+  })
+
+  it('rechecks reduced motion after deferred animation imports resolve', async () => {
+    motionState.state.defer = true
+    const mediaQuery = installMatchMedia(false)
+    const wrapper = mount(AboutSection, {
+      global: { stubs: { NuxtImg } }
+    })
+    wrappers.push(wrapper)
+    await vi.waitFor(() => expect(motionState.state.resolve).toBeTypeOf('function'))
+
+    mediaQuery.setMatches(true)
+    motionState.state.resolve?.()
+    await settleMotion()
+
+    expect(motionState.context).not.toHaveBeenCalled()
   })
 
   it('keeps the profile in normal flow and cleans up its reveal animation', async () => {
@@ -195,6 +355,7 @@ describe('results and professional profile', () => {
 
     expect(resultsHtml).toContain('Resultados variam de pessoa para pessoa')
     expect(resultsHtml).toContain('/services/botox1.jpg')
+    expect(resultsHtml).toContain('href="https://api.whatsapp.com/send?phone=5567981269482&amp;text=')
     expect(aboutHtml).toContain('CRO-MS 4589')
     expect(aboutHtml).toContain('avaliação individual')
     expect(aboutHtml).toContain('/about.jpg')
