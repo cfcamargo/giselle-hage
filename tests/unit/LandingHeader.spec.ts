@@ -51,7 +51,7 @@ describe('LandingHeader', () => {
 
     expect(toggle.attributes('aria-label')).toBe('Abrir navegação')
     expect(toggle.attributes('aria-controls')).toBe('landing-mobile-navigation')
-    expect(wrapper.get('#landing-mobile-navigation').exists()).toBe(true)
+    expect(wrapper.find('#landing-mobile-navigation').exists()).toBe(true)
 
     ;(disclosure.element as HTMLDetailsElement).open = true
     await disclosure.trigger('toggle')

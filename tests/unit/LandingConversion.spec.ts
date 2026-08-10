@@ -40,7 +40,9 @@ describe('landing conversion sections', () => {
     [ClosingCta, 'closing']
   ] as const)('reports the correct WhatsApp source from %s', async (component, source) => {
     const received: string[] = []
-    window.addEventListener('whatsapp:click', ((event: CustomEvent<{ source: string }>) => received.push(event.detail.source)) as EventListener, { once: true })
+    window.addEventListener('whatsapp:click', (event: Event) => {
+      received.push((event as CustomEvent<{ source: string }>).detail.source)
+    }, { once: true })
     const wrapper = mount(component)
 
     await wrapper.get('a[href^="https://api.whatsapp.com/"]').trigger('click')
@@ -149,7 +151,9 @@ describe('landing conversion sections', () => {
 
   it('reports the floating source and enforces safe-area positioning without animation', async () => {
     const received: string[] = []
-    window.addEventListener('whatsapp:click', ((event: CustomEvent<{ source: string }>) => received.push(event.detail.source)) as EventListener, { once: true })
+    window.addEventListener('whatsapp:click', (event: Event) => {
+      received.push((event as CustomEvent<{ source: string }>).detail.source)
+    }, { once: true })
     const wrapper = mount(FloatingWhatsApp)
     const link = wrapper.get('a')
 
@@ -167,7 +171,7 @@ describe('landing conversion sections', () => {
     expect(wrapper.text()).toContain(String(new Date().getFullYear()))
     expect(wrapper.text()).toContain(landingContent.location.address)
     expect(wrapper.text()).not.toContain('Desenvolvido por')
-    expect(wrapper.get('a[href*="instagram.com"]').exists()).toBe(true)
-    expect(wrapper.get('a[href^="https://api.whatsapp.com/"]').exists()).toBe(true)
+    expect(wrapper.find('a[href*="instagram.com"]').exists()).toBe(true)
+    expect(wrapper.find('a[href^="https://api.whatsapp.com/"]').exists()).toBe(true)
   })
 })

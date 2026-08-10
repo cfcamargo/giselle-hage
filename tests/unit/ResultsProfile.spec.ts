@@ -267,7 +267,7 @@ describe('results and professional profile', () => {
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
     expect(next.attributes('aria-disabled')).toBe('true')
     expect(next.attributes()).not.toHaveProperty('disabled')
-    next.element.focus()
+    ;(next.element as HTMLElement).focus()
     await next.trigger('click')
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
     expect(document.activeElement).toBe(next.element)
@@ -277,7 +277,7 @@ describe('results and professional profile', () => {
     animationFrame.flush()
     await nextTick()
 
-    previous.element.focus()
+    ;(previous.element as HTMLElement).focus()
     await previous.trigger('click')
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')

@@ -7,7 +7,7 @@ export function useGsapContext(
   setup: (gsap: typeof import('gsap').gsap) => void
 ) {
   const reduced = useReducedMotion()
-  let context: import('gsap').Context | undefined
+  let context: gsap.Context | undefined
   let unmounted = false
 
   onMounted(async () => {

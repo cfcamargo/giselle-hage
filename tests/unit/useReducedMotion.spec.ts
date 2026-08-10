@@ -31,7 +31,7 @@ describe('useReducedMotion', () => {
         listener = callback
       },
       removeEventListener: vi.fn()
-    } as unknown as MediaQueryList
+    } as unknown as Omit<MediaQueryList, 'matches'> & { matches: boolean }
 
     vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
 
@@ -60,7 +60,7 @@ describe('useReducedMotion', () => {
       matches: false,
       addEventListener,
       removeEventListener
-    } as unknown as MediaQueryList
+    } as unknown as MediaQueryList & { matches: boolean }
 
     vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
 
@@ -92,7 +92,7 @@ describe('useReducedMotion', () => {
       matches: false,
       addEventListener,
       removeEventListener
-    } as unknown as MediaQueryList
+    } as unknown as Omit<MediaQueryList, 'matches'> & { matches: boolean }
 
     vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
 

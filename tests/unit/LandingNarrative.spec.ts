@@ -168,7 +168,8 @@ const NuxtImg = {
   template: '<img :src="src" :alt="alt">'
 }
 
-interface ControlledMediaQuery extends MediaQueryList {
+type ControlledMediaQuery = Omit<MediaQueryList, 'matches'> & {
+  matches: boolean
   setMatches: (matches: boolean) => void
 }
 

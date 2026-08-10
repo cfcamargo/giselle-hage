@@ -64,8 +64,8 @@ import { landingContent } from '~/data/landing'
 
 const section = ref<HTMLElement | null>(null)
 const { href, openWhatsApp } = useWhatsApp()
-let animationContext: import('gsap').Context | undefined
-let responsiveMedia: import('gsap').MatchMedia | undefined
+let animationContext: gsap.Context | undefined
+let responsiveMedia: gsap.MatchMedia | undefined
 let unmounted = false
 
 onMounted(async () => {

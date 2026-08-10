@@ -8,10 +8,10 @@ export default defineConfig({
     baseURL: previewOrigin
   },
   webServer: {
-    command: "env NUXT_PUBLIC_SITE_URL=https://www.gisellehage.com.br HOST=127.0.0.1 PORT=3000 sh -c 'npm run build && unlink .output/server/node_modules/vue && npm run preview'",
+    command: 'npm run test:e2e:preview',
     url: previewOrigin,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000
+    reuseExistingServer: false,
+    timeout: 45_000
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },

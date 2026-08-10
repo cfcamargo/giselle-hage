@@ -10,16 +10,26 @@ const sectionHeadings = [
   'Seu plano começa com uma conversa.'
 ]
 
-test.beforeEach(async ({ page }) => {
+async function openWithReducedMotion(page: import('@playwright/test').Page) {
   await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+}
+
+test('serves the untouched standalone production artifact', async ({ request }) => {
+  const response = await request.get('/', { maxRedirects: 0 })
+
+  expect(response.status()).toBe(200)
+  expect(response.headers()['content-type']).toContain('text/html')
 })
 
 test('renders one headline and a real WhatsApp conversion link', async ({ page }) => {
-  await page.goto('/')
+  await openWithReducedMotion(page)
 
   await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
 
-  const cta = page.getByRole('link', { name: 'Agendar minha avaliação' }).first()
+  const cta = page.locator('[data-hero-cta]')
+  await expect(cta).toHaveCount(1)
+  await expect(cta).toHaveAccessibleName('Agendar minha avaliação')
   await expect(cta).toHaveAttribute(
     'href',
     /^https:\/\/api\.whatsapp\.com\/send\?phone=5567981269482&text=.+/
@@ -27,15 +37,38 @@ test('renders one headline and a real WhatsApp conversion link', async ({ page }
 })
 
 test('completes the intro for reduced motion and exposes keyboard focus', async ({ page }) => {
-  await page.goto('/')
+  await openWithReducedMotion(page)
 
   await expect(page.locator('[data-intro-state="complete"]')).toBeAttached()
   await page.keyboard.press('Tab')
-  await expect(page.locator(':focus-visible')).toBeVisible()
+  const focused = page.locator(':focus-visible')
+  await expect(focused).toHaveCount(1)
+  await expect(focused).toBeVisible()
+  const focusIndicator = await focused.evaluate((element) => {
+    const style = getComputedStyle(element)
+
+    return {
+      color: style.outlineColor,
+      style: style.outlineStyle,
+      width: Number.parseFloat(style.outlineWidth)
+    }
+  })
+  expect(focusIndicator.style).not.toBe('none')
+  expect(focusIndicator.width).toBeGreaterThanOrEqual(2)
+  expect(focusIndicator.color).not.toBe('rgba(0, 0, 0, 0)')
+})
+
+test('completes the ordinary-motion intro without manual intervention', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+
+  await expect(page.locator('[data-intro-state="active"]')).toBeAttached()
+  await expect(page.locator('[data-intro-state="complete"]')).toBeAttached({ timeout: 5_000 })
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 })
 
 test('preserves the complete published sibling order', async ({ page }) => {
-  await page.goto('/')
+  await openWithReducedMotion(page)
 
   const composition = await page.locator('#__nuxt').evaluate(root =>
     [...root.children].map(element =>
@@ -74,7 +107,19 @@ for (const viewport of [
 ]) {
   test(`does not overflow horizontally at ${viewport.width}x${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport)
-    await page.goto('/')
+    await openWithReducedMotion(page)
+
+    const lazyImages = page.locator('img[loading="lazy"]')
+    const lazyImageCount = await lazyImages.count()
+    expect(lazyImageCount).toBeGreaterThan(0)
+    for (let index = 0; index < lazyImageCount; index++) {
+      const image = lazyImages.nth(index)
+      await image.scrollIntoViewIfNeeded()
+      await expect.poll(() => image.evaluate(element =>
+        (element as HTMLImageElement).complete
+      )).toBe(true)
+    }
+    await page.locator('#rodape').scrollIntoViewIfNeeded()
 
     const widths = await page.evaluate(() => ({
       client: document.documentElement.clientWidth,
@@ -86,7 +131,7 @@ for (const viewport of [
 }
 
 test('keeps every required section heading visible when scrolled into view', async ({ page }) => {
-  await page.goto('/')
+  await openWithReducedMotion(page)
 
   for (const name of sectionHeadings) {
     const heading = page.getByRole('heading', { level: 2, name })
@@ -98,23 +143,28 @@ test('keeps every required section heading visible when scrolled into view', asy
 
 test('closes the mobile navigation with Escape and restores trigger focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto('/')
+  await openWithReducedMotion(page)
 
   const trigger = page.locator('.landing-header__menu-trigger')
+  const menu = page.locator('details.landing-header__mobile-navigation')
+  await expect(menu).toHaveJSProperty('open', false)
   await trigger.click()
   await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+  await expect(menu).toHaveJSProperty('open', true)
 
   await page.keyboard.press('Escape')
 
   await expect(trigger).toHaveAttribute('aria-label', 'Abrir navegação')
   await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+  await expect(menu).toHaveJSProperty('open', false)
   await expect(trigger).toBeFocused()
 })
 
 test('keeps the floating CTA out of the accessibility tree until useful', async ({ page }) => {
-  await page.goto('/')
+  await openWithReducedMotion(page)
 
-  const floating = page.locator('.floating-whatsapp').first()
+  const floating = page.locator('.floating-whatsapp-host > a.floating-whatsapp')
+  await expect(floating).toHaveCount(1)
   await expect(floating).toHaveAttribute('data-visible', 'false')
   await expect(floating).toHaveAttribute('aria-hidden', 'true')
   await expect(floating).toHaveAttribute('tabindex', '-1')

@@ -24,7 +24,7 @@ import { landingContent } from '~/data/landing'
 
 const section = ref<HTMLElement | null>(null)
 const reducedMotion = useReducedMotion()
-let animationContext: import('gsap').Context | undefined
+let animationContext: gsap.Context | undefined
 let unmounted = false
 
 onMounted(async () => {

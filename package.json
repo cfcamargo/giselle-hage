@@ -10,7 +10,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:e2e:install": "playwright install chromium"
+    "test:e2e:install": "playwright install chromium",
+    "test:e2e:preview": "node tests/e2e/production-preview.mjs",
+    "typecheck": "nuxi typecheck"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
@@ -32,15 +34,20 @@
     "nuxt": "^3.6.5",
     "postcss": "^8.4.28",
     "tailwindcss": "^3.3.3",
-    "vitest": "^4.1.10"
+    "typescript": "5.3.3",
+    "vitest": "^4.1.10",
+    "vue-tsc": "1.8.27"
   },
   "dependencies": {
     "@nuxt/image": "^1.0.0-rc.1",
+    "@vue/server-renderer": "3.5.41",
     "@vueuse/core": "^10.9.0",
     "animate.css": "^4.1.1",
     "gsap": "^3.15.0",
     "lucide-vue-next": "^0.269.0",
     "motion-v": "^2.3.0",
-    "nuxt-swiper": "^1.2.2"
+    "nuxt-swiper": "^1.2.2",
+    "vue": "3.5.41",
+    "vue-router": "4.2.5"
   }
 }

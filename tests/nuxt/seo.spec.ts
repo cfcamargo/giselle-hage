@@ -72,7 +72,7 @@ describe('landing SEO', async () => {
     const page = await renderPage('/')
     const document = new Window().document
     document.write(page.html)
-    const anchors = [...document.querySelectorAll<HTMLAnchorElement>('nav[aria-label="Navegação principal"] a[href^="#"]')]
+    const anchors = [...document.querySelectorAll('nav[aria-label="Navegação principal"] a[href^="#"]')]
     const hrefs = [...new Set(anchors.map(anchor => anchor.getAttribute('href')))]
 
     expect(hrefs).toEqual(['#inicio', '#tratamentos', '#sobre', '#resultados', '#contato'])
