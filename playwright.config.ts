@@ -8,10 +8,11 @@ export default defineConfig({
     baseURL: previewOrigin
   },
   webServer: {
-    command: 'npm run test:e2e:preview',
+    command: 'node tests/e2e/production-preview.mjs',
+    gracefulShutdown: { signal: 'SIGTERM', timeout: 30_000 },
     url: previewOrigin,
     reuseExistingServer: false,
-    timeout: 45_000
+    timeout: 120_000
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },

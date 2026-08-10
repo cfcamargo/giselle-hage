@@ -62,8 +62,10 @@ test('completes the ordinary-motion intro without manual intervention', async ({
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
 
-  await expect(page.locator('[data-intro-state="active"]')).toBeAttached()
+  expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(false)
   await expect(page.locator('[data-intro-state="complete"]')).toBeAttached({ timeout: 5_000 })
+  expect(await page.evaluate(() => sessionStorage.getItem('giselle-intro-seen'))).toBe('1')
+  await expect(page.locator('html')).not.toHaveClass(/intro-active/)
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 })
 
@@ -116,7 +118,7 @@ for (const viewport of [
       const image = lazyImages.nth(index)
       await image.scrollIntoViewIfNeeded()
       await expect.poll(() => image.evaluate(element =>
-        (element as HTMLImageElement).complete
+        (element as HTMLImageElement).complete && (element as HTMLImageElement).naturalWidth > 0
       )).toBe(true)
     }
     await page.locator('#rodape').scrollIntoViewIfNeeded()

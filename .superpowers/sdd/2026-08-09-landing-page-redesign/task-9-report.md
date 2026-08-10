@@ -20,7 +20,7 @@ DONE
 
 ## Production preview
 
-Playwright builds a temporary source copy outside the nested Git worktree and runs the real Nuxt production preview there. It reuses the checkout's installed dependencies but never mutates `.output` or any generated symlink in the checkout. `HOST`, `PORT`, and `NUXT_PUBLIC_SITE_URL` are fixed explicitly, and `reuseExistingServer` is always false.
+Playwright builds a temporary source copy outside the nested Git worktree, installs it from `package-lock.json` with `npm ci --legacy-peer-deps`, and runs the real Nuxt production preview there. It never reuses the checkout's `node_modules`, mutates `.output`, or removes a generated symlink. `HOST`, `PORT`, and `NUXT_PUBLIC_SITE_URL` are fixed explicitly, and `reuseExistingServer` is always false.
 
 ## Verification
 
@@ -60,4 +60,36 @@ DONE — the unlink workaround is removed, and the untouched standalone artifact
 - `npm run typecheck`: PASS (exit 0).
 - `npm test`: PASS — 12 files, 62/62 tests.
 - `npm run test:e2e`: PASS — 22/22 across desktop and mobile, including the untouched artifact smoke and representative 301 redirects.
+- `git diff --check`: PASS.
+
+## Fix Round 2
+
+### Status
+
+DONE — production-preview verification is lockfile-faithful and its temporary install/build artifact is cleaned after success, failure, or Playwright shutdown.
+
+### TDD and lifecycle evidence
+
+- RED: removing the ambient `node_modules` symlink made the committed standalone smoke fail because the isolated copy had no local Nuxt executable. This proved the previous test was not exercising `package-lock.json` independently.
+- GREEN: the harness now copies source, runs `npm ci --legacy-peer-deps`, builds, and previews entirely inside a fresh `/tmp/giselle-production-preview-*` directory. The focused standalone smoke passed against that artifact.
+- RED: after a passing run, the temporary directory remained because Playwright's default web-server teardown sends `SIGKILL`, which cannot execute the script's cleanup handler.
+- GREEN: `gracefulShutdown: { signal: 'SIGTERM', timeout: 30_000 }` lets the handler stop the active install/build/preview child and reach `finally`; focused and full runs left no `giselle-production-preview-*` directory.
+- Signal handlers are registered before copy/install/build. Copy, install, build, preview, and process errors share one `try/finally` cleanup path. The harness uses no symlink and selects `npm.cmd` on Windows.
+- Copy exclusions apply only to exact top-level generated paths; a nested directory named `dist` is no longer excluded accidentally.
+
+### Dependency and browser-test tightening
+
+- Kept `vue@3.5.41` because production composables/components import Vue directly, and kept the exact paired `@vue/server-renderer@3.5.41` because repository SSR tests import it directly and its Vue peer must match exactly.
+- Kept `vue-tsc@1.8.27` and `typescript@5.3.3` as exact dev dependencies because they are the verified compatible pair behind the repository's reproducible `npm run typecheck`.
+- Removed the direct `vue-router` pin: the application has no direct import and Nuxt 3.10.2 already supplies compatible `vue-router@4.2.5` through the lockfile.
+- Removed `workspaceDir: '.'`: clean-copy `npm ci`, build, preview, E2E, and typecheck all pass without it, confirming it was unnecessary application configuration.
+- Lazy-image overflow coverage now requires both `complete` and `naturalWidth > 0`. Ordinary-motion coverage verifies the actual `no-preference` media state and stable completion/failsafe effects without racing the transient `active` state.
+
+### Verification
+
+- Targeted E2E (`untouched standalone|ordinary-motion|does not overflow`): PASS — 8/8 across desktop and mobile.
+- Cleanup smoke after graceful shutdown: PASS — 1/1; no temporary preview directory remained.
+- `npm run test:e2e`: PASS — 22/22 across desktop and mobile.
+- `npm test`: PASS — 12 files, 62/62 tests.
+- `npm run typecheck`: PASS (exit 0).
 - `git diff --check`: PASS.
