@@ -19,10 +19,10 @@
     "typecheck": "nuxi typecheck"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
+    "@nuxt/devtools": "^1.7.0",
     "@nuxt/test-utils": "^4.1.0",
     "@playwright/test": "^1.62.1",
-    "@types/node": "^18.17.3",
+    "@types/node": "^22.10.1",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vue/test-utils": "^2.4.11",
