@@ -22,8 +22,8 @@ import { landingContent } from '~/data/landing'
 import { resolveSiteOrigin } from '~/utils/siteOrigin'
 
 const introComplete = ref(false)
-const title = 'Dra. Giselle Hage | Harmonização Facial em Ponta Porã'
-const description = 'Harmonização facial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
+const title = 'Dra. Giselle Hage | Harmonização Orofacial em Ponta Porã'
+const description = 'Harmonização orofacial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
 const runtimeConfig = useRuntimeConfig()
 const canonicalUrl = resolveSiteOrigin(runtimeConfig.public.siteUrl)
 const professionalRegistration = landingContent.credentials.find(({ label }) => label === 'Registro profissional')?.value

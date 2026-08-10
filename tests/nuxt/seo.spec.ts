@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vitest'
 import { $fetch, fetch, setup } from '@nuxt/test-utils/e2e'
 import { Window } from 'happy-dom'
 
-const title = 'Dra. Giselle Hage | Harmonização Facial em Ponta Porã'
-const description = 'Harmonização facial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
+const title = 'Dra. Giselle Hage | Harmonização Orofacial em Ponta Porã'
+const description = 'Harmonização orofacial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
 
 async function renderPage (path: string) {
   return { html: await $fetch<string>(path) }
@@ -24,7 +24,7 @@ describe('landing SEO', async () => {
     const page = await renderPage('/')
 
     expect(page.html.match(/<h1(?:\s|>)/g)).toHaveLength(1)
-    expect(page.html).toContain('Harmonização Facial em Ponta Porã')
+    expect(page.html).toContain('Harmonização Orofacial em Ponta Porã')
     expect(page.html).toContain(`<title>${title}</title>`)
     expect(page.html).toContain(`name="description" content="${description}"`)
     expect(page.html).toMatch(/<html[^>]*lang="pt-BR"/)
@@ -53,7 +53,7 @@ describe('landing SEO', async () => {
   it('renders the published landing content and treatments anchor', async () => {
     const page = await renderPage('/')
 
-    expect(page.html).toContain('Harmonização Facial em Ponta Porã')
+    expect(page.html).toContain('Harmonização Orofacial em Ponta Porã')
     expect(page.html).toContain('id="tratamentos"')
     expect(page.html).toContain(String(new Date().getFullYear()))
     expect(page.html).toContain('R. Tiradentes, 481 - Centro, Ponta Porã - MS, 79904-620')

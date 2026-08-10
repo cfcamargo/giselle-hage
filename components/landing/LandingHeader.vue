@@ -5,7 +5,7 @@
         <Logo color="#b9a27d" icon_width="76" icon_height="40" aria-hidden="true" />
         <span class="landing-header__signature">
           <strong>Dra. Giselle Hage</strong>
-          <small>Harmonização facial</small>
+          <small>Harmonização orofacial</small>
         </span>
       </a>
 

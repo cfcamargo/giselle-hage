@@ -65,8 +65,8 @@ export const landingContent = {
     instagramUrl: 'https://www.instagram.com/dra.gisellehage/'
   },
   hero: {
-    eyebrow: 'Harmonização facial em Ponta Porã',
-    headline: 'Harmonização Facial em Ponta Porã',
+    eyebrow: 'Harmonização orofacial em Ponta Porã',
+    headline: 'Harmonização Orofacial em Ponta Porã',
     supporting: 'Precisão, naturalidade e cuidado individual para valorizar seus traços.',
     image: '/hero-bg.jpg'
   },
