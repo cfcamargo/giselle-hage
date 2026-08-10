@@ -37,6 +37,7 @@ const motionState = vi.hoisted(() => {
   const timeline = vi.fn((options: { scrollTrigger?: { trigger?: unknown, pin?: boolean } } = {}) => {
     const trigger = options.scrollTrigger?.trigger
     if (options.scrollTrigger?.pin) markMotion(trigger, 'pin')
+    else if (options.scrollTrigger) markMotion(trigger, 'reveal')
 
     const chain = {
       fromTo: vi.fn()
@@ -375,5 +376,29 @@ describe('landing narrative sections', () => {
       'Prevenir', 'Cuidar', 'Preservar'
     ])
     expect(wrapper.get('svg').attributes('aria-hidden')).toBe('true')
+  })
+
+  it.each([
+    [CredentialsStrip, '.credentials-strip'],
+    [PhilosophySection, '.philosophy-section']
+  ])('removes and rebuilds %s motion when reduced-motion changes', async (component, selector) => {
+    const media = installMatchMedia({ desktop: false, reduced: false })
+    const wrapper = mount(component, { attachTo: document.body })
+    wrappers.push(wrapper)
+    await settleMotion()
+
+    const section = wrapper.get(selector)
+    expect(section.attributes('data-motion-mode')).toBe('reveal')
+
+    media.reduced().setMatches(true)
+    expect(section.attributes('data-motion-mode')).toBeUndefined()
+
+    media.reduced().setMatches(false)
+    expect(section.attributes('data-motion-mode')).toBe('reveal')
+
+    wrapper.unmount()
+    wrappers.pop()
+    expect(motionState.matchMediaInstances[0].revert).toHaveBeenCalledOnce()
+    expect(media.reduced().removeEventListener).toHaveBeenCalled()
   })
 })

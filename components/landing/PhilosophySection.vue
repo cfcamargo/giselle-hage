@@ -43,16 +43,15 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useReducedMotion } from '~/composables/useReducedMotion'
 import { landingContent } from '~/data/landing'
 
 const section = ref<HTMLElement | null>(null)
-const reducedMotion = useReducedMotion()
 let animationContext: gsap.Context | undefined
+let responsiveMedia: gsap.MatchMedia | undefined
 let unmounted = false
 
 onMounted(async () => {
-  if (reducedMotion.value || !section.value) return
+  if (!section.value) return
 
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([
     import('gsap'),
@@ -62,39 +61,47 @@ onMounted(async () => {
 
   gsap.registerPlugin(ScrollTrigger)
   animationContext = gsap.context(() => {
-    const contour = section.value?.querySelector<SVGPathElement>('[data-contour-path]')
-    const contourLength = contour?.getTotalLength() ?? 0
+    responsiveMedia = gsap.matchMedia()
+    responsiveMedia.add({ reduceMotion: '(prefers-reduced-motion: reduce)' }, (context) => {
+      if (context.conditions?.reduceMotion) return
 
-    if (contour && contourLength > 0) {
-      gsap.set(contour, { strokeDasharray: contourLength, strokeDashoffset: contourLength })
-      gsap.to(contour, {
-        strokeDashoffset: 0,
-        ease: 'none',
+      const contour = section.value?.querySelector<SVGPathElement>('[data-contour-path]')
+      const contourLength = contour?.getTotalLength() ?? 0
+
+      if (contour && contourLength > 0) {
+        gsap.set(contour, { strokeDasharray: contourLength, strokeDashoffset: contourLength })
+        gsap.to(contour, {
+          strokeDashoffset: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section.value,
+            start: 'top 78%',
+            end: 'bottom 42%',
+            scrub: 0.8
+          }
+        })
+      }
+
+      gsap.timeline({
+        defaults: { ease: 'power3.out' },
         scrollTrigger: {
           trigger: section.value,
-          start: 'top 78%',
-          end: 'bottom 42%',
-          scrub: 0.8
+          start: 'top 76%',
+          once: true
         }
       })
-    }
-
-    gsap.timeline({
-      defaults: { ease: 'power3.out' },
-      scrollTrigger: {
-        trigger: section.value,
-        start: 'top 76%',
-        once: true
-      }
+        .fromTo('[data-philosophy-copy]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85 })
+        .fromTo('[data-philosophy-principle]', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.12 }, 0.24)
     })
-      .fromTo('[data-philosophy-copy]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.85 })
-      .fromTo('[data-philosophy-principle]', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.12 }, 0.24)
   }, section.value)
 })
 
 onBeforeUnmount(() => {
   unmounted = true
+  responsiveMedia?.revert()
+  responsiveMedia = undefined
   animationContext?.revert()
+  animationContext = undefined
 })
 </script>
 

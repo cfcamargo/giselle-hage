@@ -19,16 +19,15 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useReducedMotion } from '~/composables/useReducedMotion'
 import { landingContent } from '~/data/landing'
 
 const section = ref<HTMLElement | null>(null)
-const reducedMotion = useReducedMotion()
 let animationContext: gsap.Context | undefined
+let responsiveMedia: gsap.MatchMedia | undefined
 let unmounted = false
 
 onMounted(async () => {
-  if (reducedMotion.value || !section.value) return
+  if (!section.value) return
 
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([
     import('gsap'),
@@ -38,22 +37,30 @@ onMounted(async () => {
 
   gsap.registerPlugin(ScrollTrigger)
   animationContext = gsap.context(() => {
-    gsap.timeline({
-      defaults: { ease: 'power3.out' },
-      scrollTrigger: {
-        trigger: section.value,
-        start: 'top 82%',
-        once: true
-      }
+    responsiveMedia = gsap.matchMedia()
+    responsiveMedia.add({ reduceMotion: '(prefers-reduced-motion: reduce)' }, (context) => {
+      if (context.conditions?.reduceMotion) return
+
+      gsap.timeline({
+        defaults: { ease: 'power3.out' },
+        scrollTrigger: {
+          trigger: section.value,
+          start: 'top 82%',
+          once: true
+        }
+      })
+        .fromTo('[data-credential]', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.72, stagger: 0.11 })
+        .fromTo('[data-credential-emphasis]', { scale: 0.97 }, { scale: 1, duration: 0.45, stagger: 0.08 }, 0.18)
     })
-      .fromTo('[data-credential]', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.72, stagger: 0.11 })
-      .fromTo('[data-credential-emphasis]', { scale: 0.97 }, { scale: 1, duration: 0.45, stagger: 0.08 }, 0.18)
   }, section.value)
 })
 
 onBeforeUnmount(() => {
   unmounted = true
+  responsiveMedia?.revert()
+  responsiveMedia = undefined
   animationContext?.revert()
+  animationContext = undefined
 })
 </script>
 
