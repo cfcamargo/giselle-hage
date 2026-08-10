@@ -28,7 +28,8 @@ const emit = defineEmits<{
 const MAX_INTRO_DURATION = 2100
 
 const intro = ref<HTMLElement | null>(null)
-const active = ref(false)
+// Starts visible in SSR so the page can never flash before hydration.
+const active = ref(true)
 const introState = ref<'pending' | 'active' | 'complete'>('pending')
 const reducedMotion = useReducedMotion()
 let timeline: { kill: () => void } | undefined
@@ -68,7 +69,6 @@ onMounted(async () => {
     return
   }
 
-  active.value = true
   introState.value = 'active'
   document.documentElement.classList.add('intro-active')
   await nextTick()
@@ -136,6 +136,11 @@ onBeforeUnmount(() => {
     radial-gradient(circle at 50% 43%, rgb(185 162 125 / 10%), transparent 28rem),
     var(--color-plum);
   clip-path: inset(0);
+  animation: intro-failsafe 0s 3s forwards;
+}
+
+@keyframes intro-failsafe {
+  to { visibility: hidden; }
 }
 
 .brand-intro__mark {
@@ -181,5 +186,9 @@ onBeforeUnmount(() => {
     opacity: 0.78;
     transform: translateY(0);
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-intro { display: none !important; }
 }
 </style>

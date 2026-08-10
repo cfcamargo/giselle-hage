@@ -108,6 +108,13 @@ describe('BrandIntro', () => {
     expect(wrapper.get('svg').attributes('height')).toBe('78')
   })
 
+  it('stays visible while the asynchronous animation is being prepared', () => {
+    wrapper = mount(BrandIntro)
+
+    expect(wrapper.attributes('data-intro-state')).toBe('pending')
+    expect(wrapper.attributes('style')).toBeUndefined()
+  })
+
   it('uses 2100 ms as a hard cap', async () => {
     wrapper = mount(BrandIntro)
     await nextTick()
