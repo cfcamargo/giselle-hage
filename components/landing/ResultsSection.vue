@@ -209,7 +209,7 @@ onBeforeUnmount(() => {
   padding: clamp(6rem, 11vw, 10rem) 0;
   overflow: hidden;
   color: var(--color-ink);
-  background: #e9e0d6;
+  background: #f8f6f2;
 }
 
 .results-section__header,
@@ -277,7 +277,7 @@ onBeforeUnmount(() => {
   position: relative;
   margin: 0;
   overflow: hidden;
-  background: #d4c7bc;
+  background: #dfe6e1;
 }
 
 .results-section__gallery figure::after {

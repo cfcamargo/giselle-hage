@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
   min-height: 32rem;
   margin: 0;
   overflow: hidden;
-  background: #5d4652;
+  background: #70867d;
 }
 
 .about-section__media img {

@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
 
 .floating-whatsapp:hover,
 .floating-whatsapp:focus-visible {
-  background: #4d2b41;
+  background: #31483f;
 }
 
 .floating-whatsapp span {

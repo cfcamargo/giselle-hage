@@ -75,8 +75,8 @@ useGsapContext(hero, (gsap) => {
   display: grid;
   min-height: 100svh;
   overflow: hidden;
-  color: var(--color-ivory);
-  background: var(--color-plum);
+  color: var(--color-ink);
+  background: var(--color-ivory);
   isolation: isolate;
 }
 
@@ -102,8 +102,8 @@ useGsapContext(hero, (gsap) => {
 .landing-hero__wash {
   z-index: -2;
   background:
-    linear-gradient(90deg, rgb(35 19 30 / 96%) 0%, rgb(53 29 45 / 87%) 45%, rgb(53 29 45 / 25%) 78%),
-    linear-gradient(0deg, rgb(33 29 31 / 48%), transparent 55%);
+    linear-gradient(90deg, rgb(248 246 242 / 98%) 0%, rgb(248 246 242 / 92%) 38%, rgb(248 246 242 / 28%) 72%),
+    linear-gradient(0deg, rgb(248 246 242 / 40%), transparent 55%);
 }
 
 .landing-hero__grain {
@@ -133,7 +133,7 @@ useGsapContext(hero, (gsap) => {
 .landing-hero__eyebrow {
   max-width: 42rem;
   margin: 0 0 1.25rem;
-  color: var(--color-champagne);
+  color: var(--color-plum);
   font-size: clamp(0.65rem, 1vw, 0.78rem);
   font-weight: 500;
   letter-spacing: 0.19em;
@@ -154,7 +154,7 @@ useGsapContext(hero, (gsap) => {
 .landing-hero__supporting {
   max-width: 38rem;
   margin: 2rem 0 0;
-  color: rgb(245 240 232 / 78%);
+  color: rgb(41 45 43 / 76%);
   font-size: clamp(0.95rem, 1.4vw, 1.14rem);
   font-weight: 300;
   line-height: 1.75;
@@ -175,9 +175,9 @@ useGsapContext(hero, (gsap) => {
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  border: 1px solid var(--color-champagne);
-  color: var(--color-plum);
-  background: var(--color-champagne);
+  border: 1px solid var(--color-plum);
+  color: var(--color-white);
+  background: var(--color-plum);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -188,7 +188,7 @@ useGsapContext(hero, (gsap) => {
 
 .landing-hero__cta:hover,
 .landing-hero__cta:focus-visible {
-  color: var(--color-ivory);
+  color: var(--color-plum);
   background: transparent;
 }
 
@@ -197,7 +197,7 @@ useGsapContext(hero, (gsap) => {
   margin: 0;
   align-items: center;
   gap: 0.55rem;
-  color: rgb(245 240 232 / 66%);
+  color: rgb(41 45 43 / 66%);
   font-size: 0.72rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -210,7 +210,7 @@ useGsapContext(hero, (gsap) => {
   display: none;
   align-items: center;
   gap: 0.8rem;
-  color: rgb(245 240 232 / 62%);
+  color: rgb(41 45 43 / 62%);
   font-size: 0.57rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -226,8 +226,8 @@ useGsapContext(hero, (gsap) => {
 @media (max-width: 47.99rem) {
   .landing-hero__wash {
     background:
-      linear-gradient(0deg, rgb(35 19 30 / 98%) 4%, rgb(53 29 45 / 80%) 54%, rgb(53 29 45 / 34%) 100%),
-      linear-gradient(90deg, rgb(53 29 45 / 50%), transparent);
+      linear-gradient(0deg, rgb(248 246 242 / 98%) 4%, rgb(248 246 242 / 88%) 50%, rgb(248 246 242 / 18%) 100%),
+      linear-gradient(90deg, rgb(248 246 242 / 38%), transparent);
   }
 
   .landing-hero__media img {

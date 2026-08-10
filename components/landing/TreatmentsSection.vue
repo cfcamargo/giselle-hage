@@ -229,7 +229,7 @@ onBeforeUnmount(() => {
   min-height: 31rem;
   margin: 0;
   overflow: hidden;
-  background: #d4c7bd;
+  background: #dfe6e1;
 }
 
 .treatment-chapter__media img {
@@ -285,14 +285,14 @@ onBeforeUnmount(() => {
 
 @media (min-width: 64rem) {
   .treatments-section { padding-bottom: 0; }
-  .js-cinematic .treatments-stage { height: 100svh; width: 100%; background: #e8e0d8; }
+  .js-cinematic .treatments-stage { height: 100svh; width: 100%; background: #f8f6f2; }
   .js-cinematic .treatments-stage__chapters { position: relative; height: 100%; display: block; }
   .js-cinematic .treatment-chapter { position: absolute; inset: 0; display: block; }
   .js-cinematic .treatment-chapter__media { position: absolute; inset: 0 0 0 40%; min-height: 0; height: 100%; }
   .js-cinematic .treatment-chapter__copy { position: absolute; z-index: 2; inset: 0 54% 0 max(5rem, calc((100vw - 86rem) / 2)); padding-right: 2rem; }
   .js-cinematic .treatment-chapter h3 { font-size: clamp(5.5rem, 8.8vw, 9.5rem); }
   .js-cinematic .treatment-chapter h3 span { position: relative; z-index: 2; }
-  .js-cinematic .treatment-chapter__media::before { position: absolute; z-index: 1; inset: 0 auto 0 0; width: 32%; background: linear-gradient(90deg, #e8e0d8, transparent); content: ''; }
+  .js-cinematic .treatment-chapter__media::before { position: absolute; z-index: 1; inset: 0 auto 0 0; width: 32%; background: linear-gradient(90deg, #f8f6f2, transparent); content: ''; }
   .js-cinematic .treatments-stage__rail { position: absolute; z-index: 5; right: max(1.5rem, calc((100vw - 86rem) / 2)); top: 50%; display: flex; height: 45%; align-items: center; flex-direction: column; gap: 0.8rem; color: rgb(255 255 255 / 75%); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; transform: translateY(-50%); }
   .js-cinematic .treatments-stage__rail span { writing-mode: vertical-rl; }
   .js-cinematic .treatments-stage__rail i { width: 1px; height: 100%; background: rgb(255 255 255 / 55%); }

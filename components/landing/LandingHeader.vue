@@ -105,7 +105,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   z-index: 60;
   border-bottom: 1px solid rgb(245 240 232 / 14%);
   color: var(--color-ivory);
-  background: rgb(53 29 45 / 90%);
+  background: rgb(64 91 80 / 94%);
   backdrop-filter: blur(18px);
 }
 
