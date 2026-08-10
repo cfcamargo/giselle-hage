@@ -7,8 +7,8 @@
   --color-plum: #351d2d;
   --color-champagne: #b9a27d;
   --color-ink: #211d1f;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Montserrat', Arial, sans-serif;
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 html {

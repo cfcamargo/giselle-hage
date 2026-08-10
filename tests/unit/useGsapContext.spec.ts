@@ -116,4 +116,72 @@ describe('useGsapContext', () => {
     expect(animation).not.toHaveBeenCalled()
     expect(context).not.toHaveBeenCalled()
   })
+
+  it('reverts ordinary motion and rebuilds it when the live preference changes', async () => {
+    let matches = false
+    const listeners = new Set<(event: MediaQueryListEvent) => void>()
+    const mediaQuery = {
+      media: '(prefers-reduced-motion: reduce)',
+      get matches() {
+        return matches
+      },
+      addEventListener: vi.fn((type: string, listener: (event: MediaQueryListEvent) => void) => {
+        if (type === 'change') listeners.add(listener)
+      }),
+      removeEventListener: vi.fn((type: string, listener: (event: MediaQueryListEvent) => void) => {
+        if (type === 'change') listeners.delete(listener)
+      }),
+      setMatches(nextMatches: boolean) {
+        matches = nextMatches
+        const event = { matches, media: mediaQuery.media } as MediaQueryListEvent
+        for (const listener of listeners) listener(event)
+      }
+    }
+    vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
+
+    const cleanup = vi.fn()
+    const animation = vi.fn((_gsap, element: HTMLElement) => {
+      element.dataset.motion = 'active'
+      return () => {
+        delete element.dataset.motion
+        cleanup()
+      }
+    })
+    const { useGsapContext } = await import('../../composables/useGsapContext')
+    const Component = defineComponent({
+      setup() {
+        const scope = ref<HTMLElement | null>(null)
+        useGsapContext(scope, gsap => animation(gsap, scope.value!))
+
+        return () => h('section', { ref: scope })
+      }
+    })
+
+    const wrapper = mount(Component)
+    await nextTick()
+    await vi.dynamicImportSettled()
+
+    expect(wrapper.attributes('data-motion')).toBe('active')
+    expect(context).toHaveBeenCalledTimes(1)
+
+    mediaQuery.setMatches(true)
+    await nextTick()
+
+    expect(wrapper.attributes('data-motion')).toBeUndefined()
+    expect(revert).toHaveBeenCalledTimes(1)
+    expect(cleanup).toHaveBeenCalledTimes(1)
+
+    mediaQuery.setMatches(false)
+    await nextTick()
+    await vi.dynamicImportSettled()
+
+    expect(wrapper.attributes('data-motion')).toBe('active')
+    expect(context).toHaveBeenCalledTimes(2)
+
+    wrapper.unmount()
+
+    expect(revert).toHaveBeenCalledTimes(2)
+    expect(cleanup).toHaveBeenCalledTimes(2)
+    expect(mediaQuery.removeEventListener).toHaveBeenCalled()
+  })
 })

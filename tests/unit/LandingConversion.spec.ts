@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import { renderToString } from '@vue/server-renderer'
 import { createSSRApp } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -6,6 +6,7 @@ import ClosingCta from '../../components/landing/ClosingCta.vue'
 import FloatingWhatsApp from '../../components/landing/FloatingWhatsApp.vue'
 import LocationSection from '../../components/landing/LocationSection.vue'
 import SiteFooter from '../../components/landing/SiteFooter.vue'
+import LandingHero from '../../components/landing/LandingHero.vue'
 import { landingContent } from '../../data/landing'
 
 describe('landing conversion sections', () => {
@@ -172,6 +173,27 @@ describe('landing conversion sections', () => {
     expect(wrapper.text()).toContain(landingContent.location.address)
     expect(wrapper.text()).not.toContain('Desenvolvido por')
     expect(wrapper.find('a[href*="instagram.com"]').exists()).toBe(true)
+    expect(wrapper.get('a[href*="instagram.com"]').attributes('href')).toBe(landingContent.contact.instagramUrl)
     expect(wrapper.find('a[href^="https://api.whatsapp.com/"]').exists()).toBe(true)
+  })
+
+  it('reports the footer source before opening WhatsApp', async () => {
+    const received: string[] = []
+    window.addEventListener('whatsapp:click', (event: Event) => {
+      received.push((event as CustomEvent<{ source: string }>).detail.source)
+    }, { once: true })
+    const wrapper = mount(SiteFooter)
+
+    await wrapper.get('a[href^="https://api.whatsapp.com/"]').trigger('click')
+
+    expect(received).toEqual(['footer'])
+    expect(window.open).toHaveBeenCalledOnce()
+  })
+
+  it('renders the exact primary conversion label in the hero', () => {
+    const wrapper = shallowMount(LandingHero)
+
+    expect(wrapper.get('[data-hero-cta]').text()).toContain('Agende sua avaliação')
+    expect(wrapper.text()).not.toContain('Agendar minha avaliação')
   })
 })

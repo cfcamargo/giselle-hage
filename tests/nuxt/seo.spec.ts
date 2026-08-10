@@ -30,10 +30,24 @@ describe('landing SEO', async () => {
     expect(page.html).toMatch(/<html[^>]*lang="pt-BR"/)
     expect(page.html).toContain('rel="canonical" href="https://seo.example.test/"')
     expect(page.html).toContain('property="og:url" content="https://seo.example.test/"')
+    expect(page.html).toContain('property="og:image" content="https://seo.example.test/hero-bg.jpg"')
     expect(page.html.match(/type="application\/ld\+json"/g)).toHaveLength(1)
     expect(page.html).toContain('CRO-MS 4589')
     expect(page.html).toContain('"Dentist"')
     expect(page.html).toContain('"url":"https://seo.example.test/"')
+    expect(page.html).toContain('"image":"https://seo.example.test/hero-bg.jpg"')
+  })
+
+  it('serves crawlable robots and an absolute sitemap from the trusted origin', async () => {
+    const [robots, sitemap] = await Promise.all([
+      $fetch<string>('/robots.txt'),
+      $fetch<string>('/sitemap.xml')
+    ])
+
+    expect(robots).toContain('User-agent: *')
+    expect(robots).toContain('Allow: /')
+    expect(robots).toContain('Sitemap: https://seo.example.test/sitemap.xml')
+    expect(sitemap).toContain('<loc>https://seo.example.test/</loc>')
   })
 
   it('renders the published landing content and treatments anchor', async () => {

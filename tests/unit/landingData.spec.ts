@@ -64,4 +64,23 @@ describe('landingContent', () => {
     expect(landingContent.profile.registration).toBe('CRO-MS 4589')
     expect(landingContent.profile.evaluation).toMatch(/avaliação individual/i)
   })
+
+  it('centralizes reusable contact and structured address facts', () => {
+    expect(landingContent.contact.whatsapp.phone).toBe('5567981269482')
+    expect(landingContent.contact.whatsapp.message).toContain('gostaria de agendar uma avaliação')
+    expect(landingContent.contact.instagramUrl).toBe('https://www.instagram.com/dra.gisellehage/')
+    expect(landingContent.location.address).toBe('R. Tiradentes, 481 - Centro, Ponta Porã - MS, 79904-620')
+    expect(landingContent.location.postalAddress).toEqual({
+      streetAddress: 'R. Tiradentes, 481 - Centro',
+      addressLocality: 'Ponta Porã',
+      addressRegion: 'MS',
+      postalCode: '79904-620',
+      addressCountry: 'BR'
+    })
+  })
+
+  it('describes regional reach without claiming attendance in Paraguay', () => {
+    expect(landingContent.location.regionalReach).toMatch(/Brasil e Paraguai/i)
+    expect(landingContent.location.regionalReach).not.toMatch(/(?:clínica|atendimento) (?:em|no) Paraguai/i)
+  })
 })

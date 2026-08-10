@@ -9,11 +9,11 @@
       <address>{{ landingContent.location.address }}</address>
 
       <nav aria-label="Contato e redes sociais">
-        <a href="https://www.instagram.com/dra.gisellehage/" target="_blank" rel="noopener noreferrer">
+        <a :href="landingContent.contact.instagramUrl" target="_blank" rel="noopener noreferrer">
           <Instagram :size="17" :stroke-width="1.5" aria-hidden="true" />
           Instagram
         </a>
-        <a :href="href" target="_blank" rel="noopener noreferrer">
+        <a :href="href" target="_blank" rel="noopener noreferrer" @click.prevent="openWhatsApp('footer')">
           <MessageCircle :size="17" :stroke-width="1.5" aria-hidden="true" />
           WhatsApp
         </a>
@@ -30,7 +30,7 @@ import { useWhatsApp } from '~/composables/useWhatsApp'
 import { landingContent } from '~/data/landing'
 
 const currentYear = new Date().getFullYear()
-const { href } = useWhatsApp()
+const { href, openWhatsApp } = useWhatsApp()
 </script>
 
 <style scoped>

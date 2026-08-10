@@ -19,23 +19,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { landingContent } from '~/data/landing'
+import { resolveSiteOrigin } from '~/utils/siteOrigin'
 
 const introComplete = ref(false)
 const title = 'Dra. Giselle Hage | Harmonização Facial em Ponta Porã'
 const description = 'Harmonização facial com precisão, naturalidade e cuidado individual em Ponta Porã. Conheça Botox, preenchimento e peeling.'
 const runtimeConfig = useRuntimeConfig()
-const canonicalUrl = (() => {
-  if (!runtimeConfig.public.siteUrl) return undefined
-
-  try {
-    const configuredOrigin = new URL(runtimeConfig.public.siteUrl)
-    return configuredOrigin.protocol === 'https:'
-      ? new URL('/', configuredOrigin).toString()
-      : undefined
-  } catch {
-    return undefined
-  }
-})()
+const canonicalUrl = resolveSiteOrigin(runtimeConfig.public.siteUrl)
 const professionalRegistration = landingContent.credentials.find(({ label }) => label === 'Registro profissional')?.value
 
 const structuredData = {
@@ -47,11 +37,7 @@ const structuredData = {
       description,
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'R. Tiradentes, 481 - Centro',
-        addressLocality: 'Ponta Porã',
-        addressRegion: 'MS',
-        postalCode: '79904-620',
-        addressCountry: 'BR'
+        ...landingContent.location.postalAddress
       },
       identifier: {
         '@type': 'PropertyValue',
@@ -77,7 +63,8 @@ useSeoMeta({
   ogLocale: 'pt_BR',
   ogType: 'website',
   ogUrl: canonicalUrl,
-  ogImage: '/hero-bg.jpg',
+  ogImage: canonicalUrl ? new URL(landingContent.hero.image, canonicalUrl).toString() : undefined,
+  robots: canonicalUrl ? 'index, follow' : 'noindex, nofollow',
   twitterCard: 'summary_large_image'
 })
 

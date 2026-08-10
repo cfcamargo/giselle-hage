@@ -57,6 +57,13 @@ export const landingContent = {
     name: 'Dra. Giselle Hage',
     logo: '/Logo.svg'
   },
+  contact: {
+    whatsapp: {
+      phone: '5567981269482',
+      message: 'Olá, Dra. Giselle! Conheci seu site e gostaria de agendar uma avaliação para entender qual tratamento é mais indicado para mim.'
+    },
+    instagramUrl: 'https://www.instagram.com/dra.gisellehage/'
+  },
   hero: {
     eyebrow: 'Harmonização facial em Ponta Porã',
     headline: 'Harmonização Facial em Ponta Porã',
@@ -85,8 +92,15 @@ export const landingContent = {
   faqs,
   location: {
     address: 'R. Tiradentes, 481 - Centro, Ponta Porã - MS, 79904-620',
+    postalAddress: {
+      streetAddress: 'R. Tiradentes, 481 - Centro',
+      addressLocality: 'Ponta Porã',
+      addressRegion: 'MS',
+      postalCode: '79904-620',
+      addressCountry: 'BR'
+    },
     city: 'Ponta Porã - MS',
-    regionalReach: 'Atendimento em Ponta Porã, cidades vizinhas e região de fronteira com Pedro Juan Caballero.',
+    regionalReach: 'Atendimento em Ponta Porã e cidades vizinhas, na região da fronteira entre Brasil e Paraguai, próxima a Pedro Juan Caballero.',
     mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14740.600180165486!2d-55.7266496!3d-22.5360514!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94626fcb4c139687%3A0x6e402d3ecf6437f7!2sDra.%20Giselle%20Hage%20-%20Harmoniza%C3%A7%C3%A3o%20Facial%20em%20Ponta%20Por%C3%A3%20MS!5e0!3m2!1spt-BR!2sbr!4v1695854782910!5m2!1spt-BR!2sbr'
   }
 } as const

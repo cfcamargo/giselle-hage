@@ -45,23 +45,33 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 import { landingContent } from '~/data/landing'
 
 const section = ref<HTMLElement | null>(null)
 const reducedMotion = useReducedMotion()
 let animationContext: gsap.Context | undefined
+let stopReducedWatcher: (() => void) | undefined
+let buildVersion = 0
 let unmounted = false
 
-onMounted(async () => {
+function revertMotion() {
+  buildVersion += 1
+  animationContext?.revert()
+  animationContext = undefined
+  section.value?.classList.remove('js-motion')
+}
+
+async function buildMotion() {
   if (reducedMotion.value || !section.value) return
+  const version = ++buildVersion
 
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([
     import('gsap'),
     import('gsap/ScrollTrigger')
   ])
-  if (unmounted || reducedMotion.value || !section.value) return
+  if (unmounted || reducedMotion.value || !section.value || version !== buildVersion) return
 
   gsap.registerPlugin(ScrollTrigger)
   section.value.classList.add('js-motion')
@@ -78,12 +88,21 @@ onMounted(async () => {
       .fromTo('[data-about-image]', { scale: 1.045 }, { scale: 1, duration: 1.7 }, 0)
       .fromTo('[data-about-copy]', { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.85 }, 0.3)
   }, section.value)
+}
+
+onMounted(() => {
+  stopReducedWatcher = watch(reducedMotion, (isReduced) => {
+    if (isReduced) revertMotion()
+    else void buildMotion()
+  }, { flush: 'sync' })
+  void buildMotion()
 })
 
 onBeforeUnmount(() => {
   unmounted = true
-  animationContext?.revert()
-  animationContext = undefined
+  stopReducedWatcher?.()
+  stopReducedWatcher = undefined
+  revertMotion()
 })
 </script>
 

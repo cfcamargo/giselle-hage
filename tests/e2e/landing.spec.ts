@@ -29,7 +29,7 @@ test('renders one headline and a real WhatsApp conversion link', async ({ page }
 
   const cta = page.locator('[data-hero-cta]')
   await expect(cta).toHaveCount(1)
-  await expect(cta).toHaveAccessibleName('Agendar minha avaliação')
+  await expect(cta).toHaveAccessibleName('Agende sua avaliação')
   await expect(cta).toHaveAttribute(
     'href',
     /^https:\/\/api\.whatsapp\.com\/send\?phone=5567981269482&text=.+/
@@ -67,6 +67,41 @@ test('completes the ordinary-motion intro without manual intervention', async ({
   expect(await page.evaluate(() => sessionStorage.getItem('giselle-intro-seen'))).toBe('1')
   await expect(page.locator('html')).not.toHaveClass(/intro-active/)
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+})
+
+test('finishes an active intro when reduced motion is enabled live', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+  await expect(page.locator('[data-intro-state="active"]')).toBeAttached()
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+
+  await expect(page.locator('[data-intro-state="complete"]')).toBeAttached()
+  await expect(page.locator('html')).not.toHaveClass(/intro-active/)
+  expect(await page.evaluate(() => sessionStorage.getItem('giselle-intro-seen'))).toBe('1')
+
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect(page.locator('[data-intro-state="complete"]')).toBeAttached()
+})
+
+test('reverts and rebuilds hero and profile motion when the preference changes', async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem('giselle-intro-seen', '1'))
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+
+  const hero = page.locator('.landing-hero')
+  const profile = page.locator('.about-section')
+  await expect(hero).toHaveClass(/js-motion/)
+  await expect(profile).toHaveClass(/js-motion/)
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(hero).not.toHaveClass(/js-motion/)
+  await expect(profile).not.toHaveClass(/js-motion/)
+  await expect(page.locator('[data-about-mask]')).toHaveCSS('transform', 'none')
+
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect(hero).toHaveClass(/js-motion/)
+  await expect(profile).toHaveClass(/js-motion/)
 })
 
 test('tears down and rebuilds narrative motion when the preference changes', async ({ page }) => {

@@ -28,7 +28,7 @@
           rel="noopener noreferrer"
           @click.prevent="openWhatsApp('hero')"
         >
-          Agendar minha avaliação
+          Agende sua avaliação
           <ArrowUpRight :size="17" :stroke-width="1.5" aria-hidden="true" />
         </a>
 
@@ -64,6 +64,8 @@ useGsapContext(hero, (gsap) => {
     .fromTo('[data-hero-media]', { scale: 1.035 }, { scale: 1, duration: 1.5 })
     .fromTo('[data-hero-line]', { scaleY: 0 }, { scaleY: 1, duration: 0.9 }, 0.12)
     .fromTo('[data-hero-folio]', { opacity: 0, x: 10 }, { opacity: 1, x: 0, duration: 0.7 }, 0.35)
+
+  return () => hero.value?.classList.remove('js-motion')
 })
 </script>
 

@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 
 const emit = defineEmits<{
@@ -34,6 +34,7 @@ const introState = ref<'pending' | 'active' | 'complete'>('pending')
 const reducedMotion = useReducedMotion()
 let timeline: { kill: () => void } | undefined
 let hardTimeout: ReturnType<typeof setTimeout> | undefined
+let stopReducedWatcher: (() => void) | undefined
 let finished = false
 let unmounted = false
 
@@ -75,6 +76,10 @@ function pathLength(path: SVGPathElement) {
 }
 
 onMounted(async () => {
+  stopReducedWatcher = watch(reducedMotion, (isReduced) => {
+    if (isReduced) finish()
+  }, { flush: 'sync' })
+
   if (hasSeenIntro() || reducedMotion.value) {
     await nextTick()
     finish()
@@ -128,6 +133,8 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   unmounted = true
+  stopReducedWatcher?.()
+  stopReducedWatcher = undefined
   if (hardTimeout) clearTimeout(hardTimeout)
   timeline?.kill()
   document.documentElement.classList.remove('intro-active')

@@ -1,10 +1,9 @@
 import { computed } from 'vue'
+import { landingContent } from '~/data/landing'
 import type { WhatsAppSource } from '~/types/landing'
 
-const phone = '5567981269482'
-const message = 'Olá, Dra. Giselle! Conheci seu site e gostaria de agendar uma avaliação para entender qual tratamento é mais indicado para mim.'
-
 export function useWhatsApp() {
+  const { message, phone } = landingContent.contact.whatsapp
   const href = computed(() => `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`)
 
   function openWhatsApp(source: WhatsAppSource) {

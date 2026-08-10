@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from 'vitest'
-import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch, setup } from '@nuxt/test-utils/e2e'
 import { Window } from 'happy-dom'
 
 type JsonLdNode = Record<string, unknown>
@@ -44,6 +44,8 @@ describe('landing SEO without a configured public origin', async () => {
 
     expect(document.querySelector('link[rel~="canonical"]')).toBeNull()
     expect(document.querySelector('meta[property="og:url"]')).toBeNull()
+    expect(document.querySelector('meta[property="og:image"]')).toBeNull()
+    expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex, nofollow')
 
     const structuredData = [...document.querySelectorAll('script[type="application/ld+json"]')]
       .map(script => JSON.parse(script.textContent || 'null'))
@@ -59,5 +61,15 @@ describe('landing SEO without a configured public origin', async () => {
       expect(businessNode).not.toHaveProperty('url')
       expect(isAbsoluteUrl(businessNode.image)).toBe(false)
     }
+  })
+
+  it('disallows crawling and does not publish a sitemap without a trusted origin', async () => {
+    const robots = await $fetch<string>('/robots.txt')
+    const sitemapResponse = await fetch('/sitemap.xml')
+
+    expect(robots).toContain('User-agent: *')
+    expect(robots).toContain('Disallow: /')
+    expect(robots).not.toContain('Sitemap:')
+    expect(sitemapResponse.status).toBe(404)
   })
 })

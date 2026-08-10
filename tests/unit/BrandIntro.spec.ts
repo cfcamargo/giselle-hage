@@ -27,17 +27,47 @@ vi.mock('gsap', () => ({
   }
 }))
 
+interface ControlledMediaQuery extends MediaQueryList {
+  setMatches: (matches: boolean) => void
+}
+
+function installMatchMedia(initial: boolean) {
+  let matches = initial
+  const listeners = new Set<(event: MediaQueryListEvent) => void>()
+  const mediaQuery = {
+    media: '(prefers-reduced-motion: reduce)',
+    get matches() {
+      return matches
+    },
+    onchange: null,
+    addEventListener: vi.fn((type: string, listener: (event: MediaQueryListEvent) => void) => {
+      if (type === 'change') listeners.add(listener)
+    }),
+    removeEventListener: vi.fn((type: string, listener: (event: MediaQueryListEvent) => void) => {
+      if (type === 'change') listeners.delete(listener)
+    }),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(() => true),
+    setMatches(nextMatches: boolean) {
+      matches = nextMatches
+      const event = { matches, media: mediaQuery.media } as MediaQueryListEvent
+      for (const listener of listeners) listener(event)
+      mediaQuery.onchange?.(event)
+    }
+  } as ControlledMediaQuery
+
+  vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
+  return mediaQuery
+}
+
 describe('BrandIntro', () => {
   let wrapper: VueWrapper | undefined
 
   beforeEach(() => {
     sessionStorage.clear()
     vi.useFakeTimers()
-    vi.stubGlobal('matchMedia', vi.fn(() => ({
-      matches: false,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn()
-    })))
+    installMatchMedia(false)
     gsapState.state.onComplete = undefined
     gsapState.set.mockClear()
     gsapState.timeline.mockClear()
@@ -100,11 +130,7 @@ describe('BrandIntro', () => {
   })
 
   it('completes on the next tick when reduced motion is preferred', async () => {
-    vi.stubGlobal('matchMedia', vi.fn(() => ({
-      matches: true,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn()
-    })))
+    installMatchMedia(true)
 
     wrapper = mount(BrandIntro)
     await nextTick()
@@ -112,6 +138,33 @@ describe('BrandIntro', () => {
 
     expect(wrapper.emitted('complete')).toHaveLength(1)
     expect(sessionStorage.getItem('giselle-intro-seen')).toBe('1')
+  })
+
+  it('finishes an active intro immediately when reduced motion is enabled and does not restart it', async () => {
+    const mediaQuery = installMatchMedia(false)
+    wrapper = mount(BrandIntro)
+    await nextTick()
+    await vi.dynamicImportSettled()
+
+    expect(wrapper.attributes('data-intro-state')).toBe('active')
+    expect(document.documentElement.classList.contains('intro-active')).toBe(true)
+    expect(vi.getTimerCount()).toBe(1)
+
+    mediaQuery.setMatches(true)
+    await nextTick()
+
+    expect(wrapper.attributes('data-intro-state')).toBe('complete')
+    expect(wrapper.emitted('complete')).toHaveLength(1)
+    expect(document.documentElement.classList.contains('intro-active')).toBe(false)
+    expect(vi.getTimerCount()).toBe(0)
+    expect(sessionStorage.getItem('giselle-intro-seen')).toBe('1')
+
+    mediaQuery.setMatches(false)
+    await nextTick()
+
+    expect(wrapper.attributes('data-intro-state')).toBe('complete')
+    expect(wrapper.emitted('complete')).toHaveLength(1)
+    expect(gsapState.timeline).toHaveBeenCalledTimes(1)
   })
 
   it('emits completion only once when completion paths race', async () => {

@@ -370,6 +370,36 @@ describe('results and professional profile', () => {
     expect(motionState.revert).toHaveBeenCalledOnce()
   })
 
+  it('reverts and rebuilds profile motion in both preference directions', async () => {
+    const mediaQuery = installMatchMedia(false)
+    const wrapper = mount(AboutSection, {
+      attachTo: document.body,
+      global: { stubs: { NuxtImg } }
+    })
+    wrappers.push(wrapper)
+    await settleMotion()
+
+    expect(wrapper.get('section').classes()).toContain('js-motion')
+    expect(motionState.context).toHaveBeenCalledTimes(1)
+
+    mediaQuery.setMatches(true)
+    await nextTick()
+
+    expect(wrapper.get('section').classes()).not.toContain('js-motion')
+    expect(motionState.revert).toHaveBeenCalledTimes(1)
+
+    mediaQuery.setMatches(false)
+    await settleMotion()
+
+    expect(wrapper.get('section').classes()).toContain('js-motion')
+    expect(motionState.context).toHaveBeenCalledTimes(2)
+
+    wrapper.unmount()
+    wrappers.pop()
+    expect(motionState.revert).toHaveBeenCalledTimes(2)
+    expect(mediaQuery.removeEventListener).toHaveBeenCalled()
+  })
+
   it('does not create profile motion when reduced motion is preferred', async () => {
     const wrapper = mount(AboutSection, {
       global: { stubs: { NuxtImg } }

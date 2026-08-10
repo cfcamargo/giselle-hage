@@ -1,6 +1,6 @@
 export type WhatsAppSource =
   | 'header' | 'hero' | 'botox' | 'preenchimento' | 'peeling'
-  | 'results' | 'faq' | 'location' | 'closing' | 'floating'
+  | 'results' | 'faq' | 'location' | 'closing' | 'floating' | 'footer'
 
 export interface Treatment {
   slug: 'botox' | 'preenchimento' | 'peeling'

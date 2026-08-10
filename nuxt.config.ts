@@ -1,3 +1,7 @@
+import { resolveSiteOrigin } from './utils/siteOrigin'
+
+const configuredSiteOrigin = resolveSiteOrigin(process.env.NUXT_PUBLIC_SITE_URL)
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	devtools: { enabled: true },
@@ -14,9 +18,16 @@ export default defineNuxtConfig({
 			autoprefixer: {},
 		},
 	},
-	modules: ['@nuxt/image', 'nuxt-swiper', 'motion-v/nuxt'],
+	modules: ['@nuxt/image', 'motion-v/nuxt'],
 	motionV: {
 		utilities: false
+	},
+	nitro: {
+		prerender: {
+			routes: configuredSiteOrigin
+				? ['/robots.txt', '/sitemap.xml']
+				: ['/robots.txt']
+		}
 	},
 	routeRules: {
 		'/services/BigodeChines': { redirect: { to: '/#tratamentos', statusCode: 301 } },

@@ -63,7 +63,7 @@ for (const [signal, handler] of signalHandlers) process.once(signal, handler)
 const environment = {
   ...process.env,
   HOST: '127.0.0.1',
-  NUXT_PUBLIC_SITE_URL: 'https://www.gisellehage.com.br',
+  NUXT_PUBLIC_SITE_URL: 'https://preview.example.test',
   PORT: '3000'
 }
 
