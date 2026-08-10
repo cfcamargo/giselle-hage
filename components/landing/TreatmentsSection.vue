@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpRight } from 'lucide-vue-next'
+import { ArrowUpRight } from '@lucide/vue'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 import { landingContent } from '~/data/landing'
@@ -115,7 +115,7 @@ onMounted(async () => {
         stage.value.dataset.motionMode = 'cinematic'
         gsap.set(images.slice(1), { clipPath: 'inset(100% 0 0 0)', scale: 1.08 })
         gsap.set(copies.slice(1), { autoAlpha: 0, y: 54 })
-        gsap.set(images[0], { scale: 1.04 })
+        gsap.set(firstImage, { scale: 1.04 })
         if (progress) gsap.set(progress, { scaleY: 0, transformOrigin: 'top center' })
 
         const timeline = gsap.timeline({
@@ -132,10 +132,15 @@ onMounted(async () => {
         timeline.to(firstImage, { scale: 1, duration: 0.7 })
         chapters.slice(1).forEach((_, index) => {
           const current = index + 1
+          const previousCopy = copies[index]
+          const currentImage = images[current]
+          const currentCopy = copies[current]
+          if (!previousCopy || !currentImage || !currentCopy) return
+
           timeline
-            .to(copies[index], { autoAlpha: 0, y: -42, duration: 0.28 })
-            .to(images[current], { clipPath: 'inset(0% 0 0 0)', scale: 1, duration: 0.72 }, '<0.05')
-            .to(copies[current], { autoAlpha: 1, y: 0, duration: 0.42 }, '<0.22')
+            .to(previousCopy, { autoAlpha: 0, y: -42, duration: 0.28 })
+            .to(currentImage, { clipPath: 'inset(0% 0 0 0)', scale: 1, duration: 0.72 }, '<0.05')
+            .to(currentCopy, { autoAlpha: 1, y: 0, duration: 0.42 }, '<0.22')
         })
         if (progress) timeline.to(progress, { scaleY: 1, duration: timeline.duration() }, 0)
 

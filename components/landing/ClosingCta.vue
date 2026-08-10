@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpRight } from 'lucide-vue-next'
+import { ArrowUpRight } from '@lucide/vue'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 
 const { href, openWhatsApp } = useWhatsApp()

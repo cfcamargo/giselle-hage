@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { BadgeCheck } from 'lucide-vue-next'
+import { BadgeCheck } from '@lucide/vue'
 
 const props = defineProps({
     title: String,

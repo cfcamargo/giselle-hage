@@ -9,7 +9,7 @@
 
 
 <script setup lang="ts">
-import { Clock, Heart } from 'lucide-vue-next'
+import { Clock, Heart } from '@lucide/vue'
 
 const props = defineProps({
     icon : {

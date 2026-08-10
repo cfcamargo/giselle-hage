@@ -10,7 +10,7 @@
 
       <nav aria-label="Contato e redes sociais">
         <a :href="landingContent.contact.instagramUrl" target="_blank" rel="noopener noreferrer">
-          <Instagram :size="17" :stroke-width="1.5" aria-hidden="true" />
+          <Camera :size="17" :stroke-width="1.5" aria-hidden="true" />
           Instagram
         </a>
         <a :href="href" target="_blank" rel="noopener noreferrer" @click.prevent="openWhatsApp('footer')">
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { Instagram, MessageCircle } from 'lucide-vue-next'
+import { Camera, MessageCircle } from '@lucide/vue'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 import { landingContent } from '~/data/landing'
 

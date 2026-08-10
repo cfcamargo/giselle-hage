@@ -119,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-vue-next'
+import { ArrowLeft, ArrowRight, ArrowUpRight } from '@lucide/vue'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 import { useWhatsApp } from '~/composables/useWhatsApp'
@@ -165,7 +165,7 @@ function syncCurrentResult() {
     return
   }
 
-  const firstOffset = cards[0].offsetLeft
+  const firstOffset = cards[0]!.offsetLeft
   let nearestIndex = 0
   let nearestDistance = Number.POSITIVE_INFINITY
 
@@ -275,7 +275,8 @@ onMounted(async () => {
       timeline
         .to(card, { scale: 1, y: 0, autoAlpha: 1, duration: 0.18 }, active)
         .to(card, { scale: 0.9, y: -20, autoAlpha: 0.78, duration: 0.18 }, Math.min(1, active + 0.15))
-      timeline.to(images[index], { scale: 1, duration: 0.26 }, start)
+      const image = images[index]
+      if (image) timeline.to(image, { scale: 1, duration: 0.26 }, start)
     })
   }, section.value)
 })

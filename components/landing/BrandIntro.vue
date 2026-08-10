@@ -86,8 +86,8 @@ onMounted(async () => {
       fill: 'transparent',
       stroke: '#b9a27d',
       strokeWidth: 0.7,
-      strokeDasharray: index => lengths[index],
-      strokeDashoffset: index => lengths[index]
+      strokeDasharray: index => lengths[index] ?? 0,
+      strokeDashoffset: index => lengths[index] ?? 0
     })
 
     timeline = gsap.timeline({ onComplete: finish })

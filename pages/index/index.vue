@@ -70,7 +70,7 @@ useSeoMeta({
 
 useHead({
   link: [
-    ...(canonicalUrl ? [{ rel: 'canonical', href: canonicalUrl }] : [])
+    ...(canonicalUrl ? [{ rel: 'canonical' as const, href: canonicalUrl }] : [])
   ],
   script: [
     {

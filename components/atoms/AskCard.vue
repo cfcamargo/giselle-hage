@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 
 interface askCardProps  {
     ask: string
@@ -33,7 +33,7 @@ const props = defineProps<{
 }>()
 const { question } = props
 
-let show = ref(false)
+const show = ref(false)
 
 function toggleShow() {
 	show.value = !show.value

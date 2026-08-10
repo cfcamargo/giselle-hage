@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { Menu, X } from 'lucide-vue-next'
+import { Menu, X } from '@lucide/vue'
 import { motion } from 'motion-v'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'

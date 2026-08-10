@@ -7,6 +7,9 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	css: ['@/assets/css/main.css'],
 	components : [{ path: '@/components', pathPrefix: false }],
+	experimental: {
+		asyncContext: true
+	},
 	runtimeConfig: {
 		public: {
 			siteUrl: ''
@@ -14,7 +17,7 @@ export default defineNuxtConfig({
 	},
 	postcss: {
 		plugins: {
-			tailwindcss: {},
+			'@tailwindcss/postcss': {},
 			autoprefixer: {},
 		},
 	},
@@ -23,6 +26,8 @@ export default defineNuxtConfig({
 		utilities: false
 	},
 	nitro: {
+		compatibilityDate: '2026-08-10',
+		preset: process.env.VERCEL ? 'vercel' : undefined,
 		prerender: {
 			routes: configuredSiteOrigin
 				? ['/robots.txt', '/sitemap.xml']

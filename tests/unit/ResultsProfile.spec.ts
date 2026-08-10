@@ -173,7 +173,7 @@ function configureGalleryLayout(wrapper: VueWrapper) {
     })
     Object.defineProperty(card.element, 'getBoundingClientRect', {
       configurable: true,
-      value: () => rectangle(cardOffsets[index] - scrollLeft, 360)
+      value: () => rectangle(cardOffsets[index]! - scrollLeft, 360)
     })
   }
 
@@ -277,7 +277,7 @@ describe('results and professional profile', () => {
     await nextTick()
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
-    expect(wrapper.findAll('[data-result-card]')[0].attributes('aria-current')).toBe('true')
+    expect(wrapper.findAll('[data-result-card]')[0]!.attributes('aria-current')).toBe('true')
 
     await wrapper.get('button[aria-label="Ver próximo resultado"]').trigger('click')
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 7')
@@ -288,8 +288,8 @@ describe('results and professional profile', () => {
     await nextTick()
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 3 de 7')
-    expect(wrapper.findAll('[data-result-card]')[2].attributes('aria-current')).toBe('true')
-    expect(wrapper.findAll('[data-result-card]')[0].attributes('aria-current')).toBeUndefined()
+    expect(wrapper.findAll('[data-result-card]')[2]!.attributes('aria-current')).toBe('true')
+    expect(wrapper.findAll('[data-result-card]')[0]!.attributes('aria-current')).toBeUndefined()
 
     layout.setScrollLeft(layout.maxScroll)
     await gallery.trigger('scroll')
@@ -297,7 +297,7 @@ describe('results and professional profile', () => {
     await nextTick()
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
-    expect(wrapper.findAll('[data-result-card]')[6].attributes('aria-current')).toBe('true')
+    expect(wrapper.findAll('[data-result-card]')[6]!.attributes('aria-current')).toBe('true')
   })
 
   it('starts controls from the visually current card and keeps edge controls focused', async () => {
@@ -382,7 +382,7 @@ describe('results and professional profile', () => {
     await nextTick()
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 7')
-    expect(wrapper.findAll('[data-result-card]')[1].attributes('aria-current')).toBe('true')
+    expect(wrapper.findAll('[data-result-card]')[1]!.attributes('aria-current')).toBe('true')
     expect(scrollIntoView).not.toHaveBeenCalled()
   })
 

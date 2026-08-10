@@ -37,12 +37,12 @@ describe('FaqSection', () => {
     const wrapper = mount(FaqSection)
     const buttons = wrapper.findAll('button[aria-expanded="false"]')
 
-    await buttons[0].trigger('click')
-    await buttons[1].trigger('click')
+    await buttons[0]!.trigger('click')
+    await buttons[1]!.trigger('click')
 
-    expect(buttons[0].attributes('aria-expanded')).toBe('true')
-    expect(buttons[1].attributes('aria-expanded')).toBe('true')
-    expect(wrapper.get(`#${buttons[0].attributes('aria-controls')}`).isVisible()).toBe(true)
-    expect(wrapper.get(`#${buttons[1].attributes('aria-controls')}`).isVisible()).toBe(true)
+    expect(buttons[0]!.attributes('aria-expanded')).toBe('true')
+    expect(buttons[1]!.attributes('aria-expanded')).toBe('true')
+    expect(wrapper.get(`#${buttons[0]!.attributes('aria-controls')}`).isVisible()).toBe(true)
+    expect(wrapper.get(`#${buttons[1]!.attributes('aria-controls')}`).isVisible()).toBe(true)
   })
 })

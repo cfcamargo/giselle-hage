@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpRight, MapPin } from 'lucide-vue-next'
+import { ArrowUpRight, MapPin } from '@lucide/vue'
 import { ref } from 'vue'
 import { useGsapContext } from '~/composables/useGsapContext'
 import { useWhatsApp } from '~/composables/useWhatsApp'

@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpRight, ChevronDown } from 'lucide-vue-next'
+import { ArrowUpRight, ChevronDown } from '@lucide/vue'
 import { motion } from 'motion-v'
 import { ref } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'

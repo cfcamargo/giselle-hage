@@ -391,7 +391,7 @@ describe('landing narrative sections', () => {
     wrappers.pop()
 
     expect(document.querySelectorAll('.pin-spacer')).toHaveLength(0)
-    expect(motionState.matchMediaInstances[0].revert).toHaveBeenCalledOnce()
+    expect(motionState.matchMediaInstances[0]!.revert).toHaveBeenCalledOnce()
     expect(media.desktop().removeEventListener).toHaveBeenCalled()
     expect(media.reduced().removeEventListener).toHaveBeenCalled()
     expect(motionState.contextReverts[0]).toHaveBeenCalledOnce()
@@ -430,7 +430,7 @@ describe('landing narrative sections', () => {
 
     wrapper.unmount()
     wrappers.pop()
-    expect(motionState.matchMediaInstances[0].revert).toHaveBeenCalledOnce()
+    expect(motionState.matchMediaInstances[0]!.revert).toHaveBeenCalledOnce()
     expect(media.noPreference().removeEventListener).toHaveBeenCalled()
     expect(media.reduced().removeEventListener).toHaveBeenCalled()
   })

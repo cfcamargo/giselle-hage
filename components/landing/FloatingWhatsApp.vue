@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { MessageCircle } from 'lucide-vue-next'
+import { MessageCircle } from '@lucide/vue'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 

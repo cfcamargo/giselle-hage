@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpRight, MapPin } from 'lucide-vue-next'
+import { ArrowUpRight, MapPin } from '@lucide/vue'
 import { useWhatsApp } from '~/composables/useWhatsApp'
 import { landingContent } from '~/data/landing'
 
