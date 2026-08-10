@@ -1,5 +1,7 @@
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { renderToString } from '@vue/server-renderer'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { createSSRApp, nextTick } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import AboutSection from '../../components/landing/AboutSection.vue'
@@ -9,6 +11,9 @@ const motionState = vi.hoisted(() => {
   const state: { defer: boolean, resolve?: () => void } = { defer: false }
   const revert = vi.fn()
   const fromTo = vi.fn()
+  const set = vi.fn()
+  const to = vi.fn()
+  const toArray = vi.fn((selector: string) => Array.from(document.querySelectorAll(selector)))
   const timeline = vi.fn((options: { scrollTrigger?: { pin?: boolean } } = {}) => {
     if (options.scrollTrigger?.pin) {
       const spacer = document.createElement('div')
@@ -16,8 +21,9 @@ const motionState = vi.hoisted(() => {
       document.body.append(spacer)
     }
 
-    const chain = { fromTo }
+    const chain = { fromTo, to }
     fromTo.mockReturnValue(chain)
+    to.mockReturnValue(chain)
     return chain
   })
   const context = vi.fn((setup: () => void) => {
@@ -26,7 +32,7 @@ const motionState = vi.hoisted(() => {
   })
   const registerPlugin = vi.fn()
 
-  return { context, fromTo, registerPlugin, revert, state, timeline }
+  return { context, fromTo, registerPlugin, revert, set, state, timeline, to, toArray }
 })
 
 vi.mock('gsap', () => {
@@ -34,7 +40,11 @@ vi.mock('gsap', () => {
     gsap: {
       context: motionState.context,
       registerPlugin: motionState.registerPlugin,
-      timeline: motionState.timeline
+      set: motionState.set,
+      timeline: motionState.timeline,
+      utils: {
+        toArray: motionState.toArray
+      }
     }
   }
 
@@ -60,13 +70,13 @@ interface ControlledMediaQuery extends MediaQueryList {
   setMatches: (matches: boolean) => void
 }
 
-function installMatchMedia(reduced: boolean) {
-  let matches = reduced
+function installMatchMedia(reduced: boolean, desktop = true) {
+  let reducedMatches = reduced
   const listeners = new Set<(event: MediaQueryListEvent) => void>()
   const mediaQuery = {
     media: '(prefers-reduced-motion: reduce)',
     get matches() {
-      return matches
+      return reducedMatches
     },
     onchange: null,
     addEventListener: vi.fn((type: string, listener: (event: MediaQueryListEvent) => void) => {
@@ -79,14 +89,28 @@ function installMatchMedia(reduced: boolean) {
     removeListener: vi.fn(),
     dispatchEvent: vi.fn(() => true),
     setMatches(nextMatches: boolean) {
-      matches = nextMatches
-      const event = { matches, media: mediaQuery.media } as MediaQueryListEvent
+      reducedMatches = nextMatches
+      const event = { matches: reducedMatches, media: mediaQuery.media } as MediaQueryListEvent
       for (const listener of listeners) listener(event)
       mediaQuery.onchange?.(event)
     }
   } as ControlledMediaQuery
+  const desktopQuery = {
+    media: '(min-width: 64rem)',
+    get matches() {
+      return desktop
+    },
+    onchange: null,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(() => true)
+  } as MediaQueryList
 
-  vi.stubGlobal('matchMedia', vi.fn(() => mediaQuery))
+  vi.stubGlobal('matchMedia', vi.fn((query: string) => {
+    return query.includes('prefers-reduced-motion') ? mediaQuery : desktopQuery
+  }))
   return mediaQuery
 }
 
@@ -188,9 +212,12 @@ describe('results and professional profile', () => {
     motionState.fromTo.mockClear()
     motionState.registerPlugin.mockClear()
     motionState.revert.mockClear()
+    motionState.set.mockClear()
     motionState.state.defer = false
     motionState.state.resolve = undefined
     motionState.timeline.mockClear()
+    motionState.to.mockClear()
+    motionState.toArray.mockClear()
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
   })
@@ -202,13 +229,38 @@ describe('results and professional profile', () => {
     wrappers.push(wrapper)
 
     expect(wrapper.get('section').attributes('id')).toBe('resultados')
+    expect(wrapper.find('[data-results-stage]').exists()).toBe(true)
+    expect(wrapper.get('[data-results-track]').attributes('id')).toBe('results-gallery')
+    expect(wrapper.find('[data-results-progress]').exists()).toBe(true)
     expect(wrapper.get('[role="region"]').attributes('aria-describedby')).toBe('results-disclaimer')
     expect(wrapper.findAll('[data-result-card]')).toHaveLength(7)
+    expect(wrapper.findAll('[data-result-image]')).toHaveLength(7)
     expect(wrapper.findAll('[data-result-card] img').every(image => (image.attributes('alt')?.length ?? 0) >= 20)).toBe(true)
     expect(wrapper.text()).toContain('Montagens fotográficas')
     expect(wrapper.findAll('figcaption small').every(label => label.text() === 'Montagem lado a lado')).toBe(true)
     expect(wrapper.get('#results-disclaimer').text()).toContain('Resultados variam de pessoa para pessoa')
     expect(wrapper.find('[role="slider"]').exists()).toBe(false)
+  })
+
+  it('keeps mobile result cards dimensionally stable while images load', () => {
+    const source = readFileSync(join(process.cwd(), 'components/landing/ResultsSection.vue'), 'utf8')
+
+    expect(source).toContain("'is-before': index < currentResult")
+    expect(source).toContain("'is-after': index > currentResult")
+    expect(source).toContain('.results-section__gallery ul {\n  display: grid;')
+    expect(source).toContain('overflow: hidden;')
+    expect(source).toContain('.results-section__gallery li {\n  grid-area: 1 / 1;')
+    expect(source).toContain('.results-section__gallery li.is-current {')
+    expect(source).toContain('.results-section__gallery li.is-after {')
+    expect(source).toContain('.results-section__gallery figure {\n  position: relative;')
+    expect(source).toContain('aspect-ratio: 1;')
+    expect(source).toContain('.results-section__gallery img {\n  position: absolute;')
+    expect(source).toContain('inset: 0;')
+    expect(source).toContain('height: 100%;')
+    expect(source).toContain('<img')
+    expect(source).not.toContain('<NuxtImg\n                :src="result.image"')
+    expect(source).toContain('@media (min-width: 64rem) {\n  .results-section.js-cinematic')
+    expect(source).toContain('.results-section.js-cinematic .results-section__gallery ul {\n    display: flex;')
   })
 
   it('syncs to leading snap positions at the start, middle and end of a multi-card viewport', async () => {
@@ -318,6 +370,22 @@ describe('results and professional profile', () => {
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
   })
 
+  it('advances the mobile editorial deck without invoking horizontal scroll alignment', async () => {
+    installMatchMedia(false, false)
+    const scrollIntoView = vi.spyOn(HTMLElement.prototype, 'scrollIntoView')
+    const wrapper = mount(ResultsSection, {
+      global: { stubs: { NuxtImg } }
+    })
+    wrappers.push(wrapper)
+
+    await wrapper.get('button[aria-label="Ver próximo resultado"]').trigger('click')
+    await nextTick()
+
+    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 7')
+    expect(wrapper.findAll('[data-result-card]')[1].attributes('aria-current')).toBe('true')
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
   it('uses the results source when opening the evaluation CTA', async () => {
     const open = vi.spyOn(window, 'open').mockImplementation(() => null)
     const sources: string[] = []
@@ -351,6 +419,31 @@ describe('results and professional profile', () => {
     await settleMotion()
 
     expect(motionState.context).not.toHaveBeenCalled()
+  })
+
+  it('creates pinned cinematic motion for results when motion is allowed', async () => {
+    installMatchMedia(false)
+    const wrapper = mount(ResultsSection, {
+      attachTo: document.body,
+      global: { stubs: { NuxtImg } }
+    })
+    wrappers.push(wrapper)
+    configureGalleryLayout(wrapper)
+    await settleMotion()
+
+    expect(motionState.registerPlugin).toHaveBeenCalledWith(ScrollTrigger)
+    expect(motionState.context).toHaveBeenCalled()
+    expect(motionState.timeline).toHaveBeenCalledWith(expect.objectContaining({
+      scrollTrigger: expect.objectContaining({
+        trigger: wrapper.get('[data-results-stage]').element,
+        pin: true,
+        scrub: expect.any(Number)
+      })
+    }))
+
+    wrapper.unmount()
+    wrappers.pop()
+    expect(motionState.revert).toHaveBeenCalled()
   })
 
   it('keeps the profile in normal flow and cleans up its reveal animation', async () => {
