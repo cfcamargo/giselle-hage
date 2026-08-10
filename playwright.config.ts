@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const previewOrigin = 'http://127.0.0.1:3000'
+const previewPort = process.env.E2E_PORT ?? '3000'
+const previewOrigin = `http://127.0.0.1:${previewPort}`
 
 export default defineConfig({
   testDir: './tests/e2e',

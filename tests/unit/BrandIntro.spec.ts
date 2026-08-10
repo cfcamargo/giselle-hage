@@ -81,16 +81,18 @@ describe('BrandIntro', () => {
     vi.useRealTimers()
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
+    window.history.replaceState({}, '', '/')
   })
 
-  it('skips the full timeline when the session flag exists', async () => {
+  it('replays the full timeline even when an old session flag exists', async () => {
     sessionStorage.setItem('giselle-intro-seen', '1')
 
     wrapper = mount(BrandIntro)
     await nextTick()
-    await nextTick()
+    await vi.dynamicImportSettled()
 
-    expect(wrapper.emitted('complete')).toHaveLength(1)
+    expect(wrapper.attributes('data-intro-state')).toBe('active')
+    expect(gsapState.timeline).toHaveBeenCalledOnce()
   })
 
   it('exposes a skip control while the intro is active', () => {
@@ -106,7 +108,7 @@ describe('BrandIntro', () => {
     expect(wrapper.get('svg').attributes('height')).toBe('78')
   })
 
-  it('uses 2100 ms as a hard cap and records completion', async () => {
+  it('uses 2100 ms as a hard cap', async () => {
     wrapper = mount(BrandIntro)
     await nextTick()
     await vi.dynamicImportSettled()
@@ -116,16 +118,16 @@ describe('BrandIntro', () => {
 
     await vi.advanceTimersByTimeAsync(1)
     expect(wrapper.emitted('complete')).toHaveLength(1)
-    expect(sessionStorage.getItem('giselle-intro-seen')).toBe('1')
+    expect(sessionStorage.getItem('giselle-intro-seen')).toBeNull()
   })
 
-  it('records the session flag when the skip control is activated', async () => {
+  it('finishes without recording a session flag when the skip control is activated', async () => {
     wrapper = mount(BrandIntro)
     await nextTick()
 
     await wrapper.get('button').trigger('click')
 
-    expect(sessionStorage.getItem('giselle-intro-seen')).toBe('1')
+    expect(sessionStorage.getItem('giselle-intro-seen')).toBeNull()
     expect(wrapper.emitted('complete')).toHaveLength(1)
   })
 
@@ -137,7 +139,7 @@ describe('BrandIntro', () => {
     await nextTick()
 
     expect(wrapper.emitted('complete')).toHaveLength(1)
-    expect(sessionStorage.getItem('giselle-intro-seen')).toBe('1')
+    expect(sessionStorage.getItem('giselle-intro-seen')).toBeNull()
   })
 
   it('finishes an active intro immediately when reduced motion is enabled and does not restart it', async () => {
@@ -157,7 +159,7 @@ describe('BrandIntro', () => {
     expect(wrapper.emitted('complete')).toHaveLength(1)
     expect(document.documentElement.classList.contains('intro-active')).toBe(false)
     expect(vi.getTimerCount()).toBe(0)
-    expect(sessionStorage.getItem('giselle-intro-seen')).toBe('1')
+    expect(sessionStorage.getItem('giselle-intro-seen')).toBeNull()
 
     mediaQuery.setMatches(false)
     await nextTick()

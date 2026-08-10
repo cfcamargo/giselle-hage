@@ -15,6 +15,11 @@ async function openWithReducedMotion(page: import('@playwright/test').Page) {
   await page.goto('/')
 }
 
+async function skipIntro(page: import('@playwright/test').Page) {
+  await page.getByRole('button', { name: 'Pular introdução' }).click()
+  await expect(page.locator('[data-intro-state="complete"]')).toBeAttached()
+}
+
 test('serves the untouched standalone production artifact', async ({ request }) => {
   const response = await request.get('/', { maxRedirects: 0 })
 
@@ -64,9 +69,13 @@ test('completes the ordinary-motion intro without manual intervention', async ({
 
   expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(false)
   await expect(page.locator('[data-intro-state="complete"]')).toBeAttached({ timeout: 5_000 })
-  expect(await page.evaluate(() => sessionStorage.getItem('giselle-intro-seen'))).toBe('1')
+  expect(await page.evaluate(() => sessionStorage.getItem('giselle-intro-seen'))).toBeNull()
   await expect(page.locator('html')).not.toHaveClass(/intro-active/)
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+
+  await page.reload()
+  await expect(page.locator('[data-intro-state="active"]')).toBeAttached()
+  await skipIntro(page)
 })
 
 test('finishes an active intro when reduced motion is enabled live', async ({ page }) => {
@@ -78,16 +87,16 @@ test('finishes an active intro when reduced motion is enabled live', async ({ pa
 
   await expect(page.locator('[data-intro-state="complete"]')).toBeAttached()
   await expect(page.locator('html')).not.toHaveClass(/intro-active/)
-  expect(await page.evaluate(() => sessionStorage.getItem('giselle-intro-seen'))).toBe('1')
+  expect(await page.evaluate(() => sessionStorage.getItem('giselle-intro-seen'))).toBeNull()
 
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await expect(page.locator('[data-intro-state="complete"]')).toBeAttached()
 })
 
 test('reverts and rebuilds hero and profile motion when the preference changes', async ({ page }) => {
-  await page.addInitScript(() => sessionStorage.setItem('giselle-intro-seen', '1'))
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
+  await skipIntro(page)
 
   const hero = page.locator('.landing-hero')
   const profile = page.locator('.about-section')
@@ -105,9 +114,9 @@ test('reverts and rebuilds hero and profile motion when the preference changes',
 })
 
 test('tears down and rebuilds narrative motion when the preference changes', async ({ page }) => {
-  await page.addInitScript(() => sessionStorage.setItem('giselle-intro-seen', '1'))
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
+  await skipIntro(page)
 
   const narrativeMotion = () => page.evaluate(() => [
     document.querySelector('[data-credential]'),
@@ -133,9 +142,9 @@ test('tears down and rebuilds narrative motion when the preference changes', asy
 
 test('presents treatments as one cinematic scroll stage on desktop', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
-  await page.addInitScript(() => sessionStorage.setItem('giselle-intro-seen', '1'))
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
+  await skipIntro(page)
 
   const section = page.locator('#tratamentos')
   await expect(section).toHaveClass(/js-cinematic/)

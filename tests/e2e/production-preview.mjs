@@ -64,7 +64,7 @@ const environment = {
   ...process.env,
   HOST: '127.0.0.1',
   NUXT_PUBLIC_SITE_URL: 'https://preview.example.test',
-  PORT: '3000'
+  PORT: process.env.E2E_PORT ?? '3000'
 }
 
 try {

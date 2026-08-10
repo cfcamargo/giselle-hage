@@ -25,7 +25,6 @@ const emit = defineEmits<{
   complete: []
 }>()
 
-const SESSION_KEY = 'giselle-intro-seen'
 const MAX_INTRO_DURATION = 2100
 
 const intro = ref<HTMLElement | null>(null)
@@ -38,22 +37,6 @@ let stopReducedWatcher: (() => void) | undefined
 let finished = false
 let unmounted = false
 
-function hasSeenIntro() {
-  try {
-    return sessionStorage.getItem(SESSION_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
-function rememberIntro() {
-  try {
-    sessionStorage.setItem(SESSION_KEY, '1')
-  } catch {
-    // Storage can be unavailable in privacy modes; the intro still completes.
-  }
-}
-
 function finish() {
   if (finished || unmounted) return
 
@@ -61,7 +44,6 @@ function finish() {
   if (hardTimeout) clearTimeout(hardTimeout)
   timeline?.kill()
   document.documentElement.classList.remove('intro-active')
-  rememberIntro()
   active.value = false
   introState.value = 'complete'
   emit('complete')
@@ -80,7 +62,7 @@ onMounted(async () => {
     if (isReduced) finish()
   }, { flush: 'sync' })
 
-  if (hasSeenIntro() || reducedMotion.value) {
+  if (reducedMotion.value) {
     await nextTick()
     finish()
     return
