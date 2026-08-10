@@ -40,9 +40,12 @@ const motionState = vi.hoisted(() => {
     else if (options.scrollTrigger) markMotion(trigger, 'reveal')
 
     const chain = {
-      fromTo: vi.fn()
+      fromTo: vi.fn(),
+      to: vi.fn(),
+      duration: vi.fn(() => 1)
     }
     chain.fromTo.mockReturnValue(chain)
+    chain.to.mockReturnValue(chain)
     return chain
   })
 
@@ -330,18 +333,20 @@ describe('landing narrative sections', () => {
     expect(motionState.registerPlugin).toHaveBeenCalledWith(ScrollTrigger)
   })
 
-  it('creates three desktop pins and replaces them with mobile reveals when the breakpoint changes', async () => {
+  it('creates one cinematic desktop stage and replaces it with mobile chapter reveals', async () => {
     const media = installMatchMedia({ desktop: true, reduced: false })
     const wrapper = mountTreatments()
     await settleMotion()
 
-    expect(document.querySelectorAll('.pin-spacer')).toHaveLength(3)
-    expect(wrapper.findAll('[data-motion-mode="pin"]')).toHaveLength(3)
+    expect(document.querySelectorAll('.pin-spacer')).toHaveLength(1)
+    expect(wrapper.get('section').classes()).toContain('js-cinematic')
+    expect(wrapper.findAll('[data-treatment-image]')).toHaveLength(3)
+    expect(wrapper.findAll('[data-treatment-copy]')).toHaveLength(3)
 
     media.desktop().setMatches(false)
 
     expect(document.querySelectorAll('.pin-spacer')).toHaveLength(0)
-    expect(wrapper.findAll('[data-motion-mode="reveal"]')).toHaveLength(3)
+    expect(wrapper.findAll('[data-treatment-chapter][data-motion-mode="reveal"]')).toHaveLength(3)
   })
 
   it('uses normal-flow reveals without pinning on mobile', async () => {
@@ -350,14 +355,14 @@ describe('landing narrative sections', () => {
     await settleMotion()
 
     expect(document.querySelectorAll('.pin-spacer')).toHaveLength(0)
-    expect(wrapper.findAll('[data-motion-mode="reveal"]')).toHaveLength(3)
+    expect(wrapper.findAll('[data-treatment-chapter][data-motion-mode="reveal"]')).toHaveLength(3)
   })
 
   it('creates no motion when reduced motion is active and removes active pins when it changes', async () => {
     const media = installMatchMedia({ desktop: true, reduced: false })
     const wrapper = mountTreatments()
     await settleMotion()
-    expect(document.querySelectorAll('.pin-spacer')).toHaveLength(3)
+    expect(document.querySelectorAll('.pin-spacer')).toHaveLength(1)
 
     media.reduced().setMatches(true)
 
@@ -380,7 +385,7 @@ describe('landing narrative sections', () => {
     const media = installMatchMedia({ desktop: true, reduced: false })
     const wrapper = mountTreatments()
     await settleMotion()
-    expect(document.querySelectorAll('.pin-spacer')).toHaveLength(3)
+    expect(document.querySelectorAll('.pin-spacer')).toHaveLength(1)
 
     wrapper.unmount()
     wrappers.pop()

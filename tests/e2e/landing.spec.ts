@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 const sectionHeadings = [
-  'Escolhas cuidadosas, orientadas por você.',
+  'Tratamentos que respeitam aquilo que já é seu.',
   'Prevenir. Cuidar. Preservar.',
   'Cuidado que respeita cada rosto.',
   'Prazer, Dra. Giselle Hage.',
@@ -129,6 +129,23 @@ test('tears down and rebuilds narrative motion when the preference changes', asy
 
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await expect.poll(async () => (await narrativeMotion()).every(state => state.active)).toBe(true)
+})
+
+test('presents treatments as one cinematic scroll stage on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.addInitScript(() => sessionStorage.setItem('giselle-intro-seen', '1'))
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+
+  const section = page.locator('#tratamentos')
+  await expect(section).toHaveClass(/js-cinematic/)
+  await expect(section.locator('[data-treatment-stage]')).toHaveAttribute('data-motion-mode', 'cinematic')
+  await expect(section.locator('.pin-spacer')).toHaveCount(1)
+  await expect(section.locator('[data-treatment-image]')).toHaveCount(3)
+  await expect(section.locator('[data-treatment-copy]')).toHaveCount(3)
+
+  await page.locator('.philosophy-section').scrollIntoViewIfNeeded()
+  await expect(page.locator('.philosophy-section')).toBeVisible()
 })
 
 test('preserves the complete published sibling order', async ({ page }) => {
