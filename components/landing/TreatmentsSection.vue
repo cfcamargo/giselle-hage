@@ -82,6 +82,7 @@ onMounted(async () => {
     const panels = gsap.utils.toArray<HTMLElement>('[data-treatment-panel]')
     responsiveMedia = gsap.matchMedia()
     responsiveMedia.add({
+      allowMotion: '(prefers-reduced-motion: no-preference)',
       desktop: '(min-width: 1024px)',
       reduceMotion: '(prefers-reduced-motion: reduce)'
     }, (context) => {

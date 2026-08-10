@@ -69,6 +69,33 @@ test('completes the ordinary-motion intro without manual intervention', async ({
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 })
 
+test('tears down and rebuilds narrative motion when the preference changes', async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem('giselle-intro-seen', '1'))
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+
+  const narrativeMotion = () => page.evaluate(() => [
+    document.querySelector('[data-credential]'),
+    document.querySelector('[data-philosophy-copy]')
+  ].map((element) => {
+    if (!(element instanceof HTMLElement)) return { active: false, final: false }
+
+    const style = getComputedStyle(element)
+    return {
+      active: Number(style.opacity) < 1 || style.transform !== 'none',
+      final: Number(style.opacity) === 1 && style.transform === 'none'
+    }
+  }))
+
+  await expect.poll(async () => (await narrativeMotion()).every(state => state.active)).toBe(true)
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect.poll(async () => (await narrativeMotion()).every(state => state.final)).toBe(true)
+
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect.poll(async () => (await narrativeMotion()).every(state => state.active)).toBe(true)
+})
+
 test('preserves the complete published sibling order', async ({ page }) => {
   await openWithReducedMotion(page)
 

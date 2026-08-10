@@ -111,3 +111,36 @@ Before public deployment:
 3. Deployment target is selected and configured with platform-native 301 rules for all 19 explicit legacy variants (plus the fallback where supported); rerun HEAD/curl on the deployed origin and reject any 200 stub or redirect loop.
 
 These gates do not block local/staging presentation, but they do block a public-release sign-off.
+
+## Fix Round 1 — faithful `gsap.matchMedia` lifecycle
+
+Review of GSAP's installed source confirmed that `MatchMedia.add()` invokes a conditional callback only when at least one registered condition matches. The initial Task 10 fix registered only `(prefers-reduced-motion: reduce)` and then returned from that matching branch. As a result, the real callback never built ordinary-motion resources and could not rebuild them after a reduce → no-preference transition. This section supersedes the earlier implementation detail that described the reduce-only registration as complete.
+
+The correction is deliberately scoped to animation lifecycle behavior:
+
+- `CredentialsStrip` and `PhilosophySection` now register complementary `allowMotion` and `reduceMotion` conditions. Ordinary motion builds, switching to reduce reverts the active media cycle, and switching back rebuilds it.
+- The faithful mock exposed the same incomplete condition set in the existing mobile branch of `TreatmentsSection`; it now also registers `allowMotion`, preserving its intended ordinary-motion reveals without changing content.
+- `LandingNarrative.spec.ts` now models the installed GSAP behavior: initial setup runs only when any registered condition matches, media changes are reactive only when a condition toggles, the previous cycle is reverted, and setup is skipped when the new state has no matching condition.
+- Both affected components are exercised in both directions: no-preference → reduce tears resources down, and reduce → no-preference rebuilds them. Listener cleanup remains asserted.
+- A timing-independent Playwright assertion checks computed animation state for both sections: resources/styles are active in ordinary motion, absent/final in reduce, and active again after returning to no-preference. It uses `expect.poll` rather than fixed sleeps and runs in both desktop and mobile projects.
+
+### RED/GREEN evidence
+
+- Unit RED, before the production fix: `npm test -- tests/unit/LandingNarrative.spec.ts` — 1 file, 10 tests; 6 passed and 4 failed. The two affected sections had no ordinary reveal, and the faithful lifecycle also exposed the two Treatment ordinary/mobile cases.
+- Browser RED, before the production fix: `npm run test:e2e -- --grep "tears down and rebuilds narrative motion"` — 0/2 passed; desktop and mobile both timed out on the initial ordinary-motion assertion.
+- Focused unit GREEN: the same unit command — 1 file, 10/10 passed.
+- Focused browser GREEN: the same filtered E2E command — 2/2 passed (desktop 906 ms; mobile 937 ms).
+
+### Fresh post-fix verification
+
+| Command | Result |
+| --- | --- |
+| `npm test` | PASS — 12 files, 64/64 tests; 13.66 s. |
+| `npm run test:e2e` | PASS — 24/24 tests across desktop and mobile; 36.0 s. |
+| `npm run typecheck` | PASS — exit 0. |
+| `NUXT_PUBLIC_SITE_URL=https://release-audit.example npm run generate` | PASS — exit 0; static output generated after fresh client (1,831 modules) and SSR (166 modules) builds. |
+| `git diff --check` | PASS after the report append — no whitespace errors. |
+
+The generated main page JavaScript remained 178.31 kB raw / 59.73 kB gzip, the entry 185.03 / 67.85 kB, ScrollTrigger 43.99 / 18.27 kB, and page CSS 32.06 / 6.04 kB. No Lighthouse score is inferred from these resource sizes.
+
+The overall status remains `DONE_WITH_RELEASE_GATES`. No clinical fact or publication claim changed. The three public-release gates above remain unchanged: client fact/permission confirmation, a confirmed production domain supplied through mandatory `NUXT_PUBLIC_SITE_URL`, and platform-native 301 rules plus deployed-origin verification for the selected static host.

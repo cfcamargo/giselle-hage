@@ -62,14 +62,19 @@ const motionState = vi.hoisted(() => {
           name,
           mediaQuery: window.matchMedia(query)
         }))
+        let previousConditions = Object.fromEntries(
+          queries.map(({ name, mediaQuery }) => [name, mediaQuery.matches])
+        )
 
-        const run = () => {
+        const activate = (currentConditions: Record<string, boolean>) => {
+          if (!Object.values(currentConditions).some(Boolean)) return
+
           revertCycle?.()
           const cleanups: Cleanup[] = []
           const previousCollector = cleanupCollector
           cleanupCollector = cleanups
           const cleanup = setup({
-            conditions: Object.fromEntries(queries.map(({ name, mediaQuery }) => [name, mediaQuery.matches]))
+            conditions: currentConditions
           })
           cleanupCollector = previousCollector
           revertCycle = () => {
@@ -78,12 +83,27 @@ const motionState = vi.hoisted(() => {
           }
         }
 
+        const run = () => {
+          const currentConditions = Object.fromEntries(
+            queries.map(({ name, mediaQuery }) => [name, mediaQuery.matches])
+          )
+          const toggled = Object.keys(currentConditions).some(
+            name => currentConditions[name] !== previousConditions[name]
+          )
+          if (!toggled) return
+
+          revertCycle?.()
+          revertCycle = undefined
+          previousConditions = currentConditions
+          activate(currentConditions)
+        }
+
         for (const { mediaQuery } of queries) {
           const listener: MediaListener = () => run()
           mediaQuery.addEventListener('change', listener)
           bindings.push({ query: mediaQuery, listener })
         }
-        run()
+        activate(previousConditions)
         return instance
       },
       revert: vi.fn(() => {
@@ -182,7 +202,11 @@ function installMatchMedia(initial: { desktop: boolean, reduced: boolean }) {
     const legacyListeners = new Set<MediaListener>()
     const query = {
       media,
-      matches: media === '(min-width: 1024px)' ? initial.desktop : initial.reduced,
+      matches: media === '(min-width: 1024px)'
+        ? initial.desktop
+        : media === '(prefers-reduced-motion: no-preference)'
+          ? !initial.reduced
+          : initial.reduced,
       onchange: null,
       addEventListener: vi.fn((type: string, listener: MediaListener) => {
         if (type === 'change') listeners.add(listener)
@@ -211,6 +235,7 @@ function installMatchMedia(initial: { desktop: boolean, reduced: boolean }) {
 
   return {
     desktop: () => queries.get('(min-width: 1024px)') ?? window.matchMedia('(min-width: 1024px)') as ControlledMediaQuery,
+    noPreference: () => queries.get('(prefers-reduced-motion: no-preference)') ?? window.matchMedia('(prefers-reduced-motion: no-preference)') as ControlledMediaQuery,
     reduced: () => queries.get('(prefers-reduced-motion: reduce)') ?? window.matchMedia('(prefers-reduced-motion: reduce)') as ControlledMediaQuery
   }
 }
@@ -391,14 +416,17 @@ describe('landing narrative sections', () => {
     expect(section.attributes('data-motion-mode')).toBe('reveal')
 
     media.reduced().setMatches(true)
+    media.noPreference().setMatches(false)
     expect(section.attributes('data-motion-mode')).toBeUndefined()
 
     media.reduced().setMatches(false)
+    media.noPreference().setMatches(true)
     expect(section.attributes('data-motion-mode')).toBe('reveal')
 
     wrapper.unmount()
     wrappers.pop()
     expect(motionState.matchMediaInstances[0].revert).toHaveBeenCalledOnce()
+    expect(media.noPreference().removeEventListener).toHaveBeenCalled()
     expect(media.reduced().removeEventListener).toHaveBeenCalled()
   })
 })

@@ -62,7 +62,10 @@ onMounted(async () => {
   gsap.registerPlugin(ScrollTrigger)
   animationContext = gsap.context(() => {
     responsiveMedia = gsap.matchMedia()
-    responsiveMedia.add({ reduceMotion: '(prefers-reduced-motion: reduce)' }, (context) => {
+    responsiveMedia.add({
+      allowMotion: '(prefers-reduced-motion: no-preference)',
+      reduceMotion: '(prefers-reduced-motion: reduce)'
+    }, (context) => {
       if (context.conditions?.reduceMotion) return
 
       const contour = section.value?.querySelector<SVGPathElement>('[data-contour-path]')
