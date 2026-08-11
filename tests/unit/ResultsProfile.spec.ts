@@ -558,7 +558,7 @@ describe('results and professional profile', () => {
     ])
 
     expect(resultsHtml).toContain('Resultados variam de pessoa para pessoa')
-    expect(resultsHtml).toContain('/services/botox1.jpg')
+    expect(resultsHtml).toContain('/results/botox1.jpg')
     expect(resultsHtml).toContain('href="https://api.whatsapp.com/send?phone=5567981269482&amp;text=')
     expect(aboutHtml).toContain('CRO-MS 4589')
     expect(aboutHtml).toContain('avaliação individual')

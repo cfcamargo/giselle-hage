@@ -74,13 +74,13 @@ export const landingContent = {
   treatments,
   philosophy: 'Prevenção, gerenciamento do envelhecimento e respeito aos traços naturais em cada plano de cuidado.',
   results: [
-    { image: '/services/bigode.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias da região da boca, com o texto incorporado “Bigode Chinês e canto da boca” e a marca GH.' },
-    { image: '/services/botox1.jpg', category: 'botox', alt: 'Montagem lado a lado de duas fotografias da testa, com o texto incorporado “Toxina Botulínica” e a marca GH.' },
-    { image: '/services/botox2.jpg', category: 'botox', alt: 'Montagem lado a lado de duas fotografias da região dos olhos e sobrancelhas, com o texto incorporado “Toxina Botulínica” e a marca GH.' },
-    { image: '/services/botox3.jpg', category: 'botox', alt: 'Montagem lado a lado de duas fotografias da testa e sobrancelhas, com o texto incorporado “Toxina Botulínica” e a marca GH.' },
-    { image: '/services/labial1.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias de perfil dos lábios e do queixo, com o texto incorporado “Preenchimento Labial e Mento” e a marca GH.' },
-    { image: '/services/labial2.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias em ângulo dos lábios, com o texto incorporado “Preenchimento Labial e Mento” e a marca GH.' },
-    { image: '/services/labial3.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias frontais dos lábios, com o texto incorporado “Preenchimento Labial e Mento” e a marca GH.' }
+    { image: '/results/bigode.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias da região da boca, com o texto incorporado “Bigode Chinês e canto da boca” e a marca GH.' },
+    { image: '/results/botox1.jpg', category: 'botox', alt: 'Montagem lado a lado de duas fotografias da testa, com o texto incorporado “Toxina Botulínica” e a marca GH.' },
+    { image: '/results/botox2.jpg', category: 'botox', alt: 'Montagem lado a lado de duas fotografias da região dos olhos e sobrancelhas, com o texto incorporado “Toxina Botulínica” e a marca GH.' },
+    { image: '/results/botox3.jpg', category: 'botox', alt: 'Montagem lado a lado de duas fotografias da testa e sobrancelhas, com o texto incorporado “Toxina Botulínica” e a marca GH.' },
+    { image: '/results/labial1.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias de perfil dos lábios e do queixo, com o texto incorporado “Preenchimento Labial e Mento” e a marca GH.' },
+    { image: '/results/labial2.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias em ângulo dos lábios, com o texto incorporado “Preenchimento Labial e Mento” e a marca GH.' },
+    { image: '/results/labial3.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias frontais dos lábios, com o texto incorporado “Preenchimento Labial e Mento” e a marca GH.' }
   ],
   profile: {
     image: '/about.jpg',
