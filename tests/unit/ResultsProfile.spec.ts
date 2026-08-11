@@ -139,6 +139,7 @@ function installAnimationFrame() {
 
 function configureGalleryLayout(wrapper: VueWrapper) {
   const gallery = wrapper.get('#results-gallery').element as HTMLElement
+  const viewportElement = wrapper.get('[data-results-viewport]').element as HTMLElement
   const cardOffsets = [32, 416, 800, 1184, 1568, 1952, 2336]
   const clientWidth = 1024
   const scrollWidth = 2728
@@ -155,7 +156,10 @@ function configureGalleryLayout(wrapper: VueWrapper) {
     toJSON: () => ({})
   })
 
-  Object.defineProperty(gallery, 'clientWidth', { configurable: true, value: clientWidth })
+  // Mirrors the real browser: an `overflow: visible` track's own clientWidth
+  // inflates to match its scrollWidth, so travel must be measured against the
+  // clipping viewport element instead (see getMaxTrackTravel in the component).
+  Object.defineProperty(gallery, 'clientWidth', { configurable: true, value: scrollWidth })
   Object.defineProperty(gallery, 'scrollWidth', { configurable: true, value: scrollWidth })
   Object.defineProperty(gallery, 'scrollLeft', {
     configurable: true,
@@ -165,6 +169,7 @@ function configureGalleryLayout(wrapper: VueWrapper) {
     configurable: true,
     value: () => rectangle(0, clientWidth)
   })
+  Object.defineProperty(viewportElement, 'clientWidth', { configurable: true, value: clientWidth })
 
   for (const [index, card] of wrapper.findAll('[data-result-card]').entries()) {
     Object.defineProperty(card.element, 'offsetLeft', {
@@ -230,6 +235,7 @@ describe('results and professional profile', () => {
 
     expect(wrapper.get('section').attributes('id')).toBe('resultados')
     expect(wrapper.find('[data-results-stage]').exists()).toBe(true)
+    expect(wrapper.find('[data-results-pin]').exists()).toBe(true)
     expect(wrapper.get('[data-results-track]').attributes('id')).toBe('results-gallery')
     expect(wrapper.find('[data-results-progress]').exists()).toBe(true)
     expect(wrapper.get('[role="region"]').attributes('aria-describedby')).toBe('results-disclaimer')
@@ -245,56 +251,55 @@ describe('results and professional profile', () => {
   it('keeps mobile result cards dimensionally stable while images load', () => {
     const source = readFileSync(join(process.cwd(), 'components/landing/ResultsSection.vue'), 'utf8')
 
-    expect(source).toContain("'is-before': index < currentResult")
-    expect(source).toContain("'is-after': index > currentResult")
-    expect(source).toContain('.results-section__gallery ul {\n  display: grid;')
+    expect(source).not.toContain('<ResultsDesktopGallery')
+    expect(source).not.toContain('<ResultsMobileGallery')
+    expect(source).not.toContain('ScrollTrigger')
+    expect(source).not.toContain('window.scrollTo')
+    expect(source).not.toContain('scrollTop')
+    expect(source).toContain('syncingFromSectionScroll')
+    expect(source).toContain('syncingFromControl')
+    expect(source).toContain('data-results-stage')
+    expect(source).toContain('data-results-pin')
+    expect(source).toContain('data-results-track')
+    expect(source).toContain('data-result-card')
+    expect(source).toContain('data-results-progress')
+    expect(source).toContain('.results-section__stage')
+    expect(source).toContain('.results-section__pin')
+    expect(source).toContain('.results-section__viewport')
+    expect(source).toContain('position: sticky;')
+    expect(source).toContain('scroll-snap-type: x mandatory;')
+    expect(source).toContain('@media (min-width: 64rem)')
+    expect(source).toContain('@media (prefers-reduced-motion: reduce)')
     expect(source).toContain('overflow: hidden;')
-    expect(source).toContain('.results-section__gallery li {\n  grid-area: 1 / 1;')
-    expect(source).toContain('.results-section__gallery li.is-current {')
-    expect(source).toContain('.results-section__gallery li.is-after {')
-    expect(source).toContain('.results-section__gallery figure {\n  position: relative;')
+    expect(source).toContain('.results-section__viewport li {')
+    expect(source).toContain('.results-section__viewport li.is-current {')
+    expect(source).toContain('.results-section__viewport figure {\n  position: relative;')
     expect(source).toContain('aspect-ratio: 1;')
-    expect(source).toContain('.results-section__gallery img {\n  position: absolute;')
+    expect(source).toContain('.results-section__viewport img {\n  position: absolute;')
     expect(source).toContain('inset: 0;')
     expect(source).toContain('height: 100%;')
     expect(source).toContain('<img')
     expect(source).not.toContain('<NuxtImg\n                :src="result.image"')
-    expect(source).toContain('@media (min-width: 64rem) {\n  .results-section.js-cinematic')
-    expect(source).toContain('.results-section.js-cinematic .results-section__gallery ul {\n    display: flex;')
   })
 
-  it('syncs to leading snap positions at the start, middle and end of a multi-card viewport', async () => {
+  it('keeps controls and current result state in sync with the cinematic gallery', async () => {
     const wrapper = mount(ResultsSection, {
       attachTo: document.body,
       global: { stubs: { NuxtImg } }
     })
     wrappers.push(wrapper)
-    const gallery = wrapper.get('#results-gallery')
-    const layout = configureGalleryLayout(wrapper)
-
-    await gallery.trigger('scroll')
-    animationFrame.flush()
-    await nextTick()
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
     expect(wrapper.findAll('[data-result-card]')[0]!.attributes('aria-current')).toBe('true')
 
     await wrapper.get('button[aria-label="Ver próximo resultado"]').trigger('click')
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 7')
-
-    layout.setScrollLeft(770)
-    await gallery.trigger('scroll')
-    animationFrame.flush()
-    await nextTick()
-
-    expect(wrapper.get('[role="status"]').text()).toContain('Resultado 3 de 7')
-    expect(wrapper.findAll('[data-result-card]')[2]!.attributes('aria-current')).toBe('true')
+    expect(wrapper.findAll('[data-result-card]')[1]!.attributes('aria-current')).toBe('true')
     expect(wrapper.findAll('[data-result-card]')[0]!.attributes('aria-current')).toBeUndefined()
 
-    layout.setScrollLeft(layout.maxScroll)
-    await gallery.trigger('scroll')
-    animationFrame.flush()
-    await nextTick()
+    for (let index = 0; index < 5; index += 1) {
+      await wrapper.get('button[aria-label="Ver próximo resultado"]').trigger('click')
+    }
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
     expect(wrapper.findAll('[data-result-card]')[6]!.attributes('aria-current')).toBe('true')
@@ -306,15 +311,12 @@ describe('results and professional profile', () => {
       global: { stubs: { NuxtImg } }
     })
     wrappers.push(wrapper)
-    const gallery = wrapper.get('#results-gallery')
     const previous = wrapper.get('button[aria-label="Ver resultado anterior"]')
     const next = wrapper.get('button[aria-label="Ver próximo resultado"]')
-    const layout = configureGalleryLayout(wrapper)
 
-    layout.setScrollLeft(layout.maxScroll)
-    await gallery.trigger('scroll')
-    animationFrame.flush()
-    await nextTick()
+    for (let index = 0; index < 6; index += 1) {
+      await next.trigger('click')
+    }
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
     expect(next.attributes('aria-disabled')).toBe('true')
@@ -324,13 +326,10 @@ describe('results and professional profile', () => {
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 7 de 7')
     expect(document.activeElement).toBe(next.element)
 
-    layout.setScrollLeft(384)
-    await gallery.trigger('scroll')
-    animationFrame.flush()
-    await nextTick()
-
     ;(previous.element as HTMLElement).focus()
-    await previous.trigger('click')
+    for (let index = 0; index < 6; index += 1) {
+      await previous.trigger('click')
+    }
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
     expect(previous.attributes('aria-disabled')).toBe('true')
@@ -338,15 +337,21 @@ describe('results and professional profile', () => {
     expect(document.activeElement).toBe(previous.element)
   })
 
-  it('removes the native scroll listener and cancels pending synchronization on unmount', async () => {
+  it('removes the page scroll listener and cancels pending cinematic synchronization on unmount', async () => {
+    installMatchMedia(false)
+    const removeEventListener = vi.spyOn(window, 'removeEventListener')
     const wrapper = mount(ResultsSection, {
+      attachTo: document.body,
       global: { stubs: { NuxtImg } }
     })
     wrappers.push(wrapper)
-    const gallery = wrapper.get('#results-gallery')
-    const removeEventListener = vi.spyOn(gallery.element, 'removeEventListener')
+    configureGalleryLayout(wrapper)
+    await nextTick()
+    animationFrame.flush()
+    animationFrame.flush()
+    await settleMotion()
 
-    await gallery.trigger('scroll')
+    window.dispatchEvent(new Event('scroll'))
     expect(animationFrame.pending()).toBe(1)
 
     wrapper.unmount()
@@ -354,6 +359,7 @@ describe('results and professional profile', () => {
 
     expect(animationFrame.cancel).toHaveBeenCalledOnce()
     expect(removeEventListener).toHaveBeenCalledWith('scroll', expect.any(Function))
+    expect(removeEventListener).toHaveBeenCalledWith('resize', expect.any(Function))
   })
 
   it('supports arrow keys when the result rail itself is focused', async () => {
@@ -370,7 +376,7 @@ describe('results and professional profile', () => {
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 1 de 7')
   })
 
-  it('advances the mobile editorial deck without invoking horizontal scroll alignment', async () => {
+  it('advances the mobile editorial deck with native horizontal scroll alignment', async () => {
     installMatchMedia(false, false)
     const scrollIntoView = vi.spyOn(HTMLElement.prototype, 'scrollIntoView')
     const wrapper = mount(ResultsSection, {
@@ -383,7 +389,10 @@ describe('results and professional profile', () => {
 
     expect(wrapper.get('[role="status"]').text()).toContain('Resultado 2 de 7')
     expect(wrapper.findAll('[data-result-card]')[1]!.attributes('aria-current')).toBe('true')
-    expect(scrollIntoView).not.toHaveBeenCalled()
+    expect(scrollIntoView).toHaveBeenCalledWith(expect.objectContaining({
+      block: 'nearest',
+      inline: 'center'
+    }))
   })
 
   it('uses the results source when opening the evaluation CTA', async () => {
@@ -421,7 +430,7 @@ describe('results and professional profile', () => {
     expect(motionState.context).not.toHaveBeenCalled()
   })
 
-  it('creates pinned cinematic motion for results when motion is allowed', async () => {
+  it('creates sticky cinematic motion for results when motion is allowed', async () => {
     installMatchMedia(false)
     const wrapper = mount(ResultsSection, {
       attachTo: document.body,
@@ -429,21 +438,53 @@ describe('results and professional profile', () => {
     })
     wrappers.push(wrapper)
     configureGalleryLayout(wrapper)
+    await nextTick()
+    animationFrame.flush()
+    animationFrame.flush()
     await settleMotion()
 
-    expect(motionState.registerPlugin).toHaveBeenCalledWith(ScrollTrigger)
-    expect(motionState.context).toHaveBeenCalled()
-    expect(motionState.timeline).toHaveBeenCalledWith(expect.objectContaining({
-      scrollTrigger: expect.objectContaining({
-        trigger: wrapper.get('[data-results-stage]').element,
-        pin: true,
-        scrub: expect.any(Number)
-      })
-    }))
+    const source = readFileSync(join(process.cwd(), 'components/landing/ResultsSection.vue'), 'utf8')
+
+    expect(source).toContain('position: sticky;')
+    expect(source).toContain('window.addEventListener(\'scroll\', queueSectionSync')
+    expect(source).toContain('translate3d(${-travel * nextProgress}px, 0, 0)')
+    expect(motionState.registerPlugin).not.toHaveBeenCalledWith(ScrollTrigger)
+    expect(wrapper.get('[data-results-stage]').classes()).toContain('is-cinematic')
 
     wrapper.unmount()
     wrappers.pop()
-    expect(motionState.revert).toHaveBeenCalled()
+  })
+
+  it('translates the desktop track horizontally as the page scrolls through the pin', async () => {
+    installMatchMedia(false)
+    const wrapper = mount(ResultsSection, {
+      attachTo: document.body,
+      global: { stubs: { NuxtImg } }
+    })
+    wrappers.push(wrapper)
+    configureGalleryLayout(wrapper)
+    await nextTick()
+    animationFrame.flush()
+    animationFrame.flush()
+    await settleMotion()
+
+    const stageElement = wrapper.get('[data-results-stage]').element as HTMLElement
+    Object.defineProperty(stageElement, 'offsetHeight', { configurable: true, value: 2000 })
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: 800 })
+    Object.defineProperty(stageElement, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({ top: -600, left: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => ({}) })
+    })
+
+    window.dispatchEvent(new Event('scroll'))
+    animationFrame.flush()
+    await nextTick()
+
+    const trackElement = wrapper.get('[data-results-track]').element as HTMLElement
+    expect(trackElement.style.transform).not.toBe('translate3d(0px, 0, 0)')
+
+    wrapper.unmount()
+    wrappers.pop()
   })
 
   it('keeps the profile in normal flow and cleans up its reveal animation', async () => {

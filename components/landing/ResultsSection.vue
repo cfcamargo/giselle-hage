@@ -1,7 +1,6 @@
 <template>
   <section
     id="resultados"
-    ref="section"
     class="results-section"
     aria-labelledby="results-title"
   >
@@ -19,57 +18,55 @@
     <div
       ref="stage"
       class="results-section__stage"
+      :class="{ 'is-cinematic': isCinematicEnabled }"
+      :style="{ '--results-travel': `${sectionTravel}px` }"
       data-results-stage
       role="region"
       aria-label="Galeria de resultados clínicos"
       aria-describedby="results-disclaimer"
     >
-      <div class="results-section__gallery">
-        <ul
-          id="results-gallery"
-          ref="gallery"
-          tabindex="0"
-          aria-label="Resultados, use as setas para navegar"
-          data-results-track
-          @keydown.left.prevent="showPrevious"
-          @keydown.right.prevent="showNext"
-        >
-          <li
-            v-for="(result, index) in landingContent.results"
-            :id="`result-card-${index + 1}`"
-            :key="result.image"
-            :aria-label="`Resultado ${index + 1} de ${landingContent.results.length}: ${categoryLabels[result.category]}`"
-            :aria-current="index === currentResult ? 'true' : undefined"
-            :class="{
-              'is-current': index === currentResult,
-              'is-before': index < currentResult,
-              'is-after': index > currentResult
-            }"
-            data-result-card
+      <div class="results-section__pin" data-results-pin>
+        <div ref="viewport" class="results-section__viewport" data-results-viewport>
+          <ul
+            id="results-gallery"
+            ref="track"
+            tabindex="0"
+            aria-label="Resultados, use as setas para navegar"
+            data-results-track
+            @keydown.left.prevent="showPrevious"
+            @keydown.right.prevent="showNext"
+            @scroll.passive="queueNativeSync"
           >
-            <figure data-result-image>
-              <img
-                :src="result.image"
-                :alt="result.alt"
-                width="892"
-                height="892"
-                :loading="index === 0 ? 'eager' : 'lazy'"
-                decoding="async"
-              />
-              <figcaption>
-                <span>{{ categoryLabels[result.category] }}</span>
-                <small>Montagem lado a lado</small>
-              </figcaption>
-            </figure>
-          </li>
-        </ul>
-      </div>
+            <li
+              v-for="(result, index) in landingContent.results"
+              :id="`result-card-${index + 1}`"
+              :key="result.image"
+              :aria-label="`Resultado ${index + 1} de ${landingContent.results.length}: ${categoryLabels[result.category]}`"
+              :aria-current="index === currentResult ? 'true' : undefined"
+              :class="{ 'is-current': index === currentResult }"
+              data-result-card
+            >
+              <figure data-result-image>
+                <img
+                  :src="result.image"
+                  :alt="result.alt"
+                  width="892"
+                  height="892"
+                  :loading="index === 0 ? 'eager' : 'lazy'"
+                  decoding="async"
+                />
+                <figcaption>
+                  <span>{{ categoryLabels[result.category] }}</span>
+                  <small>Montagem lado a lado</small>
+                </figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
 
-      <div class="results-section__progress" aria-hidden="true">
-        <i
-          :style="{ transform: `scaleX(${(currentResult + 1) / landingContent.results.length})` }"
-          data-results-progress
-        />
+        <div class="results-section__progress" aria-hidden="true">
+          <i :style="{ transform: `scaleX(${progress})` }" data-results-progress />
+        </div>
       </div>
     </div>
 
@@ -130,80 +127,144 @@ const categoryLabels = {
   preenchimento: 'Preenchimento facial'
 } as const
 
-const section = ref<HTMLElement | null>(null)
 const stage = ref<HTMLElement | null>(null)
-const gallery = ref<HTMLElement | null>(null)
+const viewport = ref<HTMLElement | null>(null)
+const track = ref<HTMLElement | null>(null)
 const currentResult = ref(0)
+const progress = ref(1 / landingContent.results.length)
+const sectionTravel = ref(1200)
+const isCinematicEnabled = ref(false)
 const reducedMotion = useReducedMotion()
 const { href, openWhatsApp } = useWhatsApp()
-let animationContext: gsap.Context | undefined
-let scrollFrame: number | undefined
-let unmounted = false
+let frame: number | undefined
+let resizeFrame: number | undefined
+let syncingFromSectionScroll = false
+let syncingFromControl = false
 
-function isDesktopResultsLayout() {
+function clampIndex(index: number) {
+  return Math.min(Math.max(index, 0), landingContent.results.length - 1)
+}
+
+function isDesktopLayout() {
   return window.matchMedia('(min-width: 64rem)').matches
 }
 
-function syncCurrentResult() {
-  scrollFrame = undefined
-  if (!gallery.value || !isDesktopResultsLayout()) return
+function canUseCinematic() {
+  return isDesktopLayout() && !reducedMotion.value
+}
 
-  const cards = Array.from(gallery.value.children) as HTMLElement[]
-  if (!cards.length) return
+function setCurrentResult(index: number) {
+  currentResult.value = clampIndex(index)
+}
 
-  const scrollPosition = gallery.value.scrollLeft
-  const maxScroll = Math.max(0, gallery.value.scrollWidth - gallery.value.clientWidth)
-  const edgeTolerance = 2
+function getMaxTrackTravel() {
+  if (!track.value || !viewport.value) return 0
 
-  if (scrollPosition <= edgeTolerance) {
-    currentResult.value = 0
-    return
-  }
+  return Math.max(0, track.value.scrollWidth - viewport.value.clientWidth)
+}
 
-  if (maxScroll - scrollPosition <= edgeTolerance) {
-    currentResult.value = cards.length - 1
-    return
-  }
+function measureSectionTravel() {
+  sectionTravel.value = Math.max(window.innerHeight * 1.35, getMaxTrackTravel())
+}
 
-  const firstOffset = cards[0]!.offsetLeft
-  let nearestIndex = 0
+function syncSectionScroll() {
+  frame = undefined
+  if (!stage.value || !track.value || !canUseCinematic()) return
+
+  const distance = Math.max(1, stage.value.offsetHeight - window.innerHeight)
+  const rawProgress = -stage.value.getBoundingClientRect().top / distance
+  const nextProgress = Math.min(Math.max(rawProgress, 0), 1)
+  const travel = getMaxTrackTravel()
+
+  progress.value = nextProgress
+  syncingFromSectionScroll = true
+  track.value.style.transform = `translate3d(${-travel * nextProgress}px, 0, 0)`
+  setCurrentResult(Math.round(nextProgress * (landingContent.results.length - 1)))
+  void nextTick(() => {
+    syncingFromSectionScroll = false
+  })
+}
+
+function syncNativeGallery() {
+  frame = undefined
+  if (!track.value || canUseCinematic() || syncingFromControl) return
+
+  const cards = Array.from(track.value.children) as HTMLElement[]
+  const trackLeft = track.value.getBoundingClientRect().left
+  const center = trackLeft + track.value.clientWidth / 2
+  let nextIndex = 0
   let nearestDistance = Number.POSITIVE_INFINITY
 
-  for (const [index, card] of cards.entries()) {
-    const snapPosition = card.offsetLeft - firstOffset
-    const distance = Math.abs(snapPosition - scrollPosition)
+  cards.forEach((card, index) => {
+    const rect = card.getBoundingClientRect()
+    const cardCenter = rect.left + rect.width / 2
+    const distance = Math.abs(cardCenter - center)
 
     if (distance < nearestDistance) {
       nearestDistance = distance
-      nearestIndex = index
+      nextIndex = index
     }
-  }
+  })
 
-  currentResult.value = nearestIndex
+  setCurrentResult(nextIndex)
+  progress.value = (nextIndex + 1) / landingContent.results.length
 }
 
-function queueScrollSync() {
-  if (scrollFrame !== undefined) return
+function queueSectionSync() {
+  if (frame !== undefined) return
 
-  scrollFrame = requestAnimationFrame(syncCurrentResult)
+  frame = requestAnimationFrame(syncSectionScroll)
+}
+
+function queueNativeSync() {
+  if (frame !== undefined) return
+
+  frame = requestAnimationFrame(syncNativeGallery)
+}
+
+function queueMeasure() {
+  if (resizeFrame !== undefined) return
+
+  resizeFrame = requestAnimationFrame(() => {
+    resizeFrame = undefined
+    measureSectionTravel()
+    if (canUseCinematic()) {
+      syncSectionScroll()
+    } else if (track.value) {
+      track.value.style.transform = ''
+      progress.value = (currentResult.value + 1) / landingContent.results.length
+    }
+  })
 }
 
 function showResult(index: number) {
-  const lastIndex = landingContent.results.length - 1
-  currentResult.value = Math.min(Math.max(index, 0), lastIndex)
+  const nextIndex = clampIndex(index)
+  setCurrentResult(nextIndex)
 
-  void nextTick(() => {
-    if (!isDesktopResultsLayout()) return
+  if (canUseCinematic()) {
+    const nextProgress = nextIndex / Math.max(1, landingContent.results.length - 1)
+    progress.value = nextProgress
+    if (track.value) {
+      track.value.style.transform = `translate3d(${-getMaxTrackTravel() * nextProgress}px, 0, 0)`
+    }
+    return
+  }
 
-    const card = gallery.value?.children.item(currentResult.value)
-    if (!(card instanceof HTMLElement)) return
+  progress.value = (nextIndex + 1) / landingContent.results.length
+  if (!track.value) return
 
-    card.scrollIntoView({
-      behavior: reducedMotion.value ? 'auto' : 'smooth',
-      block: 'nearest',
-      inline: 'start'
-    })
+  const card = track.value.children.item(nextIndex)
+  if (!(card instanceof HTMLElement)) return
+
+  syncingFromControl = true
+  card.scrollIntoView({
+    behavior: reducedMotion.value ? 'auto' : 'smooth',
+    block: 'nearest',
+    inline: 'center'
   })
+  window.setTimeout(() => {
+    syncingFromControl = false
+  }, reducedMotion.value ? 0 : 350)
 }
 
 function showPrevious() {
@@ -218,86 +279,40 @@ function showNext() {
   showResult(currentResult.value + 1)
 }
 
-onMounted(() => {
-  gallery.value?.addEventListener('scroll', queueScrollSync, { passive: true })
-})
-
 onMounted(async () => {
-  if (!section.value || !stage.value || !gallery.value || reducedMotion.value) return
-  if (!isDesktopResultsLayout()) return
-
-  const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-    import('gsap'),
-    import('gsap/ScrollTrigger')
-  ])
-  if (unmounted || !section.value || !stage.value || !gallery.value || reducedMotion.value) return
-  if (!isDesktopResultsLayout()) return
-
-  gsap.registerPlugin(ScrollTrigger)
-  animationContext = gsap.context(() => {
-    const cards = gsap.utils.toArray<HTMLElement>('[data-result-card]')
-    const images = gsap.utils.toArray<HTMLElement>('[data-result-image]')
-    const progress = section.value?.querySelector<HTMLElement>('[data-results-progress]')
-    const maxScroll = Math.max(0, gallery.value!.scrollWidth - gallery.value!.clientWidth)
-    if (!cards.length || maxScroll <= 0) return
-
-    section.value?.classList.add('js-cinematic')
-    gsap.set(cards, { transformOrigin: 'center center' })
-    gsap.set(cards.slice(1), { scale: 0.88, y: 34, autoAlpha: 0.72 })
-    gsap.set(images, { scale: 1.04 })
-    if (progress) gsap.set(progress, { scaleX: 0, transformOrigin: 'left center' })
-
-    const timeline = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: {
-        trigger: stage.value,
-        start: 'top top',
-        end: () => `+=${Math.max(window.innerHeight * 1.4, maxScroll)}`,
-        pin: true,
-        scrub: 0.85,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const nextIndex = Math.min(
-            cards.length - 1,
-            Math.round(self.progress * (cards.length - 1))
-          )
-          currentResult.value = nextIndex
-        }
-      }
-    })
-
-    timeline.to(gallery.value, { x: () => -maxScroll, duration: 1 }, 0)
-    if (progress) timeline.to(progress, { scaleX: 1, duration: 1 }, 0)
-
-    cards.forEach((card, index) => {
-      const start = Math.max(0, (index - 1) / cards.length)
-      const active = index / Math.max(1, cards.length - 1)
-      timeline
-        .to(card, { scale: 1, y: 0, autoAlpha: 1, duration: 0.18 }, active)
-        .to(card, { scale: 0.9, y: -20, autoAlpha: 0.78, duration: 0.18 }, Math.min(1, active + 0.15))
-      const image = images[index]
-      if (image) timeline.to(image, { scale: 1, duration: 0.26 }, start)
-    })
-  }, section.value)
+  await nextTick()
+  measureSectionTravel()
+  isCinematicEnabled.value = canUseCinematic()
+  if (isCinematicEnabled.value) {
+    syncSectionScroll()
+  }
+  window.addEventListener('scroll', queueSectionSync, { passive: true })
+  window.addEventListener('resize', queueMeasure, { passive: true })
 })
 
 onBeforeUnmount(() => {
-  unmounted = true
-  animationContext?.revert()
-  animationContext = undefined
-  gallery.value?.removeEventListener('scroll', queueScrollSync)
+  window.removeEventListener('scroll', queueSectionSync)
+  window.removeEventListener('resize', queueMeasure)
 
-  if (scrollFrame !== undefined) {
-    cancelAnimationFrame(scrollFrame)
-    scrollFrame = undefined
+  if (track.value) track.value.style.transform = ''
+
+  if (frame !== undefined) {
+    cancelAnimationFrame(frame)
+    frame = undefined
+  }
+
+  if (resizeFrame !== undefined) {
+    cancelAnimationFrame(resizeFrame)
+    resizeFrame = undefined
   }
 })
 </script>
 
 <style scoped>
 .results-section {
+  position: relative;
   padding: clamp(5.5rem, 10vw, 9rem) 0;
-  overflow: hidden;
+  overflow: clip;
   color: var(--color-ivory);
   background:
     radial-gradient(circle at 12% 18%, rgb(188 167 138 / 18%), transparent 28rem),
@@ -342,69 +357,64 @@ onBeforeUnmount(() => {
 }
 
 .results-section__stage {
-  position: relative;
-  margin-top: clamp(3.5rem, 7vw, 6.5rem);
+  margin-top: clamp(3rem, 8vw, 6rem);
 }
 
-.results-section__gallery {
-  overflow: visible;
+.results-section__pin {
+  min-height: auto;
 }
 
-.results-section__gallery ul {
-  display: grid;
+.results-section__viewport {
+  overflow: hidden;
+}
+
+.results-section__viewport ul {
+  display: flex;
+  gap: 1rem;
   margin: 0;
   padding: 0 max(1rem, calc((100vw - 86rem) / 2));
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   list-style: none;
+  scroll-padding-inline: max(1rem, calc((100vw - 86rem) / 2));
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
 }
 
-.results-section__gallery li {
-  grid-area: 1 / 1;
-  width: min(100%, 29rem);
-  justify-self: center;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(24%) scale(0.92) rotate(2deg);
+.results-section__viewport ul::-webkit-scrollbar {
+  display: none;
+}
+
+.results-section__viewport li {
+  width: min(82vw, 29rem);
+  flex: 0 0 auto;
+  opacity: 0.56;
+  transform: scale(0.94);
   transform-origin: center bottom;
+  scroll-snap-align: center;
   transition:
-    opacity 380ms ease,
-    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 320ms ease,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
-.results-section__gallery li.is-current {
-  z-index: 3;
+.results-section__viewport li.is-current {
   opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0) scale(1) rotate(0deg);
+  transform: scale(1);
 }
 
-.results-section__gallery li.is-before {
-  transform: translateX(-24%) scale(0.9) rotate(-2deg);
-}
-
-.results-section__gallery li.is-after {
-  z-index: 1;
-  opacity: 0.34;
-  transform: translateX(12%) translateY(0.85rem) scale(0.94) rotate(1.4deg);
-}
-
-.results-section__gallery li.is-after ~ li.is-after {
-  opacity: 0;
-}
-
-.results-section__gallery figure {
+.results-section__viewport figure {
   position: relative;
   margin: 0;
   overflow: hidden;
   aspect-ratio: 1;
-  border: 1px solid rgb(248 246 242 / 14%);
+  border: 1px solid rgb(248 246 242 / 16%);
   background: #dfe6e1;
-  box-shadow: 0 2rem 5rem rgb(0 0 0 / 26%);
+  box-shadow: 0 1.4rem 3rem rgb(0 0 0 / 24%);
   transform: translateZ(0);
 }
 
-.results-section__gallery figure::after {
+.results-section__viewport figure::after {
   position: absolute;
   inset: 55% 0 0;
   background: linear-gradient(0deg, rgb(35 19 30 / 64%), transparent);
@@ -412,23 +422,26 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
-.results-section__gallery img {
+.results-section__viewport img {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: filter 500ms ease, transform 500ms ease;
+  filter: saturate(0.92) contrast(0.98);
+  transform: scale(1.04);
+  transition:
+    filter 420ms ease,
+    transform 520ms ease;
 }
 
-.results-section__gallery li:hover img,
-.results-section__gallery li.is-current img {
-  filter: saturate(1.04) contrast(1.03);
-  transform: scale(1.015);
+.results-section__viewport li.is-current img {
+  filter: saturate(1.05) contrast(1.04);
+  transform: scale(1);
 }
 
-.results-section__gallery figcaption {
+.results-section__viewport figcaption {
   position: absolute;
   right: 1rem;
   bottom: 1rem;
@@ -441,20 +454,16 @@ onBeforeUnmount(() => {
   color: var(--color-ivory);
 }
 
-.results-section__gallery figcaption span {
+.results-section__viewport figcaption span {
   font-family: var(--font-display);
   font-size: 1.35rem;
 }
 
-.results-section__gallery figcaption small {
+.results-section__viewport figcaption small {
   font-size: 0.52rem;
   letter-spacing: 0.12em;
   text-align: right;
   text-transform: uppercase;
-}
-
-.results-section__footer {
-  margin-top: 2.25rem;
 }
 
 .results-section__progress {
@@ -470,8 +479,11 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   background: var(--color-champagne);
-  transform: scaleX(0);
   transform-origin: left center;
+}
+
+.results-section__footer {
+  margin-top: 2.25rem;
 }
 
 .results-section__navigation {
@@ -564,19 +576,9 @@ onBeforeUnmount(() => {
     gap: 4rem;
   }
 
-  .results-section__gallery ul {
-    padding-inline: max(2rem, calc((100vw - 86rem) / 2));
-    scroll-padding-inline: max(2rem, calc((100vw - 86rem) / 2));
-  }
-
-  .results-section__gallery li {
-    width: min(48vw, 31rem);
-  }
-
   .results-section__footer {
     grid-template-columns: 1fr auto;
     align-items: start;
-    gap: 3rem;
   }
 
   .results-section__context {
@@ -589,65 +591,85 @@ onBeforeUnmount(() => {
 }
 
 @media (min-width: 64rem) {
-  .results-section.js-cinematic {
+  .results-section {
     padding-bottom: clamp(3rem, 6vw, 5rem);
   }
 
-  .results-section.js-cinematic .results-section__stage {
+  .results-section__stage {
+    min-height: calc(100vh + var(--results-travel, 1200px));
+    overflow: clip;
+  }
+
+  .results-section__pin {
+    position: sticky;
+    top: 0;
     min-height: 100vh;
     display: grid;
     align-content: center;
   }
 
-  .results-section.js-cinematic .results-section__gallery {
+  .results-section__viewport {
     min-height: min(58vw, 43rem);
     display: grid;
     align-items: center;
+    overflow: hidden;
   }
 
-  .results-section.js-cinematic .results-section__gallery ul {
-    display: flex;
+  .results-section__viewport ul {
     gap: clamp(1rem, 2.8vw, 2.5rem);
+    padding-inline: max(2rem, calc((100vw - 86rem) / 2));
     overflow: visible;
-    overscroll-behavior-inline: contain;
-    scrollbar-color: rgb(226 205 172 / 70%) transparent;
-    scrollbar-width: thin;
     scroll-padding-inline: max(2rem, calc((100vw - 86rem) / 2));
     scroll-snap-type: none;
     will-change: transform;
   }
 
-  .results-section__gallery li {
-    grid-area: auto;
+  .results-section__viewport li {
     width: min(38vw, 34rem);
-    flex: 0 0 auto;
-    justify-self: auto;
-    opacity: 1;
-    pointer-events: auto;
-    scroll-snap-align: start;
-    transform: translateY(0);
+    transform: translateY(48px) scale(0.88);
+    scroll-snap-align: none;
   }
 
-  .results-section__gallery li + li {
-    margin-left: clamp(-3.8rem, -4vw, -2rem);
+  .results-section__viewport li.is-current {
+    transform: translateY(0) scale(1.04);
   }
 
-  .results-section__gallery li:nth-child(2n) {
+  .results-section__viewport li + li {
+    margin-left: clamp(-3.6rem, -3.8vw, -2rem);
+  }
+
+  .results-section__viewport li:nth-child(2n) {
     padding-top: 3.25rem;
   }
 
-  .results-section__gallery li:nth-child(3n) {
+  .results-section__viewport li:nth-child(3n) {
     padding-top: 1.5rem;
+  }
+
+  .results-section__progress {
+    width: min(100% - 4rem, 86rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .results-section__gallery img {
-    transition: none;
+  .results-section__stage {
+    min-height: auto !important;
   }
 
-  .results-section__progress i {
-    transform: none;
+  .results-section__pin {
+    position: static;
+    min-height: auto;
+  }
+
+  .results-section__viewport ul {
+    transform: none !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .results-section__viewport li,
+  .results-section__viewport img {
+    transition: none;
   }
 }
 </style>
