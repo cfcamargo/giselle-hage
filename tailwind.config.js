@@ -11,11 +11,11 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: () => ({
-        'degrade': 'linear-gradient(180deg, var(--color-plum) 42.19%, var(--color-ink) 100%)',
+        'degrade': 'linear-gradient(180deg, var(--color-taupe) 42.19%, var(--color-graphite) 100%)',
         'banner' : 'url("/background.png")',
       }),
       textColor: () => ({
-        'degrade': 'linear-gradient(180deg, var(--color-plum) 42.19%, var(--color-ink) 100%)'
+        'degrade': 'linear-gradient(180deg, var(--color-taupe) 42.19%, var(--color-graphite) 100%)'
       }),
       fontFamily: {
         display: ['var(--font-display)'],
@@ -31,11 +31,12 @@ module.exports = {
       },
       colors: {
         ivory: 'var(--color-ivory)',
-        plum: 'var(--color-plum)',
-        champagne: 'var(--color-champagne)',
-        ink: 'var(--color-ink)',
-        primary: 'var(--color-plum)',
-        secondary: 'var(--color-ink)'
+        sand: 'var(--color-sand)',
+        taupe: 'var(--color-taupe)',
+        graphite: 'var(--color-graphite)',
+        gold: 'var(--color-gold)',
+        primary: 'var(--color-graphite)',
+        secondary: 'var(--color-taupe)'
       }
     },
   },

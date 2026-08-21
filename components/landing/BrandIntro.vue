@@ -7,7 +7,7 @@
     aria-label="Introdução da marca Dra. Giselle Hage"
   >
     <div class="brand-intro__mark" aria-hidden="true">
-      <Logo color="#b9a27d" icon_width="150" icon_height="78" />
+      <Logo color="#a9835c" icon_width="140" icon_height="140" />
       <span>Dra. Giselle Hage</span>
     </div>
 
@@ -84,8 +84,8 @@ onMounted(async () => {
 
     gsap.set(paths, {
       fill: 'transparent',
-      stroke: '#b9a27d',
-      strokeWidth: 0.7,
+      stroke: '#a9835c',
+      strokeWidth: 85,
       strokeDasharray: index => lengths[index] ?? 0,
       strokeDashoffset: index => lengths[index] ?? 0
     })
@@ -98,7 +98,7 @@ onMounted(async () => {
         stagger: 0.07
       })
       .to(paths, {
-        fill: '#b9a27d',
+        fill: '#a9835c',
         strokeOpacity: 0,
         duration: 0.28,
         ease: 'power1.inOut'
@@ -131,10 +131,10 @@ onBeforeUnmount(() => {
   display: grid;
   place-items: center;
   overflow: hidden;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   background:
-    radial-gradient(circle at 50% 43%, rgb(185 162 125 / 10%), transparent 28rem),
-    var(--color-plum);
+    radial-gradient(circle at 50% 43%, rgb(169 131 92 / 14%), transparent 28rem),
+    var(--color-ivory);
   clip-path: inset(0);
   animation: intro-failsafe 0s 3s forwards;
 }
@@ -161,10 +161,10 @@ onBeforeUnmount(() => {
   right: 1.5rem;
   bottom: 1.5rem;
   padding: 0.7rem 1rem;
-  border: 1px solid rgb(185 162 125 / 65%);
+  border: 1px solid rgb(169 131 92 / 55%);
   border-radius: 999px;
-  color: var(--color-ivory);
-  background: rgb(33 29 31 / 35%);
+  color: var(--color-graphite);
+  background: rgb(248 246 242 / 65%);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   opacity: 0;

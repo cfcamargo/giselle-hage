@@ -1,19 +1,19 @@
 <template>
   <section
-    id="tratamentos"
+    id="procedimentos"
     ref="section"
     class="treatments-section"
     aria-labelledby="treatments-title"
   >
     <header class="treatments-section__header">
-      <p>Tratamentos em destaque</p>
-      <h2 id="treatments-title">Tratamentos que respeitam aquilo que já é seu.</h2>
+      <p>Procedimentos em destaque</p>
+      <h2 id="treatments-title">Procedimentos que respeitam aquilo que já é seu.</h2>
       <span>Uma avaliação individual define indicações, prioridades e possibilidades para cada momento.</span>
     </header>
 
     <div ref="stage" class="treatments-stage" data-treatment-stage>
       <div class="treatments-stage__rail" aria-hidden="true">
-        <span>Tratamentos</span>
+        <span>Procedimentos</span>
         <i data-treatment-progress />
         <b>03</b>
       </div>
@@ -179,7 +179,7 @@ onBeforeUnmount(() => {
 .treatments-section {
   padding: clamp(5.5rem, 10vw, 9.5rem) 0 clamp(5rem, 8vw, 8rem);
   overflow: clip;
-  color: var(--color-ink);
+  color: var(--color-graphite);
   background: var(--color-ivory);
 }
 
@@ -203,7 +203,7 @@ onBeforeUnmount(() => {
 .treatments-section__header h2 {
   max-width: 15ch;
   margin: 0;
-  color: var(--color-plum);
+  color: var(--color-graphite);
   font-family: var(--font-display);
   font-size: clamp(3rem, 6.8vw, 6.4rem);
   font-weight: 400;
@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
   min-height: 31rem;
   margin: 0;
   overflow: hidden;
-  background: #dfe6e1;
+  background: var(--color-sand);
 }
 
 .treatment-chapter__media img {
@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
 .treatment-chapter h3 {
   display: flex;
   margin: 0.6rem 0 1.35rem;
-  color: var(--color-plum);
+  color: var(--color-graphite);
   flex-direction: column;
   font-family: var(--font-display);
   font-size: clamp(4rem, 12vw, 7.6rem);
@@ -277,7 +277,7 @@ onBeforeUnmount(() => {
 }
 
 .treatment-chapter__summary { max-width: 32rem; margin: 0; color: rgb(33 29 31 / 72%); font-size: 0.93rem; font-weight: 300; line-height: 1.85; }
-.treatment-chapter a { display: inline-flex; min-height: 2.9rem; margin-top: 2rem; padding-bottom: 0.42rem; align-items: center; gap: 0.7rem; border-bottom: 1px solid var(--color-champagne); color: var(--color-plum); font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; }
+.treatment-chapter a { display: inline-flex; min-height: 2.9rem; margin-top: 2rem; padding-bottom: 0.42rem; align-items: center; gap: 0.7rem; border-bottom: 1px solid var(--color-taupe); color: var(--color-graphite); font-size: 0.64rem; font-weight: 600; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; }
 .treatment-chapter a svg { transition: transform 180ms ease; }
 .treatment-chapter a:hover svg, .treatment-chapter a:focus-visible svg { transform: translate(0.2rem, -0.2rem); }
 

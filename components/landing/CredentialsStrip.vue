@@ -69,8 +69,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .credentials-strip {
-  color: var(--color-ivory);
-  background: var(--color-plum);
+  color: var(--color-graphite);
+  background: var(--color-sand);
 }
 
 .credentials-strip__inner {
@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
 
 .credentials-strip__eyebrow {
   margin: 0;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.17em;
@@ -103,11 +103,11 @@ onBeforeUnmount(() => {
   display: grid;
   padding-top: 1.05rem;
   gap: 0.48rem;
-  border-top: 1px solid rgb(245 240 232 / 19%);
+  border-top: 1px solid rgb(46 43 39 / 16%);
 }
 
 .credentials-strip li span {
-  color: rgb(245 240 232 / 58%);
+  color: rgb(46 43 39 / 58%);
   font-size: 0.59rem;
   font-weight: 500;
   letter-spacing: 0.14em;

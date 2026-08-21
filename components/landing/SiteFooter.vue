@@ -36,8 +36,8 @@ const { href, openWhatsApp } = useWhatsApp()
 <style scoped>
 .site-footer {
   padding: 2.5rem 1rem 1.25rem;
-  color: rgb(245 240 232 / 70%);
-  background: var(--color-plum);
+  color: rgb(46 43 39 / 70%);
+  background: var(--color-sand);
 }
 
 .site-footer__inner {
@@ -54,7 +54,7 @@ const { href, openWhatsApp } = useWhatsApp()
 }
 
 .site-footer__identity strong {
-  color: var(--color-ivory);
+  color: var(--color-graphite);
   font-family: var(--font-display);
   font-size: 1.35rem;
   font-weight: 500;
@@ -85,7 +85,7 @@ const { href, openWhatsApp } = useWhatsApp()
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  color: var(--color-ivory);
+  color: var(--color-graphite);
   text-decoration: none;
 }
 
@@ -93,8 +93,8 @@ const { href, openWhatsApp } = useWhatsApp()
   width: min(100%, 78rem);
   margin: 2rem auto 0;
   padding-top: 1.15rem;
-  border-top: 1px solid rgb(245 240 232 / 14%);
-  color: rgb(245 240 232 / 42%);
+  border-top: 1px solid rgb(46 43 39 / 12%);
+  color: rgb(46 43 39 / 48%);
 }
 
 @media (min-width: 48rem) {

@@ -41,6 +41,28 @@
         </blockquote>
       </div>
     </div>
+
+    <div class="about-section__extra">
+      <p class="about-section__transition" data-about-transition>{{ landingContent.profile.transition }}</p>
+
+      <div class="about-section__foundations">
+        <article
+          v-for="foundation in landingContent.profile.foundations"
+          :key="foundation.title"
+          class="about-section__foundation"
+          data-about-foundation
+        >
+          <h3>{{ foundation.title }}</h3>
+          <p>{{ foundation.description }}</p>
+        </article>
+      </div>
+
+      <blockquote class="about-section__couplet" data-about-couplet>
+        <p v-for="line in landingContent.profile.statement" :key="line">{{ line }}</p>
+      </blockquote>
+
+      <p class="about-section__closing" data-about-closing>{{ landingContent.profile.closing }}</p>
+    </div>
   </section>
 </template>
 
@@ -87,6 +109,22 @@ async function buildMotion() {
       .fromTo('[data-about-mask]', { scaleY: 1 }, { scaleY: 0, duration: 1.45 })
       .fromTo('[data-about-image]', { scale: 1.045 }, { scale: 1, duration: 1.7 }, 0)
       .fromTo('[data-about-copy]', { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.85 }, 0.3)
+
+    gsap.timeline({
+      scrollTrigger: { trigger: '[data-about-transition]', start: 'top 85%', once: true }
+    }).fromTo('[data-about-transition]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 })
+
+    gsap.timeline({
+      scrollTrigger: { trigger: '.about-section__foundations', start: 'top 82%', once: true }
+    }).fromTo('[data-about-foundation]', { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.15 })
+
+    gsap.timeline({
+      scrollTrigger: { trigger: '[data-about-couplet]', start: 'top 85%', once: true }
+    }).fromTo('[data-about-couplet] p', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.18 })
+
+    gsap.timeline({
+      scrollTrigger: { trigger: '[data-about-closing]', start: 'top 85%', once: true }
+    }).fromTo('[data-about-closing]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 })
   }, section.value)
 }
 
@@ -110,8 +148,8 @@ onBeforeUnmount(() => {
 .about-section {
   padding: clamp(6rem, 12vw, 11rem) 0;
   overflow: hidden;
-  color: var(--color-ivory);
-  background: var(--color-plum);
+  color: var(--color-graphite);
+  background: var(--color-sand);
 }
 
 .about-section__inner {
@@ -126,7 +164,7 @@ onBeforeUnmount(() => {
   min-height: 32rem;
   margin: 0;
   overflow: hidden;
-  background: #70867d;
+  background: var(--color-ivory);
 }
 
 .about-section__media img {
@@ -142,7 +180,7 @@ onBeforeUnmount(() => {
 .about-section__mask {
   position: absolute;
   inset: 0;
-  background: var(--color-plum);
+  background: var(--color-sand);
   pointer-events: none;
   transform: scaleY(0);
   transform-origin: bottom;
@@ -170,7 +208,7 @@ onBeforeUnmount(() => {
 
 .about-section__eyebrow {
   margin: 0 0 1.5rem;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -190,7 +228,7 @@ onBeforeUnmount(() => {
 .about-section__biography {
   max-width: 38rem;
   margin: 2rem 0 0;
-  color: rgb(245 240 232 / 72%);
+  color: rgb(46 43 39 / 72%);
   font-size: clamp(0.91rem, 1.4vw, 1.04rem);
   font-weight: 300;
   line-height: 1.8;
@@ -205,11 +243,11 @@ onBeforeUnmount(() => {
 
 .about-section dl div {
   padding-top: 1rem;
-  border-top: 1px solid rgb(245 240 232 / 20%);
+  border-top: 1px solid rgb(46 43 39 / 16%);
 }
 
 .about-section dt {
-  color: rgb(245 240 232 / 52%);
+  color: rgb(46 43 39 / 56%);
   font-size: 0.56rem;
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -226,21 +264,107 @@ onBeforeUnmount(() => {
   max-width: 34rem;
   margin: 2.5rem 0 0;
   padding: 0 0 0 1.25rem;
-  border-left: 1px solid var(--color-champagne);
+  border-left: 1px solid var(--color-taupe);
 }
 
 .about-section blockquote p {
   margin: 0;
-  color: rgb(245 240 232 / 68%);
+  color: rgb(46 43 39 / 68%);
   font-size: 0.78rem;
   font-weight: 300;
   line-height: 1.78;
+}
+
+.about-section__extra {
+  width: min(100% - 2rem, 78rem);
+  margin: clamp(4rem, 8vw, 7rem) auto 0;
+}
+
+.about-section__transition {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--color-graphite);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.about-section__foundations {
+  display: grid;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding: 0;
+  gap: 2rem;
+}
+
+.about-section__foundation {
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(46 43 39 / 16%);
+}
+
+.about-section__foundation h3 {
+  max-width: 20ch;
+  margin: 0 0 0.85rem;
+  color: var(--color-graphite);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.about-section__foundation p {
+  max-width: 30rem;
+  margin: 0;
+  color: rgb(46 43 39 / 70%);
+  font-size: 0.88rem;
+  font-weight: 300;
+  line-height: 1.75;
+}
+
+.about-section__couplet {
+  max-width: 42rem;
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  padding: 0 0 0 1.5rem;
+  border-left: 1px solid var(--color-gold);
+}
+
+.about-section__couplet p {
+  margin: 0;
+  color: var(--color-graphite);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 2.15rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.28;
+}
+
+.about-section__couplet p + p {
+  margin-top: 0.75rem;
+}
+
+.about-section__closing {
+  max-width: 40rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  color: rgb(46 43 39 / 72%);
+  font-size: clamp(0.91rem, 1.4vw, 1.04rem);
+  font-weight: 300;
+  line-height: 1.85;
 }
 
 @media (min-width: 40rem) {
   .about-section dl {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
+  }
+
+  .about-section__foundations {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 48rem) {
+  .about-section__extra {
+    width: min(100% - 4rem, 78rem);
   }
 }
 

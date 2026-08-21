@@ -4,11 +4,11 @@
 
 :root {
   --color-ivory: #f8f6f2;
-  --color-plum: #405b50;
-  --color-champagne: #b7a27f;
-  --color-ink: #292d2b;
+  --color-sand: #efe8db;
+  --color-graphite: #2e2b27;
+  --color-taupe: #a9835c;
+  --color-gold: #c9a962;
   --color-white: #fff;
-  --color-sage-soft: #dfe6e1;
   --font-display: Georgia, 'Times New Roman', serif;
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
@@ -20,13 +20,13 @@ html {
 
 body {
   margin: 0;
-  color: var(--color-ink);
+  color: var(--color-graphite);
   background: var(--color-ivory);
   font-family: var(--font-sans);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-champagne);
+  outline: 2px solid var(--color-taupe);
   outline-offset: 4px;
 }
 

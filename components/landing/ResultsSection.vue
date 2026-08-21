@@ -1,6 +1,6 @@
 <template>
   <section
-    id="resultados"
+    id="casos"
     class="results-section"
     aria-labelledby="results-title"
   >
@@ -313,10 +313,8 @@ onBeforeUnmount(() => {
   position: relative;
   padding: clamp(5.5rem, 10vw, 9rem) 0;
   overflow: clip;
-  color: var(--color-ivory);
-  background:
-    radial-gradient(circle at 12% 18%, rgb(188 167 138 / 18%), transparent 28rem),
-    linear-gradient(135deg, #253b34 0%, #182720 52%, #2c2030 100%);
+  color: var(--color-graphite);
+  background: var(--color-ivory);
 }
 
 .results-section__header,
@@ -329,7 +327,7 @@ onBeforeUnmount(() => {
 
 .results-section__eyebrow {
   margin: 0 0 1.3rem;
-  color: rgb(226 205 172 / 82%);
+  color: var(--color-taupe);
   font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -339,7 +337,7 @@ onBeforeUnmount(() => {
 .results-section h2 {
   max-width: 11ch;
   margin: 0;
-  color: var(--color-ivory);
+  color: var(--color-graphite);
   font-family: var(--font-display);
   font-size: clamp(3rem, 7vw, 6.5rem);
   font-weight: 400;
@@ -350,7 +348,7 @@ onBeforeUnmount(() => {
 .results-section__introduction {
   max-width: 34rem;
   margin: 0;
-  color: rgb(248 246 242 / 68%);
+  color: rgb(46 43 39 / 68%);
   font-size: 0.9rem;
   font-weight: 300;
   line-height: 1.78;
@@ -408,9 +406,9 @@ onBeforeUnmount(() => {
   margin: 0;
   overflow: hidden;
   aspect-ratio: 1;
-  border: 1px solid rgb(248 246 242 / 16%);
-  background: #dfe6e1;
-  box-shadow: 0 1.4rem 3rem rgb(0 0 0 / 24%);
+  border: 1px solid rgb(46 43 39 / 12%);
+  background: var(--color-sand);
+  box-shadow: 0 1.4rem 3rem rgb(46 43 39 / 16%);
   transform: translateZ(0);
 }
 
@@ -471,14 +469,14 @@ onBeforeUnmount(() => {
   height: 1px;
   margin: 1.9rem auto 0;
   overflow: hidden;
-  background: rgb(248 246 242 / 18%);
+  background: rgb(46 43 39 / 14%);
 }
 
 .results-section__progress i {
   display: block;
   width: 100%;
   height: 100%;
-  background: var(--color-champagne);
+  background: var(--color-gold);
   transform-origin: left center;
 }
 
@@ -497,8 +495,8 @@ onBeforeUnmount(() => {
   width: 3rem;
   height: 3rem;
   padding: 0;
-  border: 1px solid rgb(248 246 242 / 30%);
-  color: var(--color-ivory);
+  border: 1px solid rgb(46 43 39 / 24%);
+  color: var(--color-graphite);
   background: transparent;
   cursor: pointer;
   place-items: center;
@@ -507,8 +505,8 @@ onBeforeUnmount(() => {
 
 .results-section__navigation button:hover:not([aria-disabled='true']),
 .results-section__navigation button:focus-visible:not([aria-disabled='true']) {
-  color: var(--color-ivory);
-  background: rgb(248 246 242 / 16%);
+  color: var(--color-graphite);
+  background: rgb(46 43 39 / 8%);
 }
 
 .results-section__navigation button[aria-disabled='true'] {
@@ -519,7 +517,7 @@ onBeforeUnmount(() => {
 .results-section__navigation p {
   min-width: 8.3rem;
   margin: 0;
-  color: rgb(248 246 242 / 62%);
+  color: rgb(46 43 39 / 62%);
   font-size: 0.62rem;
   letter-spacing: 0.09em;
   text-align: center;
@@ -534,7 +532,7 @@ onBeforeUnmount(() => {
 .results-section__context p {
   max-width: 36rem;
   margin: 0;
-  color: rgb(248 246 242 / 62%);
+  color: rgb(46 43 39 / 62%);
   font-size: 0.7rem;
   line-height: 1.65;
 }
@@ -547,9 +545,9 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  border: 1px solid rgb(248 246 242 / 78%);
-  color: #24352e;
-  background: var(--color-ivory);
+  border: 1px solid var(--color-graphite);
+  color: var(--color-ivory);
+  background: var(--color-graphite);
   font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -560,7 +558,7 @@ onBeforeUnmount(() => {
 
 .results-section__context a:hover,
 .results-section__context a:focus-visible {
-  color: var(--color-ivory);
+  color: var(--color-graphite);
   background: transparent;
 }
 

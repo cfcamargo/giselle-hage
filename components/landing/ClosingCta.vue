@@ -32,13 +32,13 @@ const { href, openWhatsApp } = useWhatsApp()
   padding: clamp(6rem, 13vw, 11rem) 1rem;
   overflow: hidden;
   text-align: center;
-  background: var(--color-champagne);
+  background: var(--color-taupe);
 }
 
 .closing-cta::before {
   position: absolute;
   inset: 1rem;
-  border: 1px solid rgb(53 29 45 / 20%);
+  border: 1px solid rgb(46 43 39 / 20%);
   content: '';
   pointer-events: none;
 }
@@ -51,7 +51,7 @@ const { href, openWhatsApp } = useWhatsApp()
 
 .closing-cta__eyebrow {
   margin: 0 0 1.25rem;
-  color: rgb(53 29 45 / 65%);
+  color: rgb(46 43 39 / 65%);
   font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -60,7 +60,7 @@ const { href, openWhatsApp } = useWhatsApp()
 
 .closing-cta h2 {
   margin: 0;
-  color: var(--color-plum);
+  color: var(--color-graphite);
   font-family: var(--font-display);
   font-size: clamp(3.2rem, 7vw, 6.4rem);
   font-weight: 400;
@@ -72,7 +72,7 @@ const { href, openWhatsApp } = useWhatsApp()
 .closing-cta__supporting {
   max-width: 42rem;
   margin: 2rem auto 0;
-  color: rgb(53 29 45 / 72%);
+  color: rgb(46 43 39 / 72%);
   font-size: clamp(0.88rem, 1.4vw, 1rem);
   line-height: 1.8;
 }
@@ -85,9 +85,9 @@ const { href, openWhatsApp } = useWhatsApp()
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  border: 1px solid var(--color-plum);
+  border: 1px solid var(--color-graphite);
   color: var(--color-ivory);
-  background: var(--color-plum);
+  background: var(--color-graphite);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.11em;
@@ -98,7 +98,7 @@ const { href, openWhatsApp } = useWhatsApp()
 
 .closing-cta a:hover,
 .closing-cta a:focus-visible {
-  color: var(--color-plum);
+  color: var(--color-graphite);
   background: transparent;
 }
 </style>

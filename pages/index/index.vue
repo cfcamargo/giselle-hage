@@ -5,9 +5,11 @@
     <LandingHero />
     <CredentialsStrip />
     <TreatmentsSection />
+    <HarmonizationSection />
     <PhilosophySection />
     <ResultsSection />
     <AboutSection />
+    <ContentSection />
     <FaqSection />
     <LocationSection />
     <ClosingCta />

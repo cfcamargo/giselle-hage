@@ -100,7 +100,7 @@ function toggle(index: number) {
 
 .faq-section__header > p {
   margin: 0 0 1.25rem;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -110,7 +110,7 @@ function toggle(index: number) {
 .faq-section__header h2 {
   max-width: 11ch;
   margin: 0;
-  color: var(--color-plum);
+  color: var(--color-graphite);
   font-family: var(--font-display);
   font-size: clamp(3rem, 6.5vw, 5.75rem);
   font-weight: 400;
@@ -123,7 +123,7 @@ function toggle(index: number) {
 }
 
 .faq-section__item {
-  border-top: 1px solid rgb(53 29 45 / 18%);
+  border-top: 1px solid rgb(46 43 39 / 16%);
 }
 
 .faq-section__item:last-child {
@@ -142,7 +142,7 @@ function toggle(index: number) {
   justify-content: space-between;
   gap: 1.25rem;
   border: 0;
-  color: var(--color-ink);
+  color: var(--color-graphite);
   background: transparent;
   font: inherit;
   font-size: clamp(0.93rem, 1.5vw, 1.08rem);
@@ -153,7 +153,7 @@ function toggle(index: number) {
 
 .faq-section__item svg {
   flex: 0 0 auto;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   transition: transform 220ms ease;
 }
 
@@ -169,7 +169,7 @@ function toggle(index: number) {
   max-width: 42rem;
   margin: 0;
   padding: 0 2.5rem 1.5rem 0;
-  color: rgb(33 29 31 / 68%);
+  color: rgb(46 43 39 / 68%);
   font-size: 0.86rem;
   font-weight: 300;
   line-height: 1.8;
@@ -188,7 +188,7 @@ function toggle(index: number) {
 .faq-section__aside p {
   max-width: 32rem;
   margin: 0;
-  color: rgb(33 29 31 / 65%);
+  color: rgb(46 43 39 / 65%);
   font-size: 0.78rem;
   line-height: 1.7;
 }
@@ -197,7 +197,7 @@ function toggle(index: number) {
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
-  color: var(--color-plum);
+  color: var(--color-graphite);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.1em;

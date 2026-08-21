@@ -20,3 +20,13 @@ export interface Credential {
   label: string
   value: string
 }
+
+export interface ContentPost {
+  title: string
+  teaser: string
+}
+
+export interface ProcessStep {
+  title: string
+  description: string
+}

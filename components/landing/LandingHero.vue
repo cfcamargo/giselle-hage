@@ -4,8 +4,8 @@
       <NuxtImg
         :src="landingContent.hero.image"
         alt=""
-        width="3024"
-        height="3185"
+        width="1672"
+        height="941"
         sizes="xs:100vw sm:100vw md:100vw lg:100vw xl:100vw"
         preload
       />
@@ -75,7 +75,7 @@ useGsapContext(hero, (gsap) => {
   display: grid;
   min-height: 100svh;
   overflow: hidden;
-  color: var(--color-ink);
+  color: var(--color-graphite);
   background: var(--color-ivory);
   isolation: isolate;
 }
@@ -96,7 +96,7 @@ useGsapContext(hero, (gsap) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 62% center;
+  object-position: center 20%;
 }
 
 .landing-hero__wash {
@@ -126,14 +126,14 @@ useGsapContext(hero, (gsap) => {
   width: 1px;
   height: clamp(3.25rem, 8vh, 5.75rem);
   margin-bottom: 1.5rem;
-  background: var(--color-champagne);
+  background: var(--color-gold);
   transform-origin: top;
 }
 
 .landing-hero__eyebrow {
   max-width: 42rem;
   margin: 0 0 1.25rem;
-  color: var(--color-plum);
+  color: var(--color-taupe);
   font-size: clamp(0.65rem, 1vw, 0.78rem);
   font-weight: 500;
   letter-spacing: 0.19em;
@@ -154,7 +154,7 @@ useGsapContext(hero, (gsap) => {
 .landing-hero__supporting {
   max-width: 38rem;
   margin: 2rem 0 0;
-  color: rgb(41 45 43 / 76%);
+  color: rgb(46 43 39 / 76%);
   font-size: clamp(0.95rem, 1.4vw, 1.14rem);
   font-weight: 300;
   line-height: 1.75;
@@ -175,9 +175,9 @@ useGsapContext(hero, (gsap) => {
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  border: 1px solid var(--color-plum);
+  border: 1px solid var(--color-graphite);
   color: var(--color-white);
-  background: var(--color-plum);
+  background: var(--color-graphite);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -188,7 +188,7 @@ useGsapContext(hero, (gsap) => {
 
 .landing-hero__cta:hover,
 .landing-hero__cta:focus-visible {
-  color: var(--color-plum);
+  color: var(--color-graphite);
   background: transparent;
 }
 
@@ -197,7 +197,7 @@ useGsapContext(hero, (gsap) => {
   margin: 0;
   align-items: center;
   gap: 0.55rem;
-  color: rgb(41 45 43 / 66%);
+  color: rgb(46 43 39 / 66%);
   font-size: 0.72rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -210,7 +210,7 @@ useGsapContext(hero, (gsap) => {
   display: none;
   align-items: center;
   gap: 0.8rem;
-  color: rgb(41 45 43 / 62%);
+  color: rgb(46 43 39 / 62%);
   font-size: 0.57rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -220,7 +220,7 @@ useGsapContext(hero, (gsap) => {
   display: block;
   width: 3.5rem;
   height: 1px;
-  background: rgb(185 162 125 / 72%);
+  background: rgb(169 131 92 / 72%);
 }
 
 @media (max-width: 47.99rem) {
@@ -231,7 +231,7 @@ useGsapContext(hero, (gsap) => {
   }
 
   .landing-hero__media img {
-    object-position: 64% center;
+    object-position: 66% center;
   }
 
   .landing-hero__content {

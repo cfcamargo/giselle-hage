@@ -104,8 +104,8 @@ describe('BrandIntro', () => {
   it('renders the existing logo at the intended intro scale', () => {
     wrapper = mount(BrandIntro)
 
-    expect(wrapper.get('svg').attributes('width')).toBe('150')
-    expect(wrapper.get('svg').attributes('height')).toBe('78')
+    expect(wrapper.get('svg').attributes('width')).toBe('140')
+    expect(wrapper.get('svg').attributes('height')).toBe('140')
   })
 
   it('stays visible while the asynchronous animation is being prepared', () => {

@@ -112,8 +112,8 @@ onBeforeUnmount(() => {
 .philosophy-section {
   position: relative;
   overflow: hidden;
-  color: var(--color-ivory);
-  background: var(--color-plum);
+  color: var(--color-graphite);
+  background: var(--color-sand);
   isolation: isolate;
 }
 
@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
 }
 
 .philosophy-section__contour path {
-  stroke: var(--color-champagne);
+  stroke: var(--color-taupe);
   stroke-width: 1.1;
   vector-effect: non-scaling-stroke;
 }
@@ -161,7 +161,7 @@ onBeforeUnmount(() => {
 
 .philosophy-section__header > p {
   margin: 0 0 1.5rem;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.19em;
@@ -182,7 +182,7 @@ onBeforeUnmount(() => {
   display: block;
   max-width: 39rem;
   margin-top: 2.1rem;
-  color: rgb(245 240 232 / 70%);
+  color: rgb(46 43 39 / 72%);
   font-size: clamp(0.92rem, 1.4vw, 1.08rem);
   font-weight: 300;
   line-height: 1.8;
@@ -198,11 +198,11 @@ onBeforeUnmount(() => {
 
 .philosophy-section__principles li {
   padding-top: 1.25rem;
-  border-top: 1px solid rgb(245 240 232 / 20%);
+  border-top: 1px solid rgb(46 43 39 / 16%);
 }
 
 .philosophy-section__principles span {
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   font-family: var(--font-display);
   font-size: 0.9rem;
 }
@@ -217,7 +217,7 @@ onBeforeUnmount(() => {
 .philosophy-section__principles p {
   max-width: 27rem;
   margin: 0;
-  color: rgb(245 240 232 / 64%);
+  color: rgb(46 43 39 / 66%);
   font-size: 0.83rem;
   font-weight: 300;
   line-height: 1.78;

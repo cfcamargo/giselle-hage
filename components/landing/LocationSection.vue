@@ -47,8 +47,8 @@ const { href, openWhatsApp } = useWhatsApp()
 <style scoped>
 .location-section {
   padding: clamp(5rem, 10vw, 9rem) 0;
-  color: var(--color-ivory);
-  background: var(--color-ink);
+  color: var(--color-graphite);
+  background: var(--color-sand);
 }
 
 .location-section__inner {
@@ -64,7 +64,7 @@ const { href, openWhatsApp } = useWhatsApp()
 
 .location-section__eyebrow {
   margin: 0 0 1.25rem;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -84,7 +84,7 @@ const { href, openWhatsApp } = useWhatsApp()
 .location-section__regional {
   max-width: 36rem;
   margin: 1.75rem 0 0;
-  color: rgb(245 240 232 / 68%);
+  color: rgb(46 43 39 / 68%);
   font-size: 0.9rem;
   font-weight: 300;
   line-height: 1.8;
@@ -97,8 +97,8 @@ const { href, openWhatsApp } = useWhatsApp()
   padding-top: 1.25rem;
   align-items: flex-start;
   gap: 0.8rem;
-  border-top: 1px solid rgb(245 240 232 / 18%);
-  color: rgb(245 240 232 / 82%);
+  border-top: 1px solid rgb(46 43 39 / 16%);
+  color: rgb(46 43 39 / 82%);
   font-size: 0.78rem;
   font-style: normal;
   line-height: 1.65;
@@ -106,7 +106,7 @@ const { href, openWhatsApp } = useWhatsApp()
 
 .location-section address svg {
   flex: 0 0 auto;
-  color: var(--color-champagne);
+  color: var(--color-taupe);
 }
 
 .location-section__cta {
@@ -117,9 +117,9 @@ const { href, openWhatsApp } = useWhatsApp()
   align-items: center;
   justify-content: center;
   gap: 0.7rem;
-  border: 1px solid var(--color-champagne);
-  color: var(--color-ink);
-  background: var(--color-champagne);
+  border: 1px solid var(--color-graphite);
+  color: var(--color-ivory);
+  background: var(--color-graphite);
   font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -130,14 +130,14 @@ const { href, openWhatsApp } = useWhatsApp()
 
 .location-section__cta:hover,
 .location-section__cta:focus-visible {
-  color: var(--color-ivory);
+  color: var(--color-graphite);
   background: transparent;
 }
 
 .location-section__map {
   min-height: 27rem;
-  border: 1px solid rgb(185 162 125 / 42%);
-  background: #302b2d;
+  border: 1px solid rgb(169 131 92 / 32%);
+  background: var(--color-ivory);
 }
 
 .location-section__map iframe {

@@ -3,8 +3,10 @@ import { renderToString } from '@vue/server-renderer'
 import { createSSRApp, nextTick } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import CredentialsStrip from '../../components/landing/CredentialsStrip.vue'
+import HarmonizationSection from '../../components/landing/HarmonizationSection.vue'
 import PhilosophySection from '../../components/landing/PhilosophySection.vue'
 import TreatmentsSection from '../../components/landing/TreatmentsSection.vue'
+import { landingContent } from '../../data/landing'
 
 type Cleanup = () => void
 type MediaListener = (event: MediaQueryListEvent) => void
@@ -408,9 +410,34 @@ describe('landing narrative sections', () => {
     expect(wrapper.get('svg').attributes('aria-hidden')).toBe('true')
   })
 
+  it('renders the four-step process under the harmonização orofacial anchor', () => {
+    const wrapper = mount(HarmonizationSection)
+    wrappers.push(wrapper)
+
+    expect(wrapper.get('section').attributes('id')).toBe('harmonizacao-orofacial')
+    expect(wrapper.get('h2').text()).toBe('Um caminho, passo a passo.')
+
+    const steps = wrapper.findAll('[data-harmonization-step]')
+    expect(steps).toHaveLength(landingContent.process.length)
+    expect(steps.map(step => step.get('h3').text())).toEqual(
+      landingContent.process.map(step => step.title)
+    )
+    expect(steps.map(step => step.get('p').text())).toEqual(
+      landingContent.process.map(step => step.description)
+    )
+  })
+
+  it('no longer duplicates the harmonização orofacial anchor on the philosophy section', () => {
+    const wrapper = mount(PhilosophySection)
+    wrappers.push(wrapper)
+
+    expect(wrapper.get('section').attributes('id')).toBeUndefined()
+  })
+
   it.each([
     [CredentialsStrip, '.credentials-strip'],
-    [PhilosophySection, '.philosophy-section']
+    [PhilosophySection, '.philosophy-section'],
+    [HarmonizationSection, '.harmonization-section']
   ])('removes and rebuilds %s motion when reduced-motion changes', async (component, selector) => {
     const media = installMatchMedia({ desktop: false, reduced: false })
     const wrapper = mount(component, { attachTo: document.body })

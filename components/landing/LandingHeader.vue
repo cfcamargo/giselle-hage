@@ -2,10 +2,9 @@
   <header class="landing-header">
     <nav class="landing-header__nav" aria-label="Navegação principal">
       <a class="landing-header__brand" href="#inicio" aria-label="Dra. Giselle Hage — início">
-        <Logo color="#b9a27d" icon_width="76" icon_height="40" aria-hidden="true" />
+        <Logo color="#a9835c" icon_width="42" icon_height="42" aria-hidden="true" />
         <span class="landing-header__signature">
           <strong>Dra. Giselle Hage</strong>
-          <small>Harmonização orofacial</small>
         </span>
       </a>
 
@@ -14,6 +13,16 @@
           <a :href="`#${item.id}`">{{ item.label }}</a>
         </li>
       </ul>
+
+      <a
+        class="landing-header__cta"
+        :href="href"
+        target="_blank"
+        rel="noopener noreferrer"
+        @click.prevent="openWhatsApp('header')"
+      >
+        Agendar
+      </a>
 
       <details
         ref="mobileNavigation"
@@ -59,12 +68,14 @@ import { Menu, X } from '@lucide/vue'
 import { motion } from 'motion-v'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
+import { useWhatsApp } from '~/composables/useWhatsApp'
 
 const navigation = [
-  { id: 'inicio', label: 'Início' },
-  { id: 'tratamentos', label: 'Tratamentos' },
   { id: 'sobre', label: 'Sobre' },
-  { id: 'resultados', label: 'Resultados' },
+  { id: 'harmonizacao-orofacial', label: 'Harmonização Orofacial' },
+  { id: 'procedimentos', label: 'Procedimentos' },
+  { id: 'casos', label: 'Casos' },
+  { id: 'conteudos', label: 'Conteúdos' },
   { id: 'contato', label: 'Contato' }
 ] as const
 
@@ -72,6 +83,7 @@ const menuOpen = ref(false)
 const mobileNavigation = ref<HTMLDetailsElement | null>(null)
 const menuTrigger = ref<HTMLElement | null>(null)
 const reducedMotion = useReducedMotion()
+const { href, openWhatsApp } = useWhatsApp()
 
 function syncMenuState() {
   menuOpen.value = Boolean(mobileNavigation.value?.open)
@@ -103,9 +115,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   right: 0;
   left: 0;
   z-index: 60;
-  border-bottom: 1px solid rgb(245 240 232 / 14%);
-  color: var(--color-ivory);
-  background: rgb(64 91 80 / 94%);
+  border-bottom: 1px solid rgb(46 43 39 / 10%);
+  color: var(--color-graphite);
+  background: rgb(248 246 242 / 94%);
   backdrop-filter: blur(18px);
 }
 
@@ -117,6 +129,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   margin: 0 auto;
   align-items: center;
   justify-content: space-between;
+  gap: 1.25rem;
 }
 
 .landing-header__brand {
@@ -127,11 +140,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   text-decoration: none;
 }
 
-.landing-header__signature {
-  display: grid;
-  line-height: 1;
-}
-
 .landing-header__signature strong {
   font-family: var(--font-display);
   font-size: 1.12rem;
@@ -139,26 +147,18 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   letter-spacing: 0.04em;
 }
 
-.landing-header__signature small {
-  margin-top: 0.35rem;
-  color: rgb(245 240 232 / 62%);
-  font-size: 0.55rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
 .landing-header__desktop-links {
   display: none;
   align-items: center;
   gap: clamp(1.4rem, 2.5vw, 2.75rem);
-  margin: 0;
+  margin: 0 auto 0 2.5rem;
   padding: 0;
   list-style: none;
 }
 
 .landing-header__desktop-links a {
   position: relative;
-  color: rgb(245 240 232 / 80%);
+  color: rgb(46 43 39 / 78%);
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-decoration: none;
@@ -172,7 +172,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   bottom: -0.55rem;
   left: 0;
   height: 1px;
-  background: var(--color-champagne);
+  background: var(--color-gold);
   content: '';
   transform: scaleX(0);
   transform-origin: right;
@@ -181,7 +181,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
 
 .landing-header__desktop-links a:hover,
 .landing-header__desktop-links a:focus-visible {
-  color: var(--color-ivory);
+  color: var(--color-graphite);
 }
 
 .landing-header__desktop-links a:hover::after,
@@ -190,14 +190,37 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   transform-origin: left;
 }
 
+.landing-header__cta {
+  display: none;
+  min-height: 2.6rem;
+  padding: 0 1.3rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-graphite);
+  color: var(--color-ivory);
+  background: var(--color-graphite);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+.landing-header__cta:hover,
+.landing-header__cta:focus-visible {
+  color: var(--color-graphite);
+  background: transparent;
+}
+
 .landing-header__menu-trigger {
   display: inline-grid;
   width: 2.75rem;
   height: 2.75rem;
   place-items: center;
-  border: 1px solid rgb(185 162 125 / 44%);
+  border: 1px solid rgb(169 131 92 / 44%);
   border-radius: 999px;
-  color: var(--color-ivory);
+  color: var(--color-graphite);
   background: transparent;
   cursor: pointer;
   list-style: none;
@@ -213,9 +236,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   right: -1rem;
   left: -1rem;
   padding: 1rem 1rem 1.5rem;
-  border-bottom: 1px solid rgb(185 162 125 / 25%);
-  background: var(--color-plum);
-  box-shadow: 0 1.5rem 3rem rgb(33 29 31 / 28%);
+  border-bottom: 1px solid rgb(169 131 92 / 25%);
+  background: var(--color-ivory);
+  box-shadow: 0 1.5rem 3rem rgb(46 43 39 / 14%);
 }
 
 .landing-header__mobile-panel ul {
@@ -230,15 +253,15 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
   align-items: baseline;
   gap: 1rem;
   padding: 0.82rem 0.25rem;
-  border-bottom: 1px solid rgb(245 240 232 / 10%);
-  color: var(--color-ivory);
+  border-bottom: 1px solid rgb(46 43 39 / 10%);
+  color: var(--color-graphite);
   font-family: var(--font-display);
   font-size: 1.7rem;
   text-decoration: none;
 }
 
 .landing-header__mobile-panel a span {
-  color: var(--color-champagne);
+  color: var(--color-taupe);
   font-family: var(--font-sans);
   font-size: 0.58rem;
   letter-spacing: 0.12em;
@@ -251,6 +274,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
 
   .landing-header__desktop-links {
     display: flex;
+  }
+
+  .landing-header__cta {
+    display: inline-flex;
   }
 
   .landing-header__menu-trigger,

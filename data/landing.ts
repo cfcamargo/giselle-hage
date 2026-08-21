@@ -1,4 +1,4 @@
-import type { Credential, FaqItem, Treatment } from '~/types/landing'
+import type { Credential, FaqItem, ContentPost, ProcessStep, Treatment } from '~/types/landing'
 
 const treatments: readonly Treatment[] = [
   {
@@ -31,6 +31,40 @@ const credentials: readonly Credential[] = [
   { label: 'Formação', value: 'Cirurgiã-dentista desde 2009' },
   { label: 'Registro profissional', value: 'CRO-MS 4589' },
   { label: 'Atendimento', value: 'Atendimento individualizado' }
+]
+
+const processSteps: readonly ProcessStep[] = [
+  {
+    title: 'Avaliação',
+    description: 'Escuta cuidadosa, exame clínico e alinhamento de expectativas antes de qualquer decisão.'
+  },
+  {
+    title: 'Plano individual',
+    description: 'Definição dos procedimentos indicados, prioridades e cronograma para o seu caso.'
+  },
+  {
+    title: 'Procedimento',
+    description: 'Execução com técnica precisa, sempre com foco em preservar a naturalidade dos traços.'
+  },
+  {
+    title: 'Acompanhamento',
+    description: 'Retornos para ajustar, cuidar e preservar o resultado ao longo do tempo.'
+  }
+]
+
+const content: readonly ContentPost[] = [
+  {
+    title: 'Botox tem contraindicação?',
+    teaser: 'Entenda em que situações a toxina botulínica não é indicada e por que a avaliação clínica vem antes de qualquer procedimento.'
+  },
+  {
+    title: 'Como prolongar o preenchimento labial',
+    teaser: 'Cuidados simples no dia a dia que ajudam a manter o resultado do preenchimento por mais tempo.'
+  },
+  {
+    title: 'O que perguntar antes de agendar uma avaliação',
+    teaser: 'Perguntas que valem a pena levar para a primeira consulta, para decidir com mais segurança.'
+  }
 ]
 
 const faqs: readonly FaqItem[] = [
@@ -68,11 +102,13 @@ export const landingContent = {
     eyebrow: 'Harmonização orofacial em Ponta Porã',
     headline: 'Harmonização Orofacial em Ponta Porã',
     supporting: 'Precisão, naturalidade e cuidado individual para valorizar seus traços.',
-    image: '/hero-bg.jpg'
+    image: '/hero-new.png'
   },
   credentials,
   treatments,
   philosophy: 'Prevenção, gerenciamento do envelhecimento e respeito aos traços naturais em cada plano de cuidado.',
+  process: processSteps,
+  content,
   results: [
     { image: '/results/bigode.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias da região da boca, com o texto incorporado “Bigode Chinês e canto da boca” e a marca GH.' },
     { image: '/results/botox1.jpg', category: 'botox', alt: 'Montagem lado a lado de duas fotografias da testa, com o texto incorporado “Toxina Botulínica” e a marca GH.' },
@@ -83,11 +119,27 @@ export const landingContent = {
     { image: '/results/labial3.jpg', category: 'preenchimento', alt: 'Montagem lado a lado de duas fotografias frontais dos lábios, com o texto incorporado “Preenchimento Labial e Mento” e a marca GH.' }
   ],
   profile: {
-    image: '/about.jpg',
+    image: '/giselle-sobre.jpg',
     alt: 'Retrato profissional da cirurgiã-dentista Dra. Giselle Hage em ambiente clínico.',
-    biography: 'Cirurgiã-dentista formada pela UNIDERP em 2009, com atuação em harmonização orofacial e atenção individualizada.',
+    biography: 'Antes de trabalhar com estética facial, construí minha formação a partir do conhecimento profundo da face.',
     registration: 'CRO-MS 4589',
-    evaluation: 'Cada plano de cuidado é definido após uma avaliação individual, considerando anatomia, histórico e expectativas.'
+    evaluation: 'Cada plano de cuidado é definido após uma avaliação individual, considerando anatomia, histórico e expectativas.',
+    foundations: [
+      {
+        title: 'Cirurgia e Traumatologia Bucomaxilofacial',
+        description: 'Compreensão detalhada da anatomia, das estruturas ósseas e dos tecidos que compõem o rosto, com formação voltada ao planejamento e à segurança.'
+      },
+      {
+        title: 'Harmonização Orofacial',
+        description: 'Um olhar para proporções, equilíbrio, envelhecimento e estética, sempre considerando a individualidade de cada paciente.'
+      }
+    ],
+    transition: 'Essas duas áreas se complementam na minha prática.',
+    statement: [
+      'Conhecer a estrutura é essencial para saber como intervir.',
+      'Compreender a individualidade é essencial para saber quando intervir.'
+    ],
+    closing: 'Por isso, meu trabalho em Harmonização Orofacial começa muito antes do procedimento: começa na avaliação, no planejamento e na indicação consciente. Porque acredito que a estética mais bonita é aquela que respeita a identidade de quem a carrega.'
   },
   faqs,
   location: {

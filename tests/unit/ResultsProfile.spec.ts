@@ -233,7 +233,7 @@ describe('results and professional profile', () => {
     })
     wrappers.push(wrapper)
 
-    expect(wrapper.get('section').attributes('id')).toBe('resultados')
+    expect(wrapper.get('section').attributes('id')).toBe('casos')
     expect(wrapper.find('[data-results-stage]').exists()).toBe(true)
     expect(wrapper.find('[data-results-pin]').exists()).toBe(true)
     expect(wrapper.get('[data-results-track]').attributes('id')).toBe('results-gallery')
@@ -562,6 +562,6 @@ describe('results and professional profile', () => {
     expect(resultsHtml).toContain('href="https://api.whatsapp.com/send?phone=5567981269482&amp;text=')
     expect(aboutHtml).toContain('CRO-MS 4589')
     expect(aboutHtml).toContain('avaliação individual')
-    expect(aboutHtml).toContain('/about.jpg')
+    expect(aboutHtml).toContain('/giselle-sobre.jpg')
   })
 })

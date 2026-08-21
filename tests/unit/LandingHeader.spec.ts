@@ -35,12 +35,25 @@ describe('LandingHeader', () => {
     expect(disclosure.element.contains(panel.element)).toBe(true)
     expect(panel.attributes('style') ?? '').not.toContain('opacity: 0')
     expect(panel.findAll('a').map(anchor => anchor.attributes('href'))).toEqual([
-      '#inicio',
-      '#tratamentos',
       '#sobre',
-      '#resultados',
+      '#harmonizacao-orofacial',
+      '#procedimentos',
+      '#casos',
+      '#conteudos',
       '#contato'
     ])
+  })
+
+  it('exposes a desktop booking CTA that opens WhatsApp', async () => {
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null)
+    wrapper = mountHeader()
+
+    const cta = wrapper.get('a.landing-header__cta')
+    expect(cta.text()).toBe('Agendar')
+
+    await cta.trigger('click')
+
+    expect(open).toHaveBeenCalledOnce()
   })
 
   it('updates the toggle name and returns focus after Escape closes the menu', async () => {

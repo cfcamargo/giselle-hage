@@ -14,7 +14,7 @@
       @click.prevent="openWhatsApp('floating')"
     >
       <MessageCircle :size="21" :stroke-width="1.6" aria-hidden="true" />
-      <span>Agendar pelo WhatsApp</span>
+      <span>Agendar avaliação</span>
     </a>
 
     <noscript>
@@ -85,11 +85,11 @@ onBeforeUnmount(() => {
   height: 3.35rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(245 240 232 / 42%);
+  border: 1px solid rgb(248 246 242 / 24%);
   border-radius: 50%;
   color: var(--color-ivory);
-  background: var(--color-plum);
-  box-shadow: 0 0.75rem 2rem rgb(33 29 31 / 24%);
+  background: var(--color-graphite);
+  box-shadow: 0 0.75rem 2rem rgb(46 43 39 / 24%);
   opacity: 0;
   text-decoration: none;
   transform: translateY(0.8rem);
@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
 
 .floating-whatsapp:hover,
 .floating-whatsapp:focus-visible {
-  background: #31483f;
+  background: var(--color-taupe);
 }
 
 .floating-whatsapp span {
